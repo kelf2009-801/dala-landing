@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dala — Your workplace has the answer. Just ask Dala for it.</title>
+<meta name="description" content="Dala turns the scattered knowledge across your tools, docs, and people into answers you can trust." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     DALA DESIGN TOKENS
+     ============================================================ */
+  :root {
+    --color-void: #000000;
+    --color-bone-white: #ffffff;
+    --color-ash-gray: #9a9a9a;
+    --color-silver-mist: #bdbdbd;
+    --color-electric-iris: #8052ff;
+    --color-saffron-spark: #ffb829;
+    --color-deep-verdant: #15846e;
+
+    --font-ppneuemontreal: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    --text-caption: 12px;        --leading-caption: 1.5;
+    --text-nav-label: 14px;      --leading-nav-label: 1.2;   --tracking-nav-label: 0.35px;
+    --text-body: 18px;           --leading-body: 1.5;
+    --text-heading-2xs: 24px;    --leading-heading-2xs: 1.25;
+    --text-heading-xs: 27px;     --leading-heading-xs: 1;
+    --text-subheading: 36px;     --leading-subheading: 1.2;
+    --text-heading-sm: 42px;     --leading-heading-sm: 1.2;
+    --text-heading: 48px;        --leading-heading: 1.1;
+    --text-heading-lg: 78px;     --leading-heading-lg: 1.1;
+    --text-display: 113px;       --leading-display: 1.1;
+
+    --fw-extralight: 200;
+    --fw-regular: 400;
+    --fw-semibold: 600;
+    --fw-bold: 700;
+
+    --spacing-unit: 6px;
+    --spacing-6: 6px; --spacing-12: 12px; --spacing-18: 18px; --spacing-24: 24px;
+    --spacing-30: 30px; --spacing-36: 36px; --spacing-60: 60px; --spacing-96: 96px; --spacing-120: 120px;
+
+    --page-max-width: 1280px;
+    --section-gap: clamp(60px, 8vw, 120px);
+
+    --radius-3xl: 24px;
+    --radius-full: 9999px;
+    --radius-buttons: 24px;
+    --radius-cards: 24px;
+    --radius-nav: 24px;
+  }
+
+  /* ============================================================
+     RESET / BASE
+     ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    background: var(--color-void);
+    color: var(--color-bone-white);
+    font-family: var(--font-ppneuemontreal);
+    font-weight: var(--fw-regular);
+    line-height: var(--leading-body);
+    overflow-x: hidden;
+    font-feature-settings: "ss01" on, "cv11" on;
+    text-rendering: optimizeLegibility;
+    position: relative;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  ::selection { background: var(--color-electric-iris); color: var(--color-bone-white); }
+
+  /* ============================================================
+     AURORA BACKGROUND — replaces particle field
+     Soft drifting light blooms in brand colors, pure CSS, GPU-friendly
+     ============================================================ */
+  .aurora {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .aurora__blob {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.42;
+    will-change: transform;
+    pointer-events: none;
+  }
+  .aurora__blob--iris {
+    width: 42vw; height: 42vw;
+    top: -8vw; right: -6vw;
+    background: radial-gradient(circle at center, #8052ff 0%, rgba(128,82,255,0) 70%);
+    animation: drift-iris 28s ease-in-out infinite;
+  }
+  .aurora__blob--verdant {
+    width: 38vw; height: 38vw;
+    bottom: -10vw; left: -8vw;
+    background: radial-gradient(circle at center, #15846e 0%, rgba(21,132,110,0) 70%);
+    opacity: 0.36;
+    animation: drift-verdant 34s ease-in-out infinite;
+  }
+  .aurora__blob--saffron {
+    width: 24vw; height: 24vw;
+    top: 38vh; left: 35vw;
+    background: radial-gradient(circle at center, #ffb829 0%, rgba(255,184,41,0) 70%);
+    opacity: 0.16;
+    animation: drift-saffron 40s ease-in-out infinite;
+  }
+
+  @keyframes drift-iris {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-4vw, 6vh) scale(1.06); }
+    66% { transform: translate(3vw, -4vh) scale(0.97); }
+  }
+  @keyframes drift-verdant {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(5vw, -6vh) scale(1.08); }
+  }
+  @keyframes drift-saffron {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-6vw, 4vh); }
+  }
+
+  .layer-content { position: relative; z-index: 2; }
+
+  /* ============================================================
+     LAYOUT PRIMITIVES
+     ============================================================ */
+  .container {
+    width: 100%;
+    max-width: var(--page-max-width);
+    margin-inline: auto;
+    padding-inline: clamp(20px, 4vw, 48px);
+  }
+  section { position: relative; padding-block: var(--section-gap); }
+
+  .eyebrow {
+    font-size: var(--text-nav-label);
+    line-height: var(--leading-nav-label);
+    font-weight: var(--fw-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    color: var(--color-saffron-spark);
+    display: inline-block;
+    margin-bottom: var(--spacing-18);
+  }
+
+  .h-display {
+    font-size: clamp(48px, 9vw, var(--text-display));
+    line-height: var(--leading-display);
+    font-weight: var(--fw-regular);
+    letter-spacing: -0.04em;
+  }
+  .h-lg {
+    font-size: clamp(40px, 6.5vw, var(--text-heading-lg));
+    line-height: var(--leading-heading-lg);
+    font-weight: var(--fw-regular);
+    letter-spacing: -0.04em;
+  }
+  .h-sm {
+    font-size: clamp(30px, 4vw, var(--text-heading-sm));
+    line-height: var(--leading-heading-sm);
+    font-weight: var(--fw-regular);
+    letter-spacing: -0.04em;
+  }
+
+  .body {
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+    font-weight: var(--fw-extralight);
+    color: var(--color-bone-white);
+  }
+  .body--muted { color: var(--color-silver-mist); }
+
+  /* ============================================================
+     NAVIGATION
+     ============================================================ */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: transparent;
+  }
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--spacing-24);
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: var(--text-nav-label);
+    font-weight: var(--fw-semibold);
+    color: var(--color-bone-white);
+  }
+  .logo__mark { width: 22px; height: 22px; display: block; }
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-36);
+  }
+  .nav__link {
+    font-size: var(--text-nav-label);
+    font-weight: var(--fw-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    color: var(--color-ash-gray);
+    transition: color .25s ease;
+  }
+  .nav__link:hover { color: var(--color-bone-white); }
+
+  /* ============================================================
+     BUTTONS
+     ============================================================ */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-electric-iris);
+    color: var(--color-bone-white);
+    font-size: var(--text-nav-label);
+    font-weight: var(--fw-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    line-height: 1;
+    padding: 14.4px 16px;
+    border-radius: var(--radius-buttons);
+    transition: transform .25s ease, background .25s ease;
+    min-height: 45px;
+  }
+  .btn-primary:hover { transform: translateY(-1px); background: #6f44e6; }
+  .btn-primary:focus-visible { outline: 2px solid var(--color-saffron-spark); outline-offset: 3px; }
+  .btn-primary--lg { padding: 16px 28px; }
+
+  .btn-ghost {
+    font-size: var(--text-nav-label);
+    font-weight: var(--fw-regular);
+    color: var(--color-bone-white);
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    transition: border-color .25s ease, color .25s ease;
+  }
+  .btn-ghost:hover { color: var(--color-saffron-spark); border-color: var(--color-saffron-spark); }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero {
+    padding-top: var(--spacing-60);
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: var(--spacing-60);
+    align-items: center;
+    width: 100%;
+  }
+  .hero__headline { margin-bottom: var(--spacing-30); }
+  .hero__headline .accent { color: var(--color-saffron-spark); }
+  .hero__body { max-width: 480px; margin-bottom: var(--spacing-36); }
+  .hero__cta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-24);
+  }
+  .hero__visual {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-height: 70vh;
+    display: grid;
+    place-items: center;
+  }
+  /* Static SVG constellation with CSS breathing — no JS */
+  .constellation-svg {
+    width: 100%;
+    height: 100%;
+    animation: breathe 8s ease-in-out infinite;
+    transform-origin: center;
+  }
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.95; }
+    50% { transform: scale(1.02); opacity: 1; }
+  }
+
+  /* ============================================================
+     SPLIT SECTIONS
+     ============================================================ */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-60);
+    align-items: start;
+  }
+  .split--reverse .split__visual { order: -1; }
+  .split__text { max-width: 540px; }
+  .split__text .body { margin-top: var(--spacing-24); }
+  .split__visual {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-cards);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .mini-constellation { width: 80%; height: 80%; }
+
+  /* ============================================================
+     TEAM
+     ============================================================ */
+  .team__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-60);
+    margin-top: var(--spacing-60);
+  }
+  .member { display: flex; flex-direction: column; gap: var(--spacing-18); }
+  .member__portrait {
+    aspect-ratio: 3 / 4;
+    border-radius: var(--radius-cards);
+    background: linear-gradient(140deg, #0c0c0c 0%, #0d2a25 60%, #13110a 100%);
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .member__initials {
+    font-size: var(--text-heading);
+    font-weight: var(--fw-extralight);
+    color: rgba(255,255,255,0.10);
+    letter-spacing: -0.04em;
+  }
+  .member__role {
+    font-size: var(--text-caption);
+    text-transform: uppercase;
+    color: var(--color-electric-iris);
+    letter-spacing: 0.04em;
+  }
+  .member__name {
+    font-size: var(--text-heading-xs);
+    font-weight: var(--fw-regular);
+    line-height: var(--leading-heading-xs);
+    color: var(--color-bone-white);
+    letter-spacing: -0.02em;
+  }
+  .member__socials {
+    display: flex;
+    gap: var(--spacing-12);
+    margin-top: var(--spacing-6);
+  }
+  .member__socials a {
+    font-size: var(--text-caption);
+    color: var(--color-ash-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .member__socials a:hover { color: var(--color-bone-white); }
+
+  .dots {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: var(--spacing-30);
+  }
+  .dot {
+    width: 8px; height: 8px; border-radius: var(--radius-full);
+    background: rgba(255,255,255,0.18);
+    transition: background .25s ease;
+    cursor: pointer;
+  }
+  .dot[aria-current="true"] { background: var(--color-electric-iris); }
+
+  /* ============================================================
+     CTA
+     ============================================================ */
+  .cta {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-36);
+    padding-block: clamp(96px, 14vw, 180px);
+  }
+  .cta__headline { max-width: 14ch; }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  .footer {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-block: var(--spacing-60) var(--spacing-36);
+  }
+  .footer__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-24);
+    flex-wrap: wrap;
+  }
+  .footer__meta {
+    font-size: var(--text-caption);
+    color: var(--color-ash-gray);
+  }
+  .footer__links { display: flex; gap: var(--spacing-24); }
+  .footer__links a {
+    font-size: var(--text-caption);
+    color: var(--color-ash-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .footer__links a:hover { color: var(--color-bone-white); }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 900px) {
+    .hero__grid, .split { grid-template-columns: 1fr; gap: var(--spacing-36); }
+    .split--reverse .split__visual { order: 0; }
+    .team__grid { grid-template-columns: 1fr; gap: var(--spacing-36); }
+    .nav__links { display: none; }
+    .hero { min-height: auto; }
+    .hero__visual { aspect-ratio: 1 / 1; max-height: 60vh; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Aurora background (replaces particles) -->
+<div class="aurora" aria-hidden="true">
+  <div class="aurora__blob aurora__blob--iris"></div>
+  <div class="aurora__blob aurora__blob--verdant"></div>
+  <div class="aurora__blob aurora__blob--saffron"></div>
+</div>
+
+<div class="layer-content">
+
+  <!-- ============================ NAV ============================ -->
+  <header class="nav">
+    <div class="container nav__inner">
+      <a href="#" class="logo" aria-label="Dala home">
+        <svg class="logo__mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#8052ff"/><stop offset="1" stop-color="#15846e"/>
+            </linearGradient>
+          </defs>
+          <path d="M12 1 L23 21 L1 21 Z" stroke="url(#logoGrad)" stroke-width="1.6" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span>Dala</span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a class="nav__link" href="#manifesto">Manifesto</a>
+        <a class="nav__link" href="#how">How it works</a>
+        <a class="nav__link" href="#team">Team</a>
+        <a class="nav__link" href="#blog">Blog</a>
+      </nav>
+      <a href="#access" class="btn-primary">Request Access</a>
+    </div>
+  </header>
+
+  <!-- ============================ HERO ============================ -->
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__text">
+        <span class="eyebrow">Workplace Intelligence</span>
+        <h1 class="h-lg hero__headline">
+          Your workplace has the answer.<br/>
+          Just ask <span class="accent">Dala</span> for it.
+        </h1>
+        <p class="body hero__body">
+          Dala turns the scattered knowledge across your tools, docs, and people
+          into answers you can trust. Ask in plain language — get the collective
+          wisdom of your entire team, surfaced the moment you need it.
+        </p>
+        <div class="hero__cta">
+          <a href="#access" class="btn-primary btn-primary--lg">Request Access</a>
+          <a href="#manifesto" class="btn-ghost">Read the manifesto</a>
+        </div>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <!-- Static SVG constellation in brain-shape. Generated programmatically below. -->
+        <svg class="constellation-svg" id="constellation-svg" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ MANIFESTO ============================ -->
+  <section id="manifesto">
+    <div class="container split">
+      <div class="split__text">
+        <span class="eyebrow">Manifesto</span>
+        <h2 class="h-sm">Knowledge isn't stored.<br/>It's distributed.</h2>
+        <p class="body body--muted">
+          The answer you need is rarely in one place. It lives across Slack threads,
+          meeting notes, Confluence pages, and the senior engineer who's seen this
+          outage before. Dala doesn't move that knowledge into a new system — it
+          reaches across every place it already lives and brings back the answer
+          with the sources attached.
+        </p>
+      </div>
+      <div class="split__visual" aria-hidden="true">
+        <svg class="mini-constellation" data-shape="cloud" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ HOW IT WORKS ============================ -->
+  <section id="how">
+    <div class="container split split--reverse">
+      <div class="split__text">
+        <span class="eyebrow">How it works</span>
+        <h2 class="h-sm">Ask once.<br/>Reach everyone who knew.</h2>
+        <p class="body body--muted">
+          Type a question the way you'd ask a teammate. Dala pulls from the living
+          context of your organization — who worked on what, which doc was cited
+          in the last incident, which decision got made and why. You get an answer
+          and a trail: here's what I used, here's who I'd ask next, here's the
+          edge I'm not certain about.
+        </p>
+      </div>
+      <div class="split__visual" aria-hidden="true">
+        <svg class="mini-constellation" data-shape="spiral" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ TEAM ============================ -->
+  <section id="team">
+    <div class="container">
+      <span class="eyebrow">Team</span>
+      <h2 class="h-sm" style="max-width:16ch;">Built by people who've felt the gap.</h2>
+      <div class="team__grid">
+        <article class="member">
+          <div class="member__portrait"><span class="member__initials">JK</span></div>
+          <span class="member__role">Co-founder &amp; CTO</span>
+          <span class="member__name">Joel Kang</span>
+          <div class="member__socials"><a href="#">Twitter</a><a href="#">LinkedIn</a></div>
+        </article>
+        <article class="member">
+          <div class="member__portrait"><span class="member__initials">MR</span></div>
+          <span class="member__role">Co-founder &amp; CEO</span>
+          <span class="member__name">Mira Okonkwo</span>
+          <div class="member__socials"><a href="#">Twitter</a><a href="#">LinkedIn</a></div>
+        </article>
+        <article class="member">
+          <div class="member__portrait"><span class="member__initials">SL</span></div>
+          <span class="member__role">Head of Design</span>
+          <span class="member__name">Sasha Lindqvist</span>
+          <div class="member__socials"><a href="#">Twitter</a><a href="#">LinkedIn</a></div>
+        </article>
+      </div>
+      <div class="dots" role="tablist" aria-label="Team page">
+        <span class="dot" aria-current="true" tabindex="0"></span>
+        <span class="dot" tabindex="0"></span>
+        <span class="dot" tabindex="0"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ BLOG ============================ -->
+  <section id="blog">
+    <div class="container">
+      <span class="eyebrow">Blog</span>
+      <h2 class="h-sm" style="max-width:20ch;">Notes on knowledge, memory, and work.</h2>
+      <div class="team__grid" style="margin-top: 60px;">
+        <article class="member">
+          <div class="member__portrait" style="aspect-ratio: 16/10; background: linear-gradient(140deg, #0c0c0c 0%, #1a0f2e 70%, #13110a 100%);">
+            <span class="member__initials">01</span>
+          </div>
+          <span class="member__role">Essay · 6 min read</span>
+          <span class="member__name">Why your wiki isn't collective memory</span>
+          <div class="member__socials"><a href="#">Read</a></div>
+        </article>
+        <article class="member">
+          <div class="member__portrait" style="aspect-ratio: 16/10; background: linear-gradient(140deg, #0c0c0c 0%, #0d2a25 70%, #13110a 100%);">
+            <span class="member__initials">02</span>
+          </div>
+          <span class="member__role">Field note · 4 min read</span>
+          <span class="member__name">The half-life of a Slack answer</span>
+          <div class="member__socials"><a href="#">Read</a></div>
+        </article>
+        <article class="member">
+          <div class="member__portrait" style="aspect-ratio: 16/10; background: linear-gradient(140deg, #0c0c0c 0%, #2e1f0a 70%, #13110a 100%);">
+            <span class="member__initials">03</span>
+          </div>
+          <span class="member__role">Essay · 8 min read</span>
+          <span class="member__name">Trust is the first feature</span>
+          <div class="member__socials"><a href="#">Read</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FINAL CTA ============================ -->
+  <section id="access">
+    <div class="container cta">
+      <span class="eyebrow">Request Access</span>
+      <h2 class="h-display cta__headline">Ask Dala anything.</h2>
+      <p class="body body--muted" style="max-width:46ch;">
+        Early access is rolling out to teams who want their workplace's collective
+        memory working for them. Put yours on the list.
+      </p>
+      <a href="#" class="btn-primary btn-primary--lg">Request Access</a>
+    </div>
+  </section>
+
+  <!-- ============================ FOOTER ============================ -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="logo" aria-label="Dala">
+        <svg class="logo__mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="logoGrad2" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#8052ff"/><stop offset="1" stop-color="#15846e"/>
+            </linearGradient>
+          </defs>
+          <path d="M12 1 L23 21 L1 21 Z" stroke="url(#logoGrad2)" stroke-width="1.6" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span>Dala</span>
+      </div>
+      <div class="footer__links">
+        <a href="#">Manifesto</a>
+        <a href="#">Privacy</a>
+        <a href="#">Contact</a>
+      </div>
+      <span class="footer__meta">© 2026 Dala. Built on collective memory.</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+/* ============================================================
+   Generate static SVG constellations ONCE on load.
+   No animation loop, no requestAnimationFrame — zero runtime cost.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  const BRAND_COLORS = ['#8052ff','#8052ff','#8052ff','#8052ff','#ffb829','#ffb829','#15846e','#15846e','#c026d3','#3b82f6','#ec4899','#22d3ee'];
+  const pick = () => BRAND_COLORS[Math.floor(Math.random() * BRAND_COLORS.length)];
+
+  // Shape masks (same logic as before, but run once)
+  function inBrain(nx, ny) {
+    const lobeL = ((nx + 0.30) ** 2) / 0.40 + ((ny + 0.04) ** 2) / 0.58;
+    const lobeR = ((nx - 0.30) ** 2) / 0.40 + ((ny + 0.04) ** 2) / 0.58;
+    const dip = (ny < -0.30 && Math.abs(nx) < 0.16) ? false : true;
+    return (lobeL < 1 || lobeR < 1) && dip;
+  }
+  function inCloud(nx, ny) { return (nx * nx) / 0.62 + (ny * ny) / 0.42 < 1; }
+  function inSpiral(nx, ny) {
+    const angle = Math.atan2(ny, nx);
+    const dist = Math.sqrt(nx * nx + ny * ny);
+    if (dist > 0.95) return false;
+    return Math.sin(angle * 2 + dist * 8) > -0.2 && dist < 0.95;
+  }
+  function inShape(nx, ny, shape) {
+    if (shape === 'cloud') return inCloud(nx, ny);
+    if (shape === 'spiral') return inSpiral(nx, ny);
+    return inBrain(nx, ny);
+  }
+
+  function buildField(count, shape) {
+    const out = [];
+    let tries = 0;
+    while (out.length < count && tries < count * 25) {
+      tries++;
+      const nx = Math.random() * 2 - 1;
+      const ny = Math.random() * 2 - 1;
+      if (!inShape(nx, ny, shape)) continue;
+      out.push({
+        x: nx * 90, // viewBox is -100..100
+        y: ny * 90,
+        size: 1 + Math.random() * 1.8,
+        rot: Math.random() * 360,
+        color: pick(),
+        op: 0.4 + Math.random() * 0.55
+      });
+    }
+    return out;
+  }
+
+  function trianglePath(s) {
+    // equilateral triangle, pointing up, centered at origin
+    const h = s;
+    return `M0,${-h} L${(s * 0.866).toFixed(2)},${(h * 0.5).toFixed(2)} L${(-s * 0.866).toFixed(2)},${(h * 0.5).toFixed(2)} Z`;
+  }
+
+  function renderSVG(svg, count, shape) {
+    const field = buildField(count, shape);
+    const ns = 'http://www.w3.org/2000/svg';
+    field.forEach(p => {
+      const path = document.createElementNS(ns, 'path');
+      path.setAttribute('d', trianglePath(p.size));
+      path.setAttribute('transform', `translate(${p.x.toFixed(2)},${p.y.toFixed(2)}) rotate(${p.rot.toFixed(1)})`);
+      path.setAttribute('stroke', p.color);
+      path.setAttribute('stroke-width', '0.8');
+      path.setAttribute('stroke-linejoin', 'round');
+      path.setAttribute('fill', 'none');
+      path.setAttribute('opacity', p.op.toFixed(2));
+      svg.appendChild(path);
+    });
+  }
+
+  // Hero constellation — dense brain shape
+  const hero = document.getElementById('constellation-svg');
+  if (hero) renderSVG(hero, 900, 'brain');
+
+  // Mini constellations in split sections
+  document.querySelectorAll('.mini-constellation').forEach((svg) => {
+    const shape = svg.getAttribute('data-shape') || 'cloud';
+    renderSVG(svg, 400, shape);
+  });
+
+  // Carousel dots (visual only)
+  document.querySelectorAll('.dot').forEach((dot) => {
+    dot.addEventListener('click', () => {
+      document.querySelectorAll('.dot').forEach((d) => d.removeAttribute('aria-current'));
+      dot.setAttribute('aria-current', 'true');
+    });
+  });
+})();
+</script>
+</body>
+</html>
