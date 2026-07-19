@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RestoBots — Закажи пиццу в Telegram за 30 секунд</title>
+<meta name="description" content="RestoBots — Telegram-бот для доставки пиццы, напитков и десертов. Заказ за 30 секунд, оплата в чате, отслеживание в реальном времени." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     SLICEBOT DESIGN TOKENS
+     Palette: Zapier orange + Claude terracotta on cream
+     ============================================================ */
+  :root {
+    /* Colors — warm, appetizing */
+    --color-cream: #fffefb;
+    --color-cream-soft: #fffdf9;
+    --color-sand: #eceae3;
+    --color-sand-deep: #e2dfd5;
+    --color-ink: #201515;
+    --color-body: #36342e;
+    --color-muted: #939084;
+    --color-accent: #ff4f00;       /* tomato/paprika orange — primary CTA */
+    --color-accent-deep: #e04300;
+    --color-terracotta: #c96442;   /* secondary accent — prices, highlights */
+    --color-bordie: #c5c0b1;
+    --color-card: #fffefb;
+    --color-telegram: #2aabee;
+    --color-basil: #15846e;        /* deep verdant — fresh/veg tag */
+
+    /* Typography */
+    --font-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    /* Type scale */
+    --text-caption: 13px;
+    --text-label: 14px;
+    --text-body: 16px;
+    --text-body-lg: 18px;
+    --text-card-title: 22px;
+    --text-feature: 24px;
+    --text-sub: 28px;
+    --text-section: 40px;
+    --text-hero: clamp(44px, 6.5vw, 72px);
+
+    /* Weights */
+    --fw-regular: 400;
+    --fw-medium: 500;
+    --fw-sbold: 600;
+    --fw-bold: 700;
+    --fw-xbold: 800;
+
+    /* Spacing */
+    --sp-4: 4px; --sp-6: 6px; --sp-8: 8px; --sp-10: 10px;
+    --sp-12: 12px; --sp-16: 16px; --sp-20: 20px; --sp-24: 24px;
+    --sp-32: 32px; --sp-40: 40px; --sp-48: 48px; --sp-64: 64px;
+    --sp-80: 80px; --sp-96: 96px; --sp-120: 120px;
+
+    /* Radius */
+    --r-sm: 6px;
+    --r-md: 8px;
+    --r-lg: 12px;
+    --r-xl: 20px;
+    --r-2xl: 24px;
+    --r-full: 9999px;
+
+    /* Layout */
+    --page-max: 1200px;
+    --section-gap: clamp(64px, 9vw, 120px);
+
+    /* Shadow — soft warm lift */
+    --shadow-card: 0 1px 0 0 rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.04), 0 4px 8px rgba(0,0,0,0.06);
+    --shadow-hover: 0 4px 12px rgba(255,79,0,0.12), 0 8px 24px rgba(0,0,0,0.08);
+    --shadow-phone: 0 20px 60px -10px rgba(0,0,0,0.25), 0 10px 30px -5px rgba(0,0,0,0.15);
+  }
+
+  /* ============================================================
+     RESET / BASE
+     ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: var(--fw-regular);
+    line-height: 1.5;
+    overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  img { display: block; max-width: 100%; }
+  ::selection { background: var(--color-accent); color: var(--color-cream); }
+
+  /* ============================================================
+     LAYOUT
+     ============================================================ */
+  .container {
+    width: 100%;
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding-inline: clamp(20px, 5vw, 48px);
+  }
+  section { padding-block: var(--section-gap); position: relative; }
+  .section--sand { background: var(--color-sand); }
+  .section--ink { background: var(--color-ink); color: var(--color-cream); }
+
+  .eyebrow {
+    font-size: var(--text-label);
+    font-weight: var(--fw-sbold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+    display: inline-block;
+    margin-bottom: var(--sp-16);
+  }
+  .h-section {
+    font-size: var(--text-section);
+    font-weight: var(--fw-bold);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+  .section--ink .h-section { color: var(--color-cream); }
+  .lead {
+    font-size: var(--text-body-lg);
+    font-weight: var(--fw-regular);
+    line-height: 1.55;
+    color: var(--color-body);
+    max-width: 56ch;
+  }
+  .section--ink .lead { color: rgba(255,254,251,0.78); }
+
+  /* ============================================================
+     NAV
+     ============================================================ */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255,254,251,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-sand-deep);
+  }
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--sp-16);
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: var(--fw-xbold);
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+  .logo__mark {
+    width: 32px; height: 32px;
+    display: grid; place-items: center;
+    background: var(--color-accent);
+    border-radius: var(--r-md);
+    color: var(--color-cream);
+    font-size: 18px;
+  }
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-32);
+  }
+  .nav__link {
+    font-size: var(--text-body);
+    font-weight: var(--fw-medium);
+    color: var(--color-body);
+    transition: color .2s ease;
+  }
+  .nav__link:hover { color: var(--color-accent); }
+
+  /* ============================================================
+     BUTTONS
+     ============================================================ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: var(--text-body);
+    font-weight: var(--fw-sbold);
+    padding: 14px 24px;
+    border-radius: var(--r-md);
+    transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    min-height: 48px;
+    white-space: nowrap;
+  }
+  .btn--primary {
+    background: var(--color-accent);
+    color: var(--color-cream);
+    box-shadow: 0 4px 12px rgba(255,79,0,0.25);
+  }
+  .btn--primary:hover {
+    background: var(--color-accent-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(255,79,0,0.35);
+  }
+  .btn--primary:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 3px; }
+  .btn--lg { padding: 18px 32px; font-size: var(--text-body-lg); min-height: 56px; }
+  .btn--ghost {
+    background: transparent;
+    color: var(--color-ink);
+    border: 1.5px solid var(--color-bordie);
+  }
+  .btn--ghost:hover { border-color: var(--color-accent); color: var(--color-accent); }
+  .btn--telegram {
+    background: var(--color-telegram);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(42,171,238,0.3);
+  }
+  .btn--telegram:hover { background: #1d9bdc; transform: translateY(-1px); }
+  .btn--on-dark {
+    background: var(--color-cream);
+    color: var(--color-ink);
+  }
+  .btn--on-dark:hover { background: var(--color-accent); color: var(--color-cream); }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero {
+    padding-top: var(--sp-64);
+    padding-bottom: var(--sp-96);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: var(--sp-64);
+    align-items: center;
+  }
+  .hero__eyebrow { margin-bottom: var(--sp-20); }
+  .hero__title {
+    font-size: var(--text-hero);
+    font-weight: var(--fw-xbold);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: var(--color-ink);
+    margin-bottom: var(--sp-24);
+  }
+  .hero__title .accent { color: var(--color-accent); }
+  .hero__lead {
+    font-size: var(--text-body-lg);
+    line-height: 1.55;
+    color: var(--color-body);
+    max-width: 52ch;
+    margin-bottom: var(--sp-32);
+  }
+  .hero__cta {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-16);
+    flex-wrap: wrap;
+    margin-bottom: var(--sp-32);
+  }
+  .hero__stats {
+    display: flex;
+    gap: var(--sp-40);
+    padding-top: var(--sp-32);
+    border-top: 1px solid var(--color-sand-deep);
+  }
+  .stat__num {
+    font-size: 32px;
+    font-weight: var(--fw-xbold);
+    color: var(--color-ink);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .stat__label {
+    font-size: var(--text-label);
+    color: var(--color-muted);
+    margin-top: 6px;
+  }
+
+  /* ============================================================
+     PHONE MOCKUP — CSS-only Telegram chat
+     ============================================================ */
+  .hero__visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  .phone {
+    width: 320px;
+    background: #1c1c1e;
+    border-radius: 44px;
+    padding: 12px;
+    box-shadow: var(--shadow-phone);
+    position: relative;
+    z-index: 2;
+  }
+  .phone::before {
+    content: "";
+    position: absolute;
+    top: 12px; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 28px;
+    background: #1c1c1e;
+    border-radius: 0 0 18px 18px;
+    z-index: 3;
+  }
+  .phone__screen {
+    background: #ebedf0;
+    border-radius: 34px;
+    overflow: hidden;
+    height: 580px;
+    display: flex;
+    flex-direction: column;
+  }
+  .phone__header {
+    background: var(--color-telegram);
+    color: #fff;
+    padding: 14px 16px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: var(--fw-sbold);
+  }
+  .phone__avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    display: grid; place-items: center;
+    font-size: 18px;
+  }
+  .phone__bot-name { font-size: 15px; line-height: 1.2; }
+  .phone__bot-status { font-size: 12px; color: rgba(255,255,255,0.8); font-weight: var(--fw-regular); }
+  .phone__body {
+    flex: 1;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+  }
+  .bubble {
+    max-width: 80%;
+    padding: 8px 12px;
+    border-radius: 14px;
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+  .bubble--bot {
+    background: #fff;
+    color: #111;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .bubble--user {
+    background: #effdde;
+    color: #111;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .bubble--bot .menu-list { margin-top: 6px; }
+  .bubble--bot .menu-item {
+    padding: 6px 0;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+  .bubble--bot .menu-item:first-child { border-top: none; }
+  .bubble--bot .menu-item .price { color: var(--color-accent); font-weight: var(--fw-sbold); }
+  .inline-kbd {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .kbd-btn {
+    background: #fff;
+    color: var(--color-telegram);
+    border: 1px solid #d8d8d8;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: var(--fw-medium);
+    text-align: center;
+  }
+  .kbd-btn--primary {
+    background: var(--color-accent);
+    color: #fff;
+    border-color: var(--color-accent);
+  }
+  .phone__footer {
+    padding: 8px 12px;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .phone__input {
+    flex: 1;
+    height: 36px;
+    background: #f0f0f0;
+    border-radius: 18px;
+    font-size: 13px;
+    color: #999;
+    display: grid;
+    align-items: center;
+    padding-left: 14px;
+  }
+  .phone__send {
+    width: 36px; height: 36px;
+    background: var(--color-telegram);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    color: #fff;
+    font-size: 16px;
+  }
+
+  /* Decorative blobs behind phone */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    z-index: 1;
+  }
+  .blob--orange {
+    width: 280px; height: 280px;
+    background: rgba(255,79,0,0.15);
+    top: -40px; right: -30px;
+  }
+  .blob--terracotta {
+    width: 220px; height: 220px;
+    background: rgba(201,100,66,0.12);
+    bottom: -30px; left: -20px;
+  }
+
+  /* ============================================================
+     MENU — pizza cards
+     ============================================================ */
+  .menu__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: var(--sp-40);
+    gap: var(--sp-24);
+    flex-wrap: wrap;
+  }
+  .menu__tabs {
+    display: flex;
+    gap: 8px;
+    margin-top: var(--sp-20);
+    flex-wrap: wrap;
+  }
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px 6px 6px;
+    border-radius: var(--r-full);
+    border: 1px solid var(--color-bordie);
+    font-size: var(--text-label);
+    font-weight: var(--fw-medium);
+    color: var(--color-body);
+    background: transparent;
+    transition: all .2s ease;
+    cursor: pointer;
+  }
+  .tab__thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: block;
+  }
+  .tab--all .tab__thumb {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .tab--active, .tab:hover {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    border-color: var(--color-ink);
+  }
+  .menu__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-24);
+    margin-top: var(--sp-32);
+  }
+  .card {
+    background: var(--color-card);
+    border: 1px solid var(--color-sand-deep);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+  .card__visual {
+    aspect-ratio: 4 / 3;
+    position: relative;
+    overflow: hidden;
+    background: var(--color-sand);
+  }
+  .card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .4s ease;
+  }
+  .card:hover .card__img { transform: scale(1.06); }
+  .card__visual::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.25) 100%);
+    pointer-events: none;
+  }
+  .card[hidden] { display: none; }
+  .card__tag {
+    position: absolute;
+    top: 12px; left: 12px;
+    background: var(--color-cream);
+    color: var(--color-basil);
+    font-size: 11px;
+    font-weight: var(--fw-sbold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: var(--r-full);
+  }
+  .card__tag--hot { color: var(--color-accent); }
+  .card__body {
+    padding: var(--sp-20);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+  .card__title {
+    font-size: var(--text-card-title);
+    font-weight: var(--fw-bold);
+    color: var(--color-ink);
+    letter-spacing: -0.01em;
+  }
+  .card__desc {
+    font-size: var(--text-label);
+    color: var(--color-muted);
+    line-height: 1.4;
+    flex: 1;
+  }
+  .card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--sp-12);
+  }
+  .card__price {
+      font-size: 18px;
+      font-weight: var(--fw-bold);
+      color: var(--color-ink);
+      font-variant-numeric: tabular-nums;
+    }
+  .card__price .currency { font-size: 14px; font-weight: var(--fw-sbold); }
+  .card__add {
+    width: 40px; height: 40px;
+    border-radius: var(--r-md);
+    background: var(--color-ink);
+    color: var(--color-cream);
+    display: grid; place-items: center;
+    font-size: 20px;
+    transition: background .2s ease, transform .2s ease;
+  }
+  .card__add:hover { background: var(--color-accent); transform: scale(1.05); }
+
+  /* ============================================================
+     HOW IT WORKS
+     ============================================================ */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-32);
+    margin-top: var(--sp-48);
+  }
+  .step {
+    position: relative;
+    padding: var(--sp-24);
+  }
+  .step__num {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: var(--color-cream);
+    display: grid; place-items: center;
+    font-size: 22px;
+    font-weight: var(--fw-xbold);
+    margin-bottom: var(--sp-20);
+  }
+  .step__title {
+    font-size: var(--text-feature);
+    font-weight: var(--fw-bold);
+    color: var(--color-ink);
+    margin-bottom: var(--sp-8);
+    letter-spacing: -0.01em;
+  }
+  .section--ink .step__title { color: var(--color-cream); }
+  .step__desc {
+    font-size: var(--text-body);
+    line-height: 1.5;
+    color: var(--color-body);
+  }
+  .section--ink .step__desc { color: rgba(255,254,251,0.7); }
+  .step__icon {
+    font-size: 28px;
+    margin-bottom: var(--sp-12);
+    display: block;
+  }
+
+  /* ============================================================
+     FEATURES
+     ============================================================ */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-24);
+    margin-top: var(--sp-48);
+  }
+  .feature {
+    background: var(--color-cream);
+    border: 1px solid var(--color-sand-deep);
+    border-radius: var(--r-lg);
+    padding: var(--sp-32);
+    display: flex;
+    gap: var(--sp-20);
+  }
+  .feature__icon {
+    width: 48px; height: 48px;
+    border-radius: var(--r-md);
+    background: var(--color-sand);
+    display: grid; place-items: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .feature__title {
+    font-size: var(--text-card-title);
+    font-weight: var(--fw-bold);
+    color: var(--color-ink);
+    margin-bottom: 6px;
+  }
+  .feature__desc {
+    font-size: var(--text-body);
+    color: var(--color-body);
+    line-height: 1.5;
+  }
+
+  /* ============================================================
+     REVIEWS
+     ============================================================ */
+  .reviews {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-24);
+    margin-top: var(--sp-48);
+  }
+  .review {
+    background: var(--color-cream);
+    border-radius: var(--r-lg);
+    padding: var(--sp-32);
+    border: 1px solid var(--color-sand-deep);
+  }
+  .review__stars {
+    color: var(--color-accent);
+    font-size: 16px;
+    margin-bottom: var(--sp-12);
+    letter-spacing: 2px;
+  }
+  .review__text {
+    font-size: var(--text-body);
+    line-height: 1.55;
+    color: var(--color-ink);
+    margin-bottom: var(--sp-20);
+  }
+  .review__author {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-12);
+  }
+  .review__avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 16px;
+    font-weight: var(--fw-bold);
+    color: var(--color-cream);
+  }
+  .review__name {
+    font-size: var(--text-label);
+    font-weight: var(--fw-sbold);
+    color: var(--color-ink);
+  }
+  .review__role {
+    font-size: 13px;
+    color: var(--color-muted);
+  }
+
+  /* ============================================================
+     FAQ
+     ============================================================ */
+  .faq {
+    margin-top: var(--sp-48);
+    max-width: 800px;
+  }
+  .faq__item {
+    border-bottom: 1px solid var(--color-sand-deep);
+  }
+  .faq__item summary {
+    padding: var(--sp-20) 0;
+    font-size: var(--text-body-lg);
+    font-weight: var(--fw-sbold);
+    color: var(--color-ink);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-16);
+  }
+  .faq__item summary::-webkit-details-marker { display: none; }
+  .faq__item summary::after {
+    content: "+";
+    font-size: 24px;
+    color: var(--color-accent);
+    font-weight: var(--fw-regular);
+    transition: transform .2s ease;
+  }
+  .faq__item[open] summary::after { content: "−"; }
+  .faq__answer {
+    padding-bottom: var(--sp-20);
+    font-size: var(--text-body);
+    line-height: 1.55;
+    color: var(--color-body);
+  }
+
+  /* ============================================================
+     FINAL CTA
+     ============================================================ */
+  .cta {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-24);
+  }
+  .cta__title {
+    font-size: clamp(40px, 6vw, 64px);
+    font-weight: var(--fw-xbold);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    max-width: 16ch;
+    color: var(--color-cream);
+  }
+  .cta__sub {
+    font-size: var(--text-body-lg);
+    color: rgba(255,254,251,0.75);
+    max-width: 48ch;
+  }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  .footer {
+    border-top: 1px solid var(--color-sand-deep);
+    padding-block: var(--sp-48) var(--sp-32);
+    background: var(--color-cream);
+  }
+  .footer__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--sp-40);
+    flex-wrap: wrap;
+  }
+  .footer__col { display: flex; flex-direction: column; gap: var(--sp-8); }
+  .footer__col-title {
+    font-size: var(--text-label);
+    font-weight: var(--fw-sbold);
+    color: var(--color-ink);
+    margin-bottom: var(--sp-8);
+  }
+  .footer__col a {
+    font-size: var(--text-label);
+    color: var(--color-muted);
+    transition: color .2s ease;
+  }
+  .footer__col a:hover { color: var(--color-accent); }
+  .footer__bottom {
+    margin-top: var(--sp-40);
+    padding-top: var(--sp-24);
+    border-top: 1px solid var(--color-sand-deep);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-16);
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--color-muted);
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 900px) {
+      .hero__grid { grid-template-columns: 1fr; gap: var(--sp-48); }
+      .menu__grid, .reviews { grid-template-columns: 1fr 1fr; }
+      .steps { grid-template-columns: 1fr; gap: var(--sp-24); }
+      .features { grid-template-columns: 1fr; }
+      .nav__links { display: none; }
+      .hero__stats { gap: var(--sp-24); }
+      .phone { width: 280px; }
+      .phone__screen { height: 500px; }
+    }
+    @media (max-width: 600px) {
+      .menu__grid, .reviews { grid-template-columns: 1fr; }
+      .hero__stats { flex-wrap: wrap; }
+      .stat__num { font-size: 26px; }
+      .feature { flex-direction: column; }
+      .footer__inner { flex-direction: column; }
+    }
+
+    /* ============================================================
+       PROMO STRIP
+       ============================================================ */
+    .promo-strip {
+      background: linear-gradient(135deg, var(--color-accent) 0%, #e65c00 100%);
+      color: var(--color-cream);
+      padding: var(--sp-24) 0;
+    }
+    .promo-strip__inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-24);
+      flex-wrap: wrap;
+      text-align: center;
+    }
+    .promo-strip__icon { font-size: 32px; line-height: 1; }
+    .promo-strip__text { display: flex; flex-direction: column; gap: 2px; }
+    .promo-strip__text strong { font-size: 18px; font-weight: var(--fw-bold); }
+    .promo-strip__text span { font-size: 14px; opacity: .9; }
+    .promo-strip__text code {
+      background: rgba(255,255,255,.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: .5px;
+    }
+    .promo-strip .btn--primary {
+      background: var(--color-cream);
+      color: var(--color-accent);
+      font-weight: var(--fw-bold);
+    }
+    .promo-strip .btn--primary:hover { background: var(--color-ink); color: var(--color-cream); }
+
+    @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* ============================================================
+     CART — real accumulation, floating button, modal
+     ============================================================ */
+  .cart-fab {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px 14px 16px;
+    border-radius: var(--r-full);
+    background: var(--color-ink);
+    color: var(--color-cream);
+    font-weight: var(--fw-sbold);
+    font-size: 15px;
+    box-shadow: 0 8px 28px rgba(0,0,0,.22);
+    cursor: pointer;
+    border: none;
+    opacity: 0;
+    transform: translateY(20px) scale(.95);
+    pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease, background .2s ease;
+  }
+  .cart-fab.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+  .cart-fab:hover { background: var(--color-accent); }
+  .cart-fab__icon {
+    font-size: 18px;
+    line-height: 1;
+  }
+  .cart-fab__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 11px;
+    background: var(--color-accent);
+    color: var(--color-ink);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .cart-fab__total {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cart-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(0,0,0,.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+  }
+  .cart-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .cart-panel {
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    background: var(--color-cream);
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform .3s cubic-bezier(.22,1,.36,1);
+    box-shadow: 0 -8px 40px rgba(0,0,0,.2);
+  }
+  .cart-overlay.is-open .cart-panel {
+    transform: translateY(0);
+  }
+  .cart-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--color-sand-deep);
+  }
+  .cart-head h3 {
+    font-size: 20px;
+    font-weight: var(--fw-bold);
+  }
+  .cart-close {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--color-body);
+    transition: background .2s ease;
+  }
+  .cart-close:hover { background: var(--color-sand); }
+  .cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+  }
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--color-sand);
+  }
+  .cart-item__img {
+    width: 52px; height: 52px;
+    border-radius: var(--r-md);
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .cart-item__info {
+    flex: 1;
+    min-width: 0;
+  }
+  .cart-item__name {
+    font-weight: var(--fw-sbold);
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+  .cart-item__price {
+    font-size: 13px;
+    color: var(--color-body);
+    font-variant-numeric: tabular-nums;
+  }
+  .cart-item__qty {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-sand);
+    border-radius: var(--r-full);
+    padding: 4px;
+  }
+  .qty-btn {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: none;
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: background .2s ease, transform .15s ease;
+  }
+  .qty-btn:hover { background: var(--color-accent); }
+  .qty-btn:active { transform: scale(.92); }
+  .qty-val {
+    min-width: 22px;
+    text-align: center;
+    font-weight: var(--fw-sbold);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .cart-empty {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--color-body);
+  }
+  .cart-empty__icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    opacity: .4;
+  }
+  .cart-foot {
+    padding: 16px 24px 24px;
+    border-top: 1px solid var(--color-sand-deep);
+    background: var(--color-cream);
+  }
+  .cart-sum-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+  }
+  .cart-sum-row__label {
+    font-size: 14px;
+    color: var(--color-body);
+  }
+  .cart-sum-row__val {
+    font-size: 22px;
+    font-weight: var(--fw-bold);
+    font-variant-numeric: tabular-nums;
+  }
+  .cart-checkout {
+    width: 100%;
+    padding: 14px;
+    border-radius: var(--r-md);
+    background: var(--color-ink);
+    color: var(--color-cream);
+    font-size: 16px;
+    font-weight: var(--fw-sbold);
+    border: none;
+    cursor: pointer;
+    transition: background .2s ease, transform .15s ease;
+  }
+  .cart-checkout:hover { background: var(--color-accent); color: var(--color-ink); }
+  .cart-checkout:active { transform: scale(.98); }
+
+  /* Scroll-to-top */
+  .scroll-top {
+    position: fixed;
+    right: 24px;
+    bottom: 100px;
+    z-index: 99;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-ink);
+    color: var(--color-cream);
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,.18);
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease, background .2s ease;
+  }
+  .scroll-top.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .scroll-top:hover { background: var(--color-accent); }
+
+  @media (max-width: 640px) {
+    .cart-fab {
+      right: 12px;
+      bottom: 12px;
+      padding: 12px 18px 12px 14px;
+      font-size: 14px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav">
+  <div class="container nav__inner">
+    <a href="#" class="logo">
+      <span class="logo__mark">🍕</span>
+      <span>RestoBots</span>
+    </a>
+    <nav class="nav__links" aria-label="Основная навигация">
+      <a class="nav__link" href="#menu">Меню</a>
+      <a class="nav__link" href="#how">Как это работает</a>
+      <a class="nav__link" href="#reviews">Отзывы</a>
+      <a class="nav__link" href="#faq">FAQ</a>
+    </nav>
+    <a href="https://t.me/RestoBots_bot?start=landing" class="btn btn--primary" target="_blank" rel="noopener">
+      Открыть в Telegram
+    </a>
+  </div>
+</header>
+
+<!-- ============================ HERO ============================ -->
+<section class="hero">
+  <div class="container hero__grid">
+    <div class="hero__text">
+      <span class="eyebrow hero__eyebrow">Доставка еды в Telegram</span>
+      <h1 class="hero__title">
+        Закажи пиццу в <span class="accent">Telegram</span> за 30 секунд.
+      </h1>
+      <p class="hero__lead">
+        Никаких приложений и звонков. Открой бота, выбери блюдо, оплати в чате —
+        и через 40 минут курьер уже у двери. Пицца, напитки, десерты — всё в одном боте.
+      </p>
+      <div class="hero__cta">
+        <a href="https://t.me/RestoBots_bot?start=landing" class="btn btn--primary btn--lg" target="_blank" rel="noopener">
+          🤖 Открыть в Telegram
+        </a>
+        <a href="#menu" class="btn btn--ghost btn--lg">Посмотреть меню</a>
+      </div>
+      <div class="hero__stats">
+        <div class="stat">
+          <div class="stat__num">30 сек</div>
+          <div class="stat__label">на заказ</div>
+        </div>
+        <div class="stat">
+          <div class="stat__num">40 мин</div>
+          <div class="stat__label">доставка</div>
+        </div>
+        <div class="stat">
+          <div class="stat__num">12 000+</div>
+          <div class="stat__label">заказов в месяц</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero__visual">
+      <div class="blob blob--orange" aria-hidden="true"></div>
+      <div class="blob blob--terracotta" aria-hidden="true"></div>
+      <div class="phone" role="img" aria-label="Пример чата с ботом RestoBots в Telegram">
+        <div class="phone__screen">
+          <div class="phone__header">
+            <div class="phone__avatar">🍕</div>
+            <div>
+              <div class="phone__bot-name">RestoBots</div>
+              <div class="phone__bot-status">бот · онлайн</div>
+            </div>
+          </div>
+          <div class="phone__body">
+            <div class="bubble bubble--bot">
+              Привет! Готов заказать? Вот топ за неделю:
+              <div class="menu-list">
+                <div class="menu-item"><span>🍕 Маргарита</span><span class="price">590 ₽</span></div>
+                <div class="menu-item"><span>🍕 Пепперони</span><span class="price">690 ₽</span></div>
+                <div class="menu-item"><span>🍰 Тирамису</span><span class="price">320 ₽</span></div>
+              </div>
+              <div class="inline-kbd">
+                <div class="kbd-btn">🍕 Пицца</div>
+                <div class="kbd-btn">🥤 Напитки</div>
+                <div class="kbd-btn">🍰 Десерты</div>
+                <div class="kbd-btn kbd-btn--primary">🛒 Корзина</div>
+              </div>
+            </div>
+            <div class="bubble bubble--user">Маргариту и Колу, пожалуйста</div>
+            <div class="bubble bubble--bot">
+              ✅ Добавил: Маргарита 590 ₽ + Cola 150 ₽<br/>
+              Итого: <b>740 ₽</b>. Оплатить картой в чате?
+            </div>
+          </div>
+          <div class="phone__footer">
+            <div class="phone__input">Написать сообщение...</div>
+            <div class="phone__send">➤</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PROMO ============================ -->
+<section class="promo-strip">
+  <div class="container">
+    <div class="promo-strip__inner">
+      <span class="promo-strip__icon">🎉</span>
+      <div class="promo-strip__text">
+        <strong>Первая пицца — скидка 15%</strong>
+        <span>по промокоду <code>HELLO</code></span>
+      </div>
+      <a href="https://t.me/RestoBots_bot?start=landing" class="btn btn--primary" target="_blank" rel="noopener">Заказать сейчас</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MENU ============================ -->
+<section id="menu" class="section--sand">
+  <div class="container">
+    <div class="menu__header">
+      <div>
+        <span class="eyebrow">Меню</span>
+        <h2 class="h-section">Что будешь заказывать?</h2>
+        <div class="menu__tabs">
+          <button class="tab tab--active tab--all" data-cat="all"><span class="tab__thumb">✦</span>Всё</button>
+          <button class="tab" data-cat="pizza"><img class="tab__thumb" src="pizza-landing-assets/cat-pizza.png" alt="" />Пицца</button>
+          <button class="tab" data-cat="drinks"><img class="tab__thumb" src="pizza-landing-assets/cat-drinks.png" alt="" />Напитки</button>
+          <button class="tab" data-cat="dessert"><img class="tab__thumb" src="pizza-landing-assets/cat-dessert.png" alt="" />Десерты</button>
+          <button class="tab" data-cat="snacks"><img class="tab__thumb" src="pizza-landing-assets/cat-snacks.png" alt="" />Закуски</button>
+        </div>
+      </div>
+      <a href="https://t.me/RestoBots_bot?start=landing" class="btn btn--primary" target="_blank" rel="noopener">Всё меню в боте →</a>
+    </div>
+    <div class="menu__grid" id="menuGrid">
+
+      <article class="card" data-category="pizza" data-item-id="9">
+        <div class="card__visual">
+          <span class="card__tag">ХИТ</span>
+          <img class="card__img" data-dish="margherita" alt="Пицца Маргарита" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Pizza_Margherita.jpg/960px-Pizza_Margherita.jpg" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Маргарита</h3>
+          <p class="card__desc">Томатный соус, моцарелла, базилик, оливковое масло. Классика неаполитанской пиццы.</p>
+          <div class="card__footer">
+            <span class="card__price">590 <span class="currency">₽</span></span>
+            <button class="card__add" aria-label="Добавить Маргариту">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="pizza" data-item-id="10">
+        <div class="card__visual">
+          <span class="card__tag card__tag--hot">ОСТРАЯ</span>
+          <img class="card__img" data-dish="pepperoni" alt="Пицца Пепперони" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Nice_pepperoni_pizza.jpg/960px-Nice_pepperoni_pizza.jpg" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Пепперони</h3>
+          <p class="card__desc">Острая пепперони, моцарелла, томатный соус. Для тех, кто любит поярче.</p>
+          <div class="card__footer">
+            <span class="card__price">690 <span class="currency">₽</span></span>
+            <button class="card__add" aria-label="Добавить Пепперони">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="pizza" data-item-id="11">
+        <div class="card__visual">
+          <img class="card__img" data-dish="quattro" alt="Пицца Кватро Формаджи" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Four_cheese_pizza.jpg/960px-Four_cheese_pizza.jpg" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Кватро Формаджи</h3>
+          <p class="card__desc">Моцарелла, горгонзола, пармезан, рикотта. Четыре сыра — четыре вкуса.</p>
+          <div class="card__footer">
+            <span class="card__price">790 <span class="currency">₽</span></span>
+            <button class="card__add" aria-label="Добавить Кватро Формаджи">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="pizza" data-item-id="12">
+        <div class="card__visual">
+          <img class="card__img" data-dish="hawaiian" alt="Гавайская пицца" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Hawaiian_pizza.jpg/960px-Hawaiian_pizza.jpg" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Гавайская</h3>
+          <p class="card__desc">Ветчина, ананас, моцарелла. Сладко-солёная классика, которая делит мир надвое.</p>
+          <div class="card__footer">
+            <span class="card__price">670 <span class="currency">₽</span></span>
+            <button class="card__add" aria-label="Добавить Гавайскую">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="pizza" data-item-id="13"">
+        <div class="card__visual">
+          <span class="card__tag">VEG</span>
+          <img class="card__img" data-dish="veggie" alt="Вегетарианская пицца" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Vegetarian_pizza.jpg/960px-Vegetarian_pizza.jpg" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Вегетарианская</h3>
+          <p class="card__desc">Баклажан, перец, цукини, томаты черри, моцарелла. Лёгкая и свежая.</p>
+          <div class="card__footer">
+            <span class="card__price">620 <span class="currency">₽</span></span>
+            <button class="card__add" aria-label="Добавить Вегетарианскую">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="pizza" data-item-id="14"">
+        <div class="card__visual">
+          <span class="card__tag">NEW</span>
+          <img class="card__img" data-dish="bbq" alt="Барбекю куриная пицца" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/B.B.Q._Chicken_Pizza_%2826679384893%29.jpg/960px-B.B.Q._Chicken_Pizza_%2826679384893%29.jpg" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Барбекю Куриная</h3>
+          <p class="card__desc">Курица, бекон, красный лук, соус BBQ, моцарелла. Новинка месяца.</p>
+          <div class="card__footer">
+            <span class="card__price">720 <span class="currency">₽</span></span>
+            <button class="card__add" aria-label="Добавить Барбекю">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="dessert" data-item-id="15"">
+        <div class="card__visual">
+          <img class="card__img" data-dish="tiramisu" alt="Тирамису" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Dessert_Tiramisu.jpg/960px-Dessert_Tiramisu.jpg" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Тирамису</h3>
+          <p class="card__desc">Савоярди, маскарпоне, кофе, какао. Итальянский десерт, который тает во рту.</p>
+          <div class="card__footer">
+            <span class="card__price">320 <span class="currency">₽</span></span>
+            <button class="card__add" aria-label="Добавить Тирамису">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="drinks" data-item-id="16"">
+        <div class="card__visual">
+          <img class="card__img" data-dish="cola" alt="Cola" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Coca-Cola_glass_bottle.jpg/960px-Coca-Cola_glass_bottle.jpg" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Cola 0.5</h3>
+          <p class="card__desc">Ледяная, с пузырьками. Идеальна к горячей пицце.</p>
+          <div class="card__footer">
+            <span class="card__price">150 <span class="currency">₽</span></span>
+            <button class="card__add" aria-label="Добавить Cola">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="drinks" data-item-id="17"">
+        <div class="card__visual">
+          <img class="card__img" data-dish="lemonade" alt="Домашний лимонад" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Fresh_lemonade_and_lemons.jpg/960px-Fresh_lemonade_and_lemons.jpg" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Лимонад домашний</h3>
+          <p class="card__desc">Лимон, мята, имбирь. Без сахара. Освежает и бодрит.</p>
+          <div class="card__footer">
+            <span class="card__price">190 <span class="currency">₽</span></span>
+            <button class="card__add" aria-label="Добавить лимонад">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="snacks" data-item-id="18"">
+        <div class="card__visual">
+          <img class="card__img" data-dish="garlic-knots" alt="Чесночные узелочки" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Garlic_bread.jpg/960px-Garlic_bread.jpg" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Чесночные узелочки</h3>
+          <p class="card__desc">Тёплое тесто, чесночное масло, пармезан, петрушка. 6 штук в порции.</p>
+          <div class="card__footer">
+            <span class="card__price">240 <span class="currency">₽</span></span>
+            <button class="card__add" aria-label="Добавить узелочки">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="snacks" data-item-id="19"">
+        <div class="card__visual">
+          <img class="card__img" data-dish="wings" alt="Куриные крылышки" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Buffalo_wings.jpg/960px-Buffalo_wings.jpg" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Крылышки BBQ</h3>
+          <p class="card__desc">6 крылышек в соусе барбекю, с сельдереем и соусом блю чиз.</p>
+          <div class="card__footer">
+            <span class="card__price">390 <span class="currency">₽</span></span>
+            <button class="card__add" aria-label="Добавить крылышки">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="snacks" data-item-id="20"">
+        <div class="card__visual">
+          <img class="card__img" data-dish="bruschetta" alt="Брускетта" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Bruschetta.jpg/960px-Bruschetta.jpg" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Брускетта</h3>
+          <p class="card__desc">Поджаренный хлеб, томаты, базилик, чеснок, оливковое масло. 4 ломтика.</p>
+          <div class="card__footer">
+            <span class="card__price">280 <span class="currency">₽</span></span>
+            <button class="card__add" aria-label="Добавить брускетту">+</button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================ HOW IT WORKS ============================ -->
+<section id="how" class="section--ink">
+  <div class="container">
+    <span class="eyebrow">Как это работает</span>
+    <h2 class="h-section">Три шага до горячей пиццы.</h2>
+    <p class="lead">Никаких приложений, регистраций и звонков оператору. Всё в одном Telegram-чате.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="step__icon">🤖</span>
+        <div class="step__num">1</div>
+        <h3 class="step__title">Открой бота</h3>
+        <p class="step__desc">Нажми «Открыть в Telegram» — бот запустится автоматически. Без установки, без логина.</p>
+      </div>
+      <div class="step">
+        <span class="step__icon">🍕</span>
+        <div class="step__num">2</div>
+        <h3 class="step__title">Выбери блюда</h3>
+        <p class="step__desc">Листай меню прямо в чате. Тапни по карточке — блюдо добавится в корзину. Можно менять размер и тесто.</p>
+      </div>
+      <div class="step">
+        <span class="step__icon">🛵</span>
+        <div class="step__num">3</div>
+        <h3 class="step__title">Оплати и жди</h3>
+        <p class="step__desc">Оплата картой в чате. Бот пришлёт трек-номер и будет обновлять статус: готовка → в пути → у двери.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FEATURES ============================ -->
+<section id="features">
+  <div class="container">
+    <span class="eyebrow">Почему через бота</span>
+    <h2 class="h-section">Быстрее, чем звонить. Удобнее, чем приложение.</h2>
+    <div class="features">
+      <div class="feature">
+        <div class="feature__icon">⚡</div>
+        <div>
+          <h3 class="feature__title">30 секунд на заказ</h3>
+          <p class="feature__desc">Без голосовых меню и ожидания оператора. Бот помнит твой прошлый заказ — можно повторить в один тап.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature__icon">💳</div>
+        <div>
+          <h3 class="feature__title">Оплата в чате</h3>
+          <p class="feature__desc">Картой через Telegram Pay, СБП или наличными курьеру. Бот хранит способ оплаты — следующий раз без ввода данных.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature__icon">📍</div>
+        <div>
+          <h3 class="feature__title">Трекинг в реальном времени</h3>
+          <p class="feature__desc">Видишь, где курьер, на карте прямо в чате. Push-уведомления на каждом этапе: готовка → в пути → прибыл.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature__icon">🏆</div>
+        <div>
+          <h3 class="feature__title">Бонусы за заказы</h3>
+          <p class="feature__desc">Каждая пицца — 5% кэшбека в RestoBots-баллах. Копи и оплачивай ими до 50% следующего заказа.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ REVIEWS ============================ -->
+<section id="reviews" class="section--sand">
+  <div class="container">
+    <span class="eyebrow">Отзывы</span>
+    <h2 class="h-section">Что говорят клиенты.</h2>
+    <div class="reviews">
+      <div class="review">
+        <div class="review__stars">★★★★★</div>
+        <p class="review__text">«Заказал пиццу в пробке, пока ехал домой. К моменту приезда курьер уже ждал внизу. Магия, а не бот.»</p>
+        <div class="review__author">
+          <div class="review__avatar" style="background: #ff4f00;">А</div>
+          <div>
+            <div class="review__name">Антон</div>
+            <div class="review__role">заказал 23 раза</div>
+          </div>
+        </div>
+      </div>
+      <div class="review">
+        <div class="review__stars">★★★★★</div>
+        <p class="review__text">«У нас в офисе RestoBots заменил все звонки в доставку. Один бот на команду — каждый заказывает своё, оплата по-отдельности.»</p>
+        <div class="review__author">
+          <div class="review__avatar" style="background: #c96442;">М</div>
+          <div>
+            <div class="review__name">Марина</div>
+            <div class="review__role">офис-менеджер</div>
+          </div>
+        </div>
+      </div>
+      <div class="review">
+        <div class="review__stars">★★★★★</div>
+        <p class="review__text">«Тирамису тут просто космос. И удобно, что не надо отдельное приложение держать — всё в Телеге, где и так сижу.»</p>
+        <div class="review__author">
+          <div class="review__avatar" style="background: #15846e;">К</div>
+          <div>
+            <div class="review__name">Костя</div>
+            <div class="review__role">десерт-фанат</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FAQ ============================ -->
+<section id="faq">
+  <div class="container">
+    <span class="eyebrow">Вопросы</span>
+    <h2 class="h-section">Часто спрашивают.</h2>
+    <div class="faq">
+      <details class="faq__item" open>
+        <summary>Нужно ли устанавливать отдельное приложение?</summary>
+        <p class="faq__answer">Нет. RestoBots работает прямо в Telegram — если у тебя установлен Telegram, больше ничего ставить не нужно. Бот открывается по ссылке за секунду.</p>
+      </details>
+      <details class="faq__item">
+        <summary>В каких районах вы доставляете?</summary>
+        <p class="faq__answer">Сейчас работаем в центральных районах города. Зону доставки бот определяет автоматически по твоему адресу — просто отправь геолокацию или введи улицу в чат.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Как оплатить заказ?</summary>
+        <p class="faq__answer">Тремя способами: картой через Telegram Pay прямо в чате, через СБП по QR, или наличными курьеру при получении. Бот запоминает твой способ — в следующий раз не придётся вводить заново.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Сколько занимает доставка?</summary>
+        <p class="faq__answer">В среднем 40 минут с момента подтверждения заказа. В часы пик — до 60 минут. Бот показывает актуальное время до подтверждения и обновляет статусы в реальном времени.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Можно ли изменить или отменить заказ?</summary>
+        <p class="faq__answer">Да, пока пицца не ушла в печь — обычно это первые 3-5 минут. Открой заказ в чате и нажми «Изменить» или «Отменить». Деньги вернутся автоматически.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Что с бонусами и скидками?</summary>
+        <p class="faq__answer">За каждый заказ начисляются RestoBots-баллы — 5% от суммы. Ими можно оплатить до 50% следующего заказа. Скидки и промокоды тоже применяются в корзине перед оплатой.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FINAL CTA ============================ -->
+<section class="section--ink">
+  <div class="container cta">
+    <span class="eyebrow" style="color: var(--color-accent);">Открой бота</span>
+    <h2 class="cta__title">Голоден? Открой бота. 30 секунд — и пицца в пути.</h2>
+    <p class="cta__sub">Первый заказ — скидка 15% по промокоду <b style="color: var(--color-saffron-spark, #ffb829); color: #ffb829;">HELLO</b>. Сработает прямо в чате.</p>
+    <a href="https://t.me/RestoBots_bot?start=landing" class="btn btn--on-dark btn--lg" target="_blank" rel="noopener">
+      🤖 Открыть RestoBots в Telegram
+    </a>
+  </div>
+</section>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__col">
+        <div class="logo">
+          <span class="logo__mark">🍕</span>
+          <span>RestoBots</span>
+        </div>
+        <p style="font-size: 14px; color: var(--color-muted); max-width: 280px; margin-top: 12px;">
+          Доставка пиццы, напитков и десертов через Telegram-бота. Быстро, вкусно, без звонков.
+        </p>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Меню</div>
+        <a href="#menu">Пицца</a>
+        <a href="#menu">Напитки</a>
+        <a href="#menu">Десерты</a>
+        <a href="#menu">Закуски</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Компания</div>
+        <a href="#how">Как это работает</a>
+        <a href="#reviews">Отзывы</a>
+        <a href="#faq">Вопросы</a>
+        <a href="#">Вакансии</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Связь</div>
+        <a href="https://t.me/RestoBots_bot?start=landing" target="_blank" rel="noopener">Telegram-бот</a>
+        <a href="mailto:hello@restobots.example">hello@restobots.example</a>
+        <a href="#">+7 (000) 000-00-00</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 RestoBots. Сделано с 🍕 в Telegram.</span>
+      <span>Политика конфиденциальности · Условия</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================ CART ============================ -->
+<button id="cartFab" class="cart-fab" aria-label="Открыть корзину">
+  <span class="cart-fab__icon">🛒</span>
+  <span class="cart-fab__count" id="cartCount">0</span>
+  <span class="cart-fab__total" id="cartTotal">0 ₽</span>
+</button>
+
+<div id="cartOverlay" class="cart-overlay" role="dialog" aria-modal="true" aria-label="Корзина">
+  <div class="cart-panel">
+    <div class="cart-head">
+      <h3>Корзина</h3>
+      <button class="cart-close" id="cartClose" aria-label="Закрыть">×</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-foot">
+      <div class="cart-sum-row">
+        <span class="cart-sum-row__label">Итого</span>
+        <span class="cart-sum-row__val" id="cartSumVal">0 ₽</span>
+      </div>
+      <button class="cart-checkout" id="cartCheckout">Заказать в Telegram →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Scroll-to-top -->
+<button class="scroll-top" id="scrollTop" aria-label="Наверх">↑</button>
+
+<script>
+  // Menu filter — tabs actually filter cards now
+  const tabs = document.querySelectorAll('.tab');
+  const cards = document.querySelectorAll('#menuGrid .card');
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => t.classList.remove('tab--active'));
+      tab.classList.add('tab--active');
+      const cat = tab.dataset.cat;
+      cards.forEach((card) => {
+        if (cat === 'all' || card.dataset.category === cat) {
+          card.hidden = false;
+        } else {
+          card.hidden = true;
+        }
+      });
+    });
+  });
+
+  // ====== CART STATE ======
+  const cart = new Map(); // key: dish name -> { name, price, qty, img, alt }
+
+  // Parse price text like "590 ₽" -> 590
+  function parsePrice(el) {
+    const txt = el.textContent.replace(/[^\d]/g, '');
+    return parseInt(txt, 10) || 0;
+  }
+
+  const cartFab = document.getElementById('cartFab');
+  const cartOverlay = document.getElementById('cartOverlay');
+  const cartItemsEl = document.getElementById('cartItems');
+  const cartCountEl = document.getElementById('cartCount');
+  const cartTotalEl = document.getElementById('cartTotal');
+  const cartSumValEl = document.getElementById('cartSumVal');
+
+  function updateFab() {
+    let count = 0;
+    let total = 0;
+    for (const item of cart.values()) {
+      count += item.qty;
+      total += item.qty * item.price;
+    }
+    if (count > 0) {
+      cartFab.classList.add('is-visible');
+      cartCountEl.textContent = count;
+      cartTotalEl.textContent = total.toLocaleString('ru-RU') + ' ₽';
+    } else {
+      cartFab.classList.remove('is-visible');
+    }
+  }
+
+  function renderCart() {
+    if (cart.size === 0) {
+      cartItemsEl.innerHTML = `
+        <div class="cart-empty">
+          <div class="cart-empty__icon">🛒</div>
+          <div>Корзина пуста</div>
+          <div style="font-size:13px;margin-top:6px;opacity:.7;">Добавьте блюда из меню</div>
+        </div>`;
+      cartSumValEl.textContent = '0 ₽';
+      return;
+    }
+    let html = '';
+    let total = 0;
+    for (const item of cart.values()) {
+      const lineSum = item.qty * item.price;
+      total += lineSum;
+      html += `
+        <div class="cart-item" data-name="${item.name}">
+          <img class="cart-item__img" src="${item.img}" alt="${item.alt || ''}" />
+          <div class="cart-item__info">
+            <div class="cart-item__name">${item.name}</div>
+            <div class="cart-item__price">${item.price.toLocaleString('ru-RU')} ₽</div>
+          </div>
+          <div class="cart-item__qty">
+            <button class="qty-btn" data-act="dec" aria-label="Убрать">−</button>
+            <span class="qty-val">${item.qty}</span>
+            <button class="qty-btn" data-act="inc" aria-label="Добавить">+</button>
+          </div>
+        </div>`;
+    }
+    cartItemsEl.innerHTML = html;
+    cartSumValEl.textContent = total.toLocaleString('ru-RU') + ' ₽';
+
+    // Wire qty buttons
+    cartItemsEl.querySelectorAll('.qty-btn').forEach((qbtn) => {
+      qbtn.addEventListener('click', () => {
+        const row = qbtn.closest('.cart-item');
+        const name = row.dataset.name;
+        const item = cart.get(name);
+        if (!item) return;
+        if (qbtn.dataset.act === 'inc') {
+          item.qty += 1;
+        } else {
+          item.qty -= 1;
+          if (item.qty <= 0) cart.delete(name);
+        }
+        renderCart();
+        updateFab();
+      });
+    });
+  }
+
+  function openCart() {
+    renderCart();
+    cartOverlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeCart() {
+    cartOverlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  cartFab.addEventListener('click', openCart);
+  document.getElementById('cartClose').addEventListener('click', closeCart);
+  cartOverlay.addEventListener('click', (e) => {
+    if (e.target === cartOverlay) closeCart();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && cartOverlay.classList.contains('is-open')) closeCart();
+  });
+
+  // Checkout -> open Telegram bot
+  document.getElementById('cartCheckout').addEventListener('click', () => {
+    // Формируем payload: order_9x2,10x1,15x1
+    const parts = [];
+    let total = 0;
+    let hasIds = true;
+    for (const item of cart.values()) {
+      if (item.itemId) {
+        parts.push(`${item.itemId}x${item.qty}`);
+      } else {
+        hasIds = false;
+      }
+      total += item.qty * item.price;
+    }
+
+    let url;
+    if (hasIds && parts.length > 0) {
+      // Полная синхронизация: заказ улетает в бота
+      // Внимание: Telegram start= принимает только [A-Za-z0-9_-], до 64 символа.
+      // Запятая НЕ разрешена — поэтому разделитель '-'.
+      url = `https://t.me/RestoBots_bot?start=order_${parts.join('-')}`;
+    } else {
+      // Фолбэк: просто открываем бота
+      url = `https://t.me/RestoBots_bot?start=landing`;
+    }
+    window.open(url, '_blank', 'noopener');
+  });
+
+  // Card "+" -> ADD FOR REAL
+  document.querySelectorAll('.card__add').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.card');
+      const name = card.querySelector('.card__title').textContent.trim();
+      const price = parsePrice(card.querySelector('.card__price'));
+      const imgEl = card.querySelector('.card__img');
+      const img = imgEl ? imgEl.src : '';
+      const alt = imgEl ? imgEl.alt : '';
+      const itemId = parseInt(card.dataset.itemId, 10) || null;
+
+      const existing = cart.get(name);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.set(name, { name, price, qty: 1, img, alt, itemId });
+      }
+
+      // Visual feedback — brief checkmark, then return
+      const original = btn.textContent;
+      btn.textContent = '✓';
+      btn.style.background = 'var(--color-basil)';
+      btn.style.transform = 'scale(1.1)';
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.style.background = '';
+        btn.style.transform = '';
+      }, 500);
+
+      updateFab();
+      // Pulse the FAB
+      cartFab.animate(
+        [{ transform: 'scale(1)' }, { transform: 'scale(1.12)' }, { transform: 'scale(1)' }],
+        { duration: 300, easing: 'ease-out' }
+      );
+    });
+      });
+
+      // Scroll-to-top
+      const scrollTopBtn = document.getElementById('scrollTop');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+          scrollTopBtn.classList.add('is-visible');
+        } else {
+          scrollTopBtn.classList.remove('is-visible');
+        }
+      });
+      scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    </script>
+</body>
+</html>
