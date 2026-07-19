@@ -664,44 +664,44 @@
     margin-top: var(--sp-48);
   }
   .review {
-    background: var(--color-cream);
-    border-radius: var(--r-lg);
-    padding: var(--sp-32);
-    border: 1px solid var(--color-sand-deep);
+    background: #E1FEC6; /* Telegram incoming bubble color */
+    border-radius: 12px 12px 12px 0;
+    padding: var(--sp-20) var(--sp-24);
+    position: relative;
+    border: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,.08);
   }
-  .review__stars {
-    color: var(--color-accent);
-    font-size: 16px;
-    margin-bottom: var(--sp-12);
-    letter-spacing: 2px;
-  }
-  .review__text {
-    font-size: var(--text-body);
-    line-height: 1.55;
-    color: var(--color-ink);
-    margin-bottom: var(--sp-20);
-  }
+  .review:nth-child(2) { background: #FFF3C4; }
+  .review:nth-child(3) { background: #D4EAFF; }
   .review__author {
     display: flex;
     align-items: center;
-    gap: var(--sp-12);
+    gap: var(--sp-8);
+    margin-bottom: var(--sp-8);
   }
   .review__avatar {
-    width: 40px; height: 40px;
+    width: 28px; height: 28px;
     border-radius: 50%;
     display: grid; place-items: center;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: var(--fw-bold);
     color: var(--color-cream);
   }
   .review__name {
-    font-size: var(--text-label);
+    font-size: 13px;
     font-weight: var(--fw-sbold);
     color: var(--color-ink);
   }
-  .review__role {
-    font-size: 13px;
+  .review__time {
+    font-size: 11px;
     color: var(--color-muted);
+    margin-left: auto;
+  }
+  .review__text {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-ink);
+    margin: 0;
   }
 
   /* ============================================================
@@ -1490,40 +1490,31 @@
 <section id="reviews" class="section--sand">
   <div class="container">
     <span class="eyebrow">Отзывы</span>
-    <h2 class="h-section">Что говорят клиенты.</h2>
+    <h2 class="h-section">Из Telegram-чата.</h2>
     <div class="reviews">
       <div class="review">
-        <div class="review__stars">★★★★★</div>
-        <p class="review__text">«Заказал пиццу в пробке, пока ехал домой. К моменту приезда курьер уже ждал внизу. Магия, а не бот.»</p>
         <div class="review__author">
           <div class="review__avatar" style="background: #ff4f00;">А</div>
-          <div>
-            <div class="review__name">Антон</div>
-            <div class="review__role">заказал 23 раза</div>
-          </div>
+          <div class="review__name">Антон</div>
+          <div class="review__time">вчера, 19:42</div>
         </div>
+        <p class="review__text">Заказал пиццу в пробке, пока ехал домой. К моменту приезда курьер уже ждал внизу 🔥</p>
       </div>
       <div class="review">
-        <div class="review__stars">★★★★★</div>
-        <p class="review__text">«У нас в офисе RestoBots заменил все звонки в доставку. Один бот на команду — каждый заказывает своё, оплата по-отдельности.»</p>
         <div class="review__author">
           <div class="review__avatar" style="background: #c96442;">М</div>
-          <div>
-            <div class="review__name">Марина</div>
-            <div class="review__role">офис-менеджер</div>
-          </div>
+          <div class="review__name">Марина</div>
+          <div class="review__time">2 дня назад</div>
         </div>
+        <p class="review__text">У нас в офисе бот заменил все звонки в доставку. Каждый заказывает своё, оплата по-отдельности 👍</p>
       </div>
       <div class="review">
-        <div class="review__stars">★★★★★</div>
-        <p class="review__text">«Тирамису тут просто космос. И удобно, что не надо отдельное приложение держать — всё в Телеге, где и так сижу.»</p>
         <div class="review__author">
           <div class="review__avatar" style="background: #15846e;">К</div>
-          <div>
-            <div class="review__name">Костя</div>
-            <div class="review__role">десерт-фанат</div>
-          </div>
+          <div class="review__name">Костя</div>
+          <div class="review__time">3 дня назад</div>
         </div>
+        <p class="review__text">Тирамису тут просто космос 🍰 И не надо отдельное приложение — всё в Телеге</p>
       </div>
     </div>
   </div>
