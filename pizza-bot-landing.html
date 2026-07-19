@@ -531,6 +531,8 @@
     border-radius: var(--r-full);
   }
   .card__tag--hot { color: var(--color-accent); }
+  .card__tag--new { color: #2aabee; }
+  .card__tag--chef { color: #8B5CF6; background: #F3F0FF; }
   .card__body {
     padding: var(--sp-20);
     display: flex;
@@ -1275,6 +1277,7 @@
 
       <article class="card" data-category="pizza" data-item-id="11">
         <div class="card__visual">
+          <span class="card__tag card__tag--chef">ШЕФ</span>
           <img class="card__img" data-dish="quattro" alt="Пицца Кватро Формаджи" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Four_cheese_pizza.jpg/960px-Four_cheese_pizza.jpg" />
         </div>
         <div class="card__body">
@@ -1318,7 +1321,7 @@
 
       <article class="card" data-category="pizza" data-item-id="14"">
         <div class="card__visual">
-          <span class="card__tag">NEW</span>
+          <span class="card__tag card__tag--new">НОВИНКА</span>
           <img class="card__img" data-dish="bbq" alt="Барбекю куриная пицца" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/B.B.Q._Chicken_Pizza_%2826679384893%29.jpg/960px-B.B.Q._Chicken_Pizza_%2826679384893%29.jpg" />
         </div>
         <div class="card__body">
@@ -1333,6 +1336,7 @@
 
       <article class="card" data-category="dessert" data-item-id="15"">
         <div class="card__visual">
+          <span class="card__tag card__tag--chef">ШЕФ</span>
           <img class="card__img" data-dish="tiramisu" alt="Тирамису" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Dessert_Tiramisu.jpg/960px-Dessert_Tiramisu.jpg" />
         </div>
         <div class="card__body">
