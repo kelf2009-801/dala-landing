@@ -303,16 +303,16 @@
     width: 320px;
     background: linear-gradient(145deg, #f5f0e8 0%, #e8ddd0 50%, #f0e8dc 100%);
     border-radius: 44px;
-    padding: 12px;
+    padding: 8px;
     box-shadow:
       0 40px 90px -15px rgba(0,0,0,0.9),
       0 15px 50px rgba(0,0,0,0.7),
       0 0 70px rgba(168,42,0,0.2),
-      inset 0 1.5px 0 rgba(255,255,255,0.8),
+      inset 0 1px 0 rgba(255,255,255,0.8),
       inset 0 -1px 0 rgba(0,0,0,0.15);
     position: relative;
     z-index: 2;
-    border: 2px solid #c8b8a0;
+    border: 1px solid #d0c0a8;
   }
   /* Notch убран — чистый верх */
   .phone::before { display: none; }
@@ -320,24 +320,23 @@
   .phone > .phone__screen::before { display: none; }
   .phone > .phone__screen::after { display: none; }
   .phone__screen {
-    background: #1a1410;
-    border-radius: 34px;
+    background: #2a2420;
+    border-radius: 38px;
     overflow: hidden;
     height: 580px;
     display: flex;
     flex-direction: column;
     position: relative;
-    box-shadow: inset 0 0 0 1.5px rgba(0,0,0,0.4);
   }
   .phone__header {
-    background: var(--color-coal);
+    background: #35302a;
     color: var(--color-cream);
     padding: 14px 16px 12px;
     display: flex;
     align-items: center;
     gap: 10px;
     font-weight: var(--fw-sbold);
-    border-bottom: 1px solid var(--color-charcoal-light);
+    border-bottom: 1px solid #443d34;
   }
   .phone__avatar {
     width: 36px; height: 36px;
@@ -356,7 +355,7 @@
     flex-direction: column;
     gap: 10px;
     overflow: hidden;
-    background: #15110d;
+    background: #241f1a;
   }
   .bubble {
     max-width: 80%;
@@ -366,7 +365,7 @@
     line-height: 1.4;
   }
   .bubble--bot {
-    background: #241c15;
+    background: #3a3228;
     color: var(--color-cream);
     align-self: flex-start;
     border-bottom-left-radius: 4px;
@@ -381,7 +380,7 @@
   .bubble--bot .menu-list { margin-top: 6px; }
   .bubble--bot .menu-item {
     padding: 6px 0;
-    border-top: 1px solid #2e2519;
+    border-top: 1px solid #4a4034;
     display: flex;
     justify-content: space-between;
     font-size: 13px;
@@ -395,9 +394,9 @@
     margin-top: 8px;
   }
   .kbd-btn {
-    background: #2a1f15;
+    background: #3a3228;
     color: var(--color-gold);
-    border: 1px solid #3a2d1f;
+    border: 1px solid #4a4034;
     padding: 8px 10px;
     border-radius: 8px;
     font-size: 13px;
@@ -412,8 +411,8 @@
   }
   .phone__footer {
     padding: 8px 12px;
-    background: #0d0a08;
-    border-top: 1px solid #2a1f15;
+    background: #1d1814;
+    border-top: 1px solid #3a3228;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -421,10 +420,10 @@
   .phone__input {
     flex: 1;
     height: 36px;
-    background: #1a1410;
+    background: #2a2420;
     border-radius: 18px;
     font-size: 13px;
-    color: #5a4d40;
+    color: #7a6d60;
     display: grid;
     align-items: center;
     padding-left: 14px;
