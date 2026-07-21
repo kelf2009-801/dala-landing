@@ -14,10 +14,10 @@
      Тёмный гриль-бар. Угли, пламя, чугун.
      ============================================================ */
   :root {
-    --color-coal: #0d0a08;
-    --color-coal-soft: #14100c;
-    --color-charcoal: #1c1611;
-    --color-charcoal-light: #241c15;
+    --color-coal: #14100c;
+    --color-coal-soft: #1c1611;
+    --color-charcoal: #241c15;
+    --color-charcoal-light: #2e2519;
     --color-ember: #a82a00;       /* тёмно-бордовый огонь — мягкий, не режет */
     --color-ember-deep: #8a2300;
     --color-flame: #9c2e0a;       /* soft hover */
@@ -72,7 +72,10 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
   body {
-    background: var(--color-coal);
+    background:
+      radial-gradient(ellipse 80% 50% at 15% 0%, rgba(168,42,0,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse 70% 40% at 85% 100%, rgba(168,42,0,0.06) 0%, transparent 50%),
+      var(--color-coal);
     color: var(--color-cream);
     font-family: var(--font-sans);
     font-weight: var(--fw-regular);
@@ -224,7 +227,18 @@
     right: -10%;
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(168,42,0,0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(168,42,0,0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    bottom: -15%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(201,138,23,0.08) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
   }
@@ -320,7 +334,7 @@
   .phone > .phone__screen::before { display: none; }
   .phone > .phone__screen::after { display: none; }
   .phone__screen {
-    background: #2a2420;
+    background: #353028;
     border-radius: 38px;
     overflow: hidden;
     height: 580px;
@@ -329,14 +343,14 @@
     position: relative;
   }
   .phone__header {
-    background: #35302a;
+    background: #3f3930;
     color: var(--color-cream);
     padding: 14px 16px 12px;
     display: flex;
     align-items: center;
     gap: 10px;
     font-weight: var(--fw-sbold);
-    border-bottom: 1px solid #443d34;
+    border-bottom: 1px solid #504838;
   }
   .phone__avatar {
     width: 36px; height: 36px;
@@ -355,7 +369,7 @@
     flex-direction: column;
     gap: 10px;
     overflow: hidden;
-    background: #241f1a;
+    background: #2c271f;
   }
   .bubble {
     max-width: 80%;
@@ -365,7 +379,7 @@
     line-height: 1.4;
   }
   .bubble--bot {
-    background: #3a3228;
+    background: #443b30;
     color: var(--color-cream);
     align-self: flex-start;
     border-bottom-left-radius: 4px;
@@ -380,7 +394,7 @@
   .bubble--bot .menu-list { margin-top: 6px; }
   .bubble--bot .menu-item {
     padding: 6px 0;
-    border-top: 1px solid #4a4034;
+    border-top: 1px solid #555043;
     display: flex;
     justify-content: space-between;
     font-size: 13px;
@@ -394,9 +408,9 @@
     margin-top: 8px;
   }
   .kbd-btn {
-    background: #3a3228;
+    background: #443b30;
     color: var(--color-gold);
-    border: 1px solid #4a4034;
+    border: 1px solid #555043;
     padding: 8px 10px;
     border-radius: 8px;
     font-size: 13px;
@@ -411,7 +425,7 @@
   }
   .phone__footer {
     padding: 8px 12px;
-    background: #1d1814;
+    background: #251f1a;
     border-top: 1px solid #3a3228;
     display: flex;
     align-items: center;
@@ -420,10 +434,10 @@
   .phone__input {
     flex: 1;
     height: 36px;
-    background: #2a2420;
+    background: #353028;
     border-radius: 18px;
     font-size: 13px;
-    color: #7a6d60;
+    color: #8a7d70;
     display: grid;
     align-items: center;
     padding-left: 14px;
