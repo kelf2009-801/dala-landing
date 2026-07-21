@@ -302,16 +302,7 @@
     position: relative;
     z-index: 2;
   }
-  .phone::before {
-    content: "";
-    position: absolute;
-    top: 12px; left: 50%;
-    transform: translateX(-50%);
-    width: 120px; height: 28px;
-    background: #1c1c1e;
-    border-radius: 0 0 18px 18px;
-    z-index: 3;
-  }
+  .phone::before { display: none; }
   .phone__screen {
     background: #ebedf0;
     border-radius: 34px;
