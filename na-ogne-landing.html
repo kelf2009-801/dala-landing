@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>На Огне! — Гриль-бар. Пицца на углях. Доставка в Telegram</title>
+<meta name="description" content="На Огне! — гриль-бар и пиццерия. Пицца на углях, крылышки BBQ, домашний лимонад. Заказ в Telegram за 30 секунд, отслеживание в реальном времени." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     НА ОГНЕ! — DESIGN TOKENS
+     Тёмный гриль-бар. Угли, пламя, чугун.
+     ============================================================ */
+  :root {
+    --color-coal: #0d0a08;
+    --color-coal-soft: #14100c;
+    --color-charcoal: #1c1611;
+    --color-charcoal-light: #241c15;
+    --color-ember: #a82a00;       /* тёмно-бордовый огонь — мягкий, не режет */
+    --color-ember-deep: #8a2300;
+    --color-flame: #9c2e0a;       /* soft hover */
+    --color-gold: #c98a17;        /* мягкое золото */
+    --color-ash: #8a7e72;
+    --color-ash-light: #a89c8e;
+    --color-cream: #fff5e6;
+    --color-cream-soft: #f5ead8;
+    --color-telegram: #2aabee;
+    --color-basil: #7cb342;
+
+    --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
+    --font-sans: 'Manrope', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    --text-caption: 13px;
+    --text-label: 14px;
+    --text-body: 16px;
+    --text-body-lg: 18px;
+    --text-card-title: 22px;
+    --text-feature: 24px;
+    --text-sub: 28px;
+    --text-section: 48px;
+    --text-hero: clamp(56px, 9vw, 104px);
+
+    --fw-regular: 400;
+    --fw-medium: 500;
+    --fw-sbold: 600;
+    --fw-bold: 700;
+    --fw-xbold: 800;
+
+    --sp-4: 4px; --sp-6: 6px; --sp-8: 8px; --sp-10: 10px;
+    --sp-12: 12px; --sp-16: 16px; --sp-20: 20px; --sp-24: 24px;
+    --sp-32: 32px; --sp-40: 40px; --sp-48: 48px; --sp-64: 64px;
+    --sp-80: 80px; --sp-96: 96px; --sp-120: 120px;
+
+    --r-sm: 4px;
+    --r-md: 6px;
+    --r-lg: 10px;
+    --r-xl: 14px;
+    --r-2xl: 20px;
+    --r-full: 9999px;
+
+    --page-max: 1200px;
+    --section-gap: clamp(64px, 9vw, 120px);
+
+    --shadow-card: 0 2px 8px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-hover: 0 8px 24px rgba(255,69,0,0.2), 0 4px 12px rgba(0,0,0,0.5);
+    --shadow-phone: 0 20px 60px -10px rgba(255,69,0,0.15), 0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  /* ============================================================ RESET */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    background: var(--color-coal);
+    color: var(--color-cream);
+    font-family: var(--font-sans);
+    font-weight: var(--fw-regular);
+    line-height: 1.55;
+    overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  img { display: block; max-width: 100%; }
+  ::selection { background: var(--color-ember); color: #fff; }
+
+  /* ============================================================ LAYOUT */
+  .container {
+    width: 100%;
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding-inline: clamp(20px, 5vw, 48px);
+  }
+  section { padding-block: var(--section-gap); position: relative; }
+  .section--charcoal { background: var(--color-charcoal); }
+  .section--coal { background: var(--color-coal-soft); }
+
+  .eyebrow {
+    font-size: var(--text-label);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--color-ember);
+    display: inline-block;
+    margin-bottom: var(--sp-16);
+  }
+  .h-section {
+    font-family: var(--font-display);
+    font-size: var(--text-section);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: 0.01em;
+    color: var(--color-cream);
+  }
+  .lead {
+    font-size: var(--text-body-lg);
+    font-weight: var(--fw-regular);
+    line-height: 1.6;
+    color: var(--color-ash-light);
+    max-width: 58ch;
+  }
+
+  /* ============================================================ NAV */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(13,10,8,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-charcoal-light);
+  }
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--sp-16);
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-size: 26px;
+    letter-spacing: 0.02em;
+    color: var(--color-cream);
+  }
+  .logo__mark {
+    width: 36px; height: 36px;
+    display: grid; place-items: center;
+    background: var(--color-ember);
+    border-radius: var(--r-md);
+    color: var(--color-cream);
+    font-size: 20px;
+    box-shadow: 0 0 12px rgba(197,49,0,0.3);
+  }
+  .logo__text { display: flex; flex-direction: column; line-height: 0.9; }
+  .logo__text small { font-family: var(--font-sans); font-size: 9px; font-weight: 700; letter-spacing: 0.2em; color: var(--color-ash); text-transform: uppercase; }
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-32);
+  }
+  .nav__link {
+    font-size: var(--text-body);
+    font-weight: var(--fw-medium);
+    color: var(--color-ash-light);
+    transition: color .2s ease;
+  }
+  .nav__link:hover { color: var(--color-ember); }
+
+  /* ============================================================ BUTTONS */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: var(--text-body);
+    font-weight: var(--fw-bold);
+    padding: 14px 24px;
+    border-radius: var(--r-md);
+    transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    min-height: 48px;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .btn--primary {
+    background: var(--color-ember);
+    color: var(--color-cream);
+    box-shadow: 0 4px 12px rgba(197,49,0,0.25);
+  }
+  .btn--primary:hover {
+    background: var(--color-flame);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(197,49,0,0.35);
+  }
+  .btn--primary:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+  .btn--lg { padding: 18px 32px; font-size: var(--text-body-lg); min-height: 56px; }
+  .btn--ghost {
+    background: transparent;
+    color: var(--color-cream);
+    border: 1.5px solid var(--color-charcoal-light);
+  }
+  .btn--ghost:hover { border-color: var(--color-ember); color: var(--color-ember); }
+  .btn--telegram {
+    background: var(--color-telegram);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(42,171,238,0.3);
+  }
+  .btn--telegram:hover { background: #1d9bdc; transform: translateY(-1px); }
+
+  /* ============================================================ HERO */
+  .hero {
+    padding-top: var(--sp-64);
+    padding-bottom: var(--sp-96);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(168,42,0,0.1) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: var(--sp-64);
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  .hero__eyebrow { margin-bottom: var(--sp-20); }
+  .hero__title {
+    font-family: var(--font-display);
+    font-size: var(--text-hero);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    color: var(--color-cream);
+    margin-bottom: var(--sp-24);
+  }
+  .hero__title .accent {
+    color: var(--color-ember);
+    text-shadow: 0 0 30px rgba(224,52,0,0.2);
+  }
+  .hero__lead {
+    font-size: var(--text-body-lg);
+    line-height: 1.6;
+    color: var(--color-ash-light);
+    max-width: 50ch;
+    margin-bottom: var(--sp-32);
+  }
+  .hero__cta {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-16);
+    flex-wrap: wrap;
+    margin-bottom: var(--sp-32);
+  }
+  .hero__stats {
+    display: flex;
+    gap: var(--sp-40);
+    padding-top: var(--sp-32);
+    border-top: 1px solid var(--color-charcoal-light);
+  }
+  .stat__num {
+    font-family: var(--font-display);
+    font-size: 42px;
+    color: var(--color-gold);
+    line-height: 1;
+  }
+  .stat__label {
+    font-size: var(--text-label);
+    color: var(--color-ash);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ============================================================ PHONE MOCKUP */
+  .hero__visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    order: -1;
+  }
+  .hero__visual::before {
+    content: "";
+    position: absolute;
+    inset: -40px -20px;
+    background: radial-gradient(ellipse, rgba(168,42,0,0.25) 0%, transparent 65%);
+    z-index: 0;
+  }
+  .phone {
+    width: 320px;
+    background: linear-gradient(145deg, #3a3128 0%, #221a12 45%, #2e251c 100%);
+    border-radius: 44px;
+    padding: 12px;
+    box-shadow:
+      0 30px 80px -12px rgba(0,0,0,0.85),
+      0 12px 40px rgba(0,0,0,0.6),
+      0 0 60px rgba(168,42,0,0.22),
+      inset 0 0 0 1.5px rgba(255,210,160,0.08);
+    position: relative;
+    z-index: 2;
+    border: 1px solid #4a3a28;
+    outline: 2px solid rgba(255,200,150,0.06);
+  }
+  /* Боковые кнопки — power справа, volume слева */
+  .phone::before {
+    content: "";
+    position: absolute;
+    top: 12px; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 28px;
+    background: linear-gradient(180deg, #2a2218 0%, #1a1410 100%);
+    border-radius: 0 0 18px 18px;
+    z-index: 3;
+    box-shadow: inset 0 1px 0 rgba(255,220,180,0.06);
+  }
+  /* Динамик — горизонтальная щель в notch */
+  .phone > .phone__screen::before {
+    content: "";
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 60px; height: 5px;
+    background: #2a1f15;
+    border-radius: 3px;
+    z-index: 4;
+  }
+  /* Камера — точка справа от динамика */
+  .phone > .phone__screen::after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: calc(50% + 40px);
+    width: 7px; height: 7px;
+    background: #1a1a1a;
+    border-radius: 50%;
+    border: 1px solid #0a0806;
+    z-index: 4;
+    box-shadow: inset 0 0 2px rgba(0,0,0,0.8);
+  }
+  .phone__screen {
+    background: #1a1410;
+    border-radius: 34px;
+    overflow: hidden;
+    height: 580px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: inset 0 0 0 1.5px rgba(255,220,180,0.1);
+  }
+  .phone__header {
+    background: var(--color-coal);
+    color: var(--color-cream);
+    padding: 14px 16px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: var(--fw-sbold);
+    border-bottom: 1px solid var(--color-charcoal-light);
+  }
+  .phone__avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--color-ember);
+    display: grid; place-items: center;
+    font-size: 18px;
+    box-shadow: 0 0 10px rgba(197,49,0,0.3);
+  }
+  .phone__bot-name { font-size: 15px; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .phone__bot-status { font-size: 12px; color: var(--color-gold); font-weight: var(--fw-regular); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .phone__body {
+    flex: 1;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+    background: #15110d;
+  }
+  .bubble {
+    max-width: 80%;
+    padding: 8px 12px;
+    border-radius: 14px;
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+  .bubble--bot {
+    background: #241c15;
+    color: var(--color-cream);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .bubble--user {
+    background: var(--color-ember);
+    color: var(--color-cream);
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    font-weight: var(--fw-sbold);
+  }
+  .bubble--bot .menu-list { margin-top: 6px; }
+  .bubble--bot .menu-item {
+    padding: 6px 0;
+    border-top: 1px solid #2e2519;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+  .bubble--bot .menu-item:first-child { border-top: none; }
+  .bubble--bot .menu-item .price { color: var(--color-gold); font-weight: var(--fw-bold); }
+  .inline-kbd {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .kbd-btn {
+    background: #2a1f15;
+    color: var(--color-gold);
+    border: 1px solid #3a2d1f;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: var(--fw-medium);
+    text-align: center;
+  }
+  .kbd-btn--primary {
+    background: var(--color-ember);
+    color: var(--color-cream);
+    border-color: var(--color-ember);
+    font-weight: var(--fw-bold);
+  }
+  .phone__footer {
+    padding: 8px 12px;
+    background: #0d0a08;
+    border-top: 1px solid #2a1f15;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .phone__input {
+    flex: 1;
+    height: 36px;
+    background: #1a1410;
+    border-radius: 18px;
+    font-size: 13px;
+    color: #5a4d40;
+    display: grid;
+    align-items: center;
+    padding-left: 14px;
+  }
+  .phone__send {
+    width: 36px; height: 36px;
+    background: var(--color-ember);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    color: var(--color-cream);
+    font-size: 16px;
+    box-shadow: 0 0 8px rgba(197,49,0,0.3);
+  }
+
+  /* ============================================================ MENU */
+  .menu__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: var(--sp-40);
+    gap: var(--sp-24);
+    flex-wrap: wrap;
+  }
+  .menu__tabs {
+    display: flex;
+    gap: 8px;
+    margin-top: var(--sp-20);
+    flex-wrap: wrap;
+  }
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px 6px 6px;
+    border-radius: var(--r-full);
+    border: 1px solid var(--color-charcoal-light);
+    font-size: var(--text-label);
+    font-weight: var(--fw-sbold);
+    color: var(--color-ash-light);
+    background: transparent;
+    transition: all .2s ease;
+    cursor: pointer;
+  }
+  .tab__thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: block;
+  }
+  .tab--all .tab__thumb {
+    background: var(--color-ember);
+    color: var(--color-cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .tab--active, .tab:hover {
+    background: var(--color-ember);
+    color: var(--color-cream);
+    border-color: var(--color-ember);
+  }
+  .menu__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-24);
+    margin-top: var(--sp-32);
+  }
+  .card {
+    background: var(--color-charcoal);
+    border: 1px solid var(--color-charcoal-light);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .card[hidden] { display: none !important; }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover), 0 0 24px rgba(168,42,0,0.25);
+    border-color: var(--color-ember);
+  }
+  .card:hover .card__visual::after {
+    content: "🔥";
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    font-size: 28px;
+    opacity: 1;
+    transform: scale(1.1);
+    transition: all .3s ease;
+    z-index: 2;
+    filter: drop-shadow(0 0 8px rgba(168,42,0,0.6));
+  }
+  .card__visual::after {
+    content: "🔥";
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    font-size: 28px;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all .3s ease;
+    z-index: 2;
+  }
+  .card__visual {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    position: relative;
+    background: var(--color-coal);
+  }
+  .card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .4s ease;
+  }
+  .card:hover .card__img { transform: scale(1.06); }
+  .card__tag {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--color-ember);
+    color: var(--color-cream);
+    font-size: 11px;
+    font-weight: var(--fw-bold);
+    padding: 4px 10px;
+    border-radius: var(--r-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .card__tag--gold { background: var(--color-gold); }
+  .card__tag--hit { background: #b8261e; color: #fff; }  /* приглушённый алый */
+  .card__body {
+    padding: var(--sp-16) var(--sp-16) var(--sp-20);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-8);
+    flex: 1;
+    min-width: 0;
+  }
+  .card__title {
+    font-size: var(--text-card-title);
+    font-weight: var(--fw-bold);
+    line-height: 1.15;
+    color: var(--color-cream);
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+  .card__desc {
+    font-size: 15px;
+    color: var(--color-ash-light);
+    line-height: 1.5;
+    flex: 1;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-12);
+    margin-top: var(--sp-8);
+  }
+  .card__price {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--color-gold);
+    line-height: 1;
+  }
+  .card__add {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--r-md);
+    background: var(--color-ember);
+    color: var(--color-cream);
+    font-size: 24px;
+    font-weight: var(--fw-bold);
+    display: grid;
+    place-items: center;
+    transition: transform .15s ease, background .15s ease;
+    flex-shrink: 0;
+  }
+  .card__add:hover {
+    background: var(--color-flame);
+    transform: scale(1.08);
+  }
+
+  /* ============================================================ FEATURES (grill theme) */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-24);
+    margin-top: var(--sp-48);
+  }
+  .feature {
+    background: var(--color-charcoal);
+    border: 1px solid var(--color-charcoal-light);
+    border-radius: var(--r-xl);
+    padding: var(--sp-32);
+  }
+  .feature__icon {
+    width: 48px; height: 48px;
+    display: grid; place-items: center;
+    background: rgba(255,69,0,0.1);
+    border: 1px solid rgba(255,69,0,0.3);
+    border-radius: var(--r-md);
+    font-size: 24px;
+    margin-bottom: var(--sp-20);
+  }
+  .feature__title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--color-cream);
+    margin-bottom: var(--sp-8);
+    letter-spacing: 0.02em;
+  }
+  .feature__text {
+    font-size: var(--text-body);
+    color: var(--color-ash-light);
+    line-height: 1.5;
+  }
+
+  /* ============================================================ HOW IT WORKS */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-24);
+    margin-top: var(--sp-48);
+    counter-reset: step;
+  }
+  .step {
+    text-align: left;
+    position: relative;
+    padding-left: 0;
+  }
+  .step__num {
+    font-family: var(--font-display);
+    font-size: 64px;
+    color: var(--color-ember);
+    line-height: 0.9;
+    margin-bottom: var(--sp-12);
+    opacity: 0.9;
+  }
+  .step__title {
+    font-size: var(--text-body-lg);
+    font-weight: var(--fw-bold);
+    color: var(--color-cream);
+    margin-bottom: var(--sp-8);
+  }
+  .step__text {
+    font-size: var(--text-body);
+    color: var(--color-ash-light);
+    line-height: 1.5;
+  }
+
+  /* ============================================================ REVIEWS */
+  .reviews {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-20);
+    margin-top: var(--sp-48);
+  }
+  .review {
+    background: var(--color-charcoal);
+    border: 1px solid var(--color-charcoal-light);
+    border-radius: var(--r-lg);
+    padding: var(--sp-20);
+  }
+  .review__author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: var(--sp-12);
+  }
+  .review__avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-weight: var(--fw-bold);
+    color: var(--color-cream);
+    font-size: 16px;
+  }
+  .review__name { font-weight: var(--fw-bold); color: var(--color-cream); }
+  .review__time { font-size: var(--text-caption); color: var(--color-ash); margin-left: auto; }
+  .review__text {
+    font-size: var(--text-body);
+    color: var(--color-ash-light);
+    line-height: 1.55;
+  }
+
+  /* ============================================================ FAQ */
+  .faq { max-width: 760px; margin-top: var(--sp-40); }
+  .faq__item {
+    border-bottom: 1px solid var(--color-charcoal-light);
+    padding: var(--sp-20) 0;
+  }
+  .faq__item summary {
+    font-size: var(--text-body-lg);
+    font-weight: var(--fw-bold);
+    color: var(--color-cream);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-12);
+  }
+  .faq__item summary::after {
+    content: "+";
+    font-size: 24px;
+    color: var(--color-ember);
+    font-weight: var(--fw-regular);
+    transition: transform .2s ease;
+  }
+  .faq__item[open] summary::after { transform: rotate(45deg); }
+  .faq__answer {
+    font-size: var(--text-body);
+    color: var(--color-ash-light);
+    line-height: 1.6;
+    margin-top: var(--sp-12);
+    padding-right: 32px;
+  }
+
+  /* ============================================================ CTA */
+  .cta {
+    text-align: center;
+    padding: var(--sp-96) var(--sp-32);
+    position: relative;
+    overflow: hidden;
+  }
+  .cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(168,42,0,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta > * { position: relative; z-index: 1; }
+  .cta .btn { display: inline-flex; margin-inline: auto; }
+  .cta__title {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 6vw, 72px);
+    color: var(--color-cream);
+    line-height: 0.95;
+    margin-bottom: var(--sp-16);
+  }
+  .cta__title .accent { color: var(--color-ember); }
+  .cta__sub {
+    font-size: var(--text-body-lg);
+    color: var(--color-ash-light);
+    max-width: 52ch;
+    margin: 0 auto var(--sp-32);
+    line-height: 1.6;
+  }
+  .promo-code {
+    display: inline-block;
+    background: var(--color-gold);
+    color: var(--color-coal);
+    font-weight: var(--fw-xbold);
+    padding: 2px 10px;
+    border-radius: var(--r-sm);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================ FOOTER */
+  .footer {
+    background: #070504;
+    border-top: 1px solid var(--color-charcoal-light);
+    padding-block: var(--sp-64) var(--sp-32);
+  }
+  .footer__inner {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: var(--sp-48);
+    margin-bottom: var(--sp-48);
+  }
+  .footer__col-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--color-gold);
+    margin-bottom: var(--sp-16);
+    letter-spacing: 0.04em;
+  }
+  .footer__col a {
+    display: block;
+    font-size: var(--text-body);
+    color: var(--color-ash-light);
+    padding: 4px 0;
+    transition: color .2s ease;
+  }
+  .footer__col a:hover { color: var(--color-ember); }
+  .footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    padding-top: var(--sp-24);
+    border-top: 1px solid var(--color-charcoal-light);
+    font-size: var(--text-caption);
+    color: var(--color-ash);
+    flex-wrap: wrap;
+    gap: var(--sp-12);
+  }
+
+  /* ============================================================ CART FAB */
+  .cart-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 60;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px 14px 16px;
+    background: var(--color-ember);
+    color: var(--color-cream);
+    border-radius: var(--r-full);
+    font-weight: var(--fw-bold);
+    font-size: var(--text-body);
+    box-shadow: 0 6px 18px rgba(197,49,0,0.3);
+    transition: transform .2s ease;
+  }
+  .cart-fab.is-visible { display: inline-flex; }
+  .cart-fab:hover { transform: scale(1.04); }
+  .cart-fab__icon { font-size: 22px; }
+  .cart-fab__count {
+    background: var(--color-coal);
+    color: var(--color-gold);
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: var(--r-full);
+    min-width: 20px;
+    text-align: center;
+  }
+  .cart-fab__total { font-family: var(--font-display); font-size: 20px; }
+
+  /* ============================================================ CART OVERLAY */
+  .cart-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    background: rgba(7,5,4,0.85);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .cart-overlay.is-open { display: flex; }
+  .cart-panel {
+    width: 100%;
+    max-width: 480px;
+    background: var(--color-charcoal);
+    border-radius: var(--r-2xl) var(--r-2xl) 0 0;
+    border: 1px solid var(--color-charcoal-light);
+    border-bottom: none;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .cart-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--sp-20) var(--sp-24);
+    border-bottom: 1px solid var(--color-charcoal-light);
+  }
+  .cart-head h3 {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--color-cream);
+    letter-spacing: 0.02em;
+  }
+  .cart-close {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--color-charcoal-light);
+    color: var(--color-ash-light);
+    font-size: 20px;
+    display: grid; place-items: center;
+    transition: background .2s ease;
+  }
+  .cart-close:hover { background: var(--color-ember); color: var(--color-cream); }
+  .cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--sp-16) var(--sp-24);
+  }
+  .cart-empty {
+    text-align: center;
+    padding: var(--sp-48) var(--sp-24);
+    color: var(--color-ash);
+  }
+  .cart-empty__icon { font-size: 40px; margin-bottom: var(--sp-12); }
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-12);
+    padding: var(--sp-12) 0;
+    border-bottom: 1px solid var(--color-charcoal-light);
+  }
+  .cart-item:last-child { border-bottom: none; }
+  .cart-item__img {
+    width: 56px; height: 56px;
+    border-radius: var(--r-md);
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .cart-item__info { flex: 1; min-width: 0; }
+  .cart-item__name {
+    font-weight: var(--fw-bold);
+    color: var(--color-cream);
+    font-size: var(--text-body);
+  }
+  .cart-item__price {
+    font-size: var(--text-caption);
+    color: var(--color-gold);
+    font-weight: var(--fw-sbold);
+  }
+  .cart-item__qty {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .qty-btn {
+    width: 28px; height: 28px;
+    border-radius: var(--r-sm);
+    background: var(--color-charcoal-light);
+    color: var(--color-cream);
+    font-size: 16px;
+    font-weight: var(--fw-bold);
+    display: grid; place-items: center;
+    transition: background .2s ease;
+  }
+  .qty-btn:hover { background: var(--color-ember); color: var(--color-cream); }
+  .qty-val { min-width: 20px; text-align: center; font-weight: var(--fw-bold); color: var(--color-cream); }
+  .cart-foot {
+    padding: var(--sp-20) var(--sp-24);
+    border-top: 1px solid var(--color-charcoal-light);
+  }
+  .cart-sum-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--sp-16);
+  }
+  .cart-sum-row__label {
+    font-size: var(--text-body);
+    color: var(--color-ash-light);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: var(--fw-sbold);
+  }
+  .cart-sum-row__val {
+    font-family: var(--font-display);
+    font-size: 36px;
+    color: var(--color-gold);
+    line-height: 1;
+  }
+  .cart-checkout {
+    width: 100%;
+    padding: 16px;
+    background: var(--color-ember);
+    color: var(--color-cream);
+    border-radius: var(--r-md);
+    font-weight: var(--fw-bold);
+    font-size: var(--text-body-lg);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    transition: background .2s ease, transform .2s ease;
+    box-shadow: 0 4px 12px rgba(197,49,0,0.25);
+  }
+  .cart-checkout:hover {
+    background: var(--color-flame);
+    transform: translateY(-1px);
+  }
+
+  /* ============================================================ SCROLL TOP */
+  .scroll-top {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 50;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--color-charcoal);
+    border: 1px solid var(--color-charcoal-light);
+    color: var(--color-gold);
+    font-size: 20px;
+    display: none;
+    place-items: center;
+    transition: background .2s ease, transform .2s ease;
+  }
+  .scroll-top.is-visible { display: grid; }
+  .scroll-top:hover { background: var(--color-ember); color: var(--color-cream); transform: translateY(-2px); }
+
+  /* ============================================================ RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero__grid { grid-template-columns: 1fr; gap: var(--sp-48); justify-items: center; text-align: center; }
+    .hero__content { text-align: center; max-width: 100%; }
+    .hero__visual { order: -1; width: 100%; max-width: 320px; margin: 0 auto; display: flex; justify-content: center; align-items: center; }
+    .phone { width: 100%; max-width: 280px; }
+    .hero__cta { justify-content: center; }
+    .hero__stats { justify-content: center; }
+    .menu__grid { grid-template-columns: repeat(2, 1fr); }
+    .features { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: repeat(2, 1fr); gap: var(--sp-32); }
+    .reviews { grid-template-columns: 1fr; }
+    .footer__inner { grid-template-columns: 1fr 1fr; gap: var(--sp-32); }
+    .nav__links { display: none; }
+    /* Адаптивные шрифты на планшетах */
+    .hero__title { font-size: clamp(40px, 11vw, 64px); }
+    .h-section { font-size: 36px; }
+    .cta__title { font-size: clamp(36px, 9vw, 56px); }
+    /* Текст не вылезает за блоки */
+    .feature__text, .step__text, .lead, .hero__lead, .faq__answer, .review__text {
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+  }
+  @media (max-width: 600px) {
+    .menu__grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .footer__inner { grid-template-columns: 1fr; }
+    .footer__bottom { flex-direction: column; text-align: center; }
+    .hero__stats { gap: var(--sp-24); }
+    .stat__num { font-size: 32px; }
+    /* Мобильные шрифты — компактнее */
+    .hero__title { font-size: clamp(36px, 10vw, 52px); line-height: 0.92; }
+    .h-section { font-size: 30px; }
+    .cta__title { font-size: clamp(32px, 9vw, 44px); }
+    .lead, .hero__lead { font-size: 16px; }
+    .feature__title { font-size: 20px; }
+    .step__num { font-size: 48px; }
+    .card__price { font-size: 24px; }
+    .card__title { font-size: 20px; }
+    /* Перенос слов для длинных текстов */
+    .feature__text { font-size: 15px; }
+    .faq__item summary { font-size: 16px; }
+    .faq__answer { font-size: 15px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================ NAV ============================ -->
+<nav class="nav">
+  <div class="container nav__inner">
+    <a href="#top" class="logo">
+      <span class="logo__mark">🔥</span>
+      <span class="logo__text">
+        На Огне!
+        <small>гриль-бар</small>
+      </span>
+    </a>
+    <div class="nav__links">
+      <a href="#menu" class="nav__link">Меню</a>
+      <a href="#how" class="nav__link">Как это работает</a>
+      <a href="#reviews" class="nav__link">Отзывы</a>
+      <a href="#faq" class="nav__link">Вопросы</a>
+    </div>
+    <a href="https://t.me/RestoBots_bot?start=landing" class="btn btn--primary" target="_blank" rel="noopener">
+      Заказать
+    </a>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<section class="hero" id="top">
+  <div class="container">
+    <div class="hero__grid">
+      <div class="hero__content">
+        <span class="eyebrow">Гриль-бар · Доставка в Telegram</span>
+        <h1 class="hero__title">
+          Пицца на <span class="accent">углях</span>.<br>
+          Доставка за <span class="accent">30 минут</span>.
+        </h1>
+        <p class="hero__lead">
+          Не просто пицца — а на живом огне. Крылышки BBQ, домашний лимонад, десерты.
+          Заказ прямо в Telegram — без звонков, без приложений, без ожидания на линии.
+        </p>
+        <div class="hero__cta">
+          <a href="#menu" class="btn btn--primary btn--lg">Смотреть меню</a>
+          <a href="https://t.me/RestoBots_bot?start=landing" class="btn btn--ghost btn--lg" target="_blank" rel="noopener">
+            Открыть в Telegram
+          </a>
+        </div>
+        <div class="hero__stats">
+          <div class="stat">
+            <div class="stat__num">30</div>
+            <div class="stat__label">минут доставка</div>
+          </div>
+          <div class="stat">
+            <div class="stat__num">12</div>
+            <div class="stat__label">блюд на огне</div>
+          </div>
+          <div class="stat">
+            <div class="stat__num">15%</div>
+            <div class="stat__label">скидка на первый заказ</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHONE MOCKUP -->
+      <div class="hero__visual">
+        <div class="phone">
+          <div class="phone__screen">
+            <div class="phone__header">
+              <div class="phone__avatar">🔥</div>
+              <div>
+                <div class="phone__bot-name">На Огне!</div>
+                <div class="phone__bot-status">доставка · онлайн</div>
+              </div>
+            </div>
+            <div class="phone__body">
+              <div class="bubble bubble--bot">
+                🔥 Привет! Закажи пиццу на углях прямо здесь
+                <div class="menu-list">
+                  <div class="menu-item"><span>Маргарита на углях</span><span class="price">590₽</span></div>
+                  <div class="menu-item"><span>Крылышки BBQ</span><span class="price">390₽</span></div>
+                  <div class="menu-item"><span>Лимонад домашний</span><span class="price">190₽</span></div>
+                </div>
+              </div>
+              <div class="bubble bubble--user">Закажи Маргариту и крылышки 🔥</div>
+              <div class="bubble bubble--bot">
+                Готово! Маргарита + крылышки BBQ
+                <div class="inline-kbd">
+                  <div class="kbd-btn kbd-btn--primary">✅ Оформить</div>
+                  <div class="kbd-btn">🛒 Корзина</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone__footer">
+              <div class="phone__input">Напиши сообщение...</div>
+              <button class="phone__send">➤</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FEATURES ============================ -->
+<section class="section--charcoal">
+  <div class="container">
+    <span class="eyebrow">Почему на огне</span>
+    <h2 class="h-section">Не микроволновка. Настоящий огонь.</h2>
+    <div class="features">
+      <div class="feature">
+        <div class="feature__icon">🔥</div>
+        <h3 class="feature__title">На живом огне</h3>
+        <p class="feature__text">Пицца и мясо готовятся на углях, а не в конвекционной печи. Дым, хруст корочки, аромат — то, что не подделаешь.</p>
+      </div>
+      <div class="feature">
+        <div class="feature__icon">⚡</div>
+        <h3 class="feature__title">30 минут — и у двери</h3>
+        <p class="feature__text">Среднее время доставки 30 минут. Бот показывает статус в реальном времени: приняли → готовится → в пути → доставлен.</p>
+      </div>
+      <div class="feature">
+        <div class="feature__icon">💬</div>
+        <h3 class="feature__title">Всё в Telegram</h3>
+        <p class="feature__text">Без приложений, без звонков оператору, без «продиктуйте адрес ещё раз». Один чат — от заказа до доставки.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MENU ============================ -->
+<section id="menu">
+  <div class="container">
+    <div class="menu__header">
+      <div>
+        <span class="eyebrow">Меню</span>
+        <h2 class="h-section">Что готовим на огне</h2>
+      </div>
+    </div>
+
+    <div class="menu__tabs" role="tablist">
+      <button class="tab tab--all tab--active" data-cat="all">
+        <span class="tab__thumb">Все</span>
+        Всё меню
+      </button>
+      <button class="tab" data-cat="pizza">
+        <img class="tab__thumb" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Pizza_Margherita.jpg/960px-Pizza_Margherita.jpg" alt="Пицца" />
+        Пицца
+      </button>
+      <button class="tab" data-cat="snacks">
+        <img class="tab__thumb" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Buffalo_wings.jpg/960px-Buffalo_wings.jpg" alt="Закуски" />
+        Закуски
+      </button>
+      <button class="tab" data-cat="drinks">
+        <img class="tab__thumb" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Fresh_lemonade_and_lemons.jpg/960px-Fresh_lemonade_and_lemons.jpg" alt="Напитки" />
+        Напитки
+      </button>
+      <button class="tab" data-cat="dessert">
+        <img class="tab__thumb" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/A_slice_of_tiramisu_cake.jpg/960px-A_slice_of_tiramisu_cake.jpg" alt="Десерты" />
+        Десерты
+      </button>
+    </div>
+
+    <div class="menu__grid" id="menuGrid">
+      <!-- Пицца -->
+      <div class="card" data-item-id="9" data-category="pizza">
+        <div class="card__visual">
+          <img class="card__img" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Pizza_Margherita.jpg/960px-Pizza_Margherita.jpg" alt="Маргарита на углях" />
+          <span class="card__tag card__tag--hit">🔥 ХИТ</span>
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Маргарита</h3>
+          <p class="card__desc">Томатный соус, моцарелла, базилик. Классика на углях.</p>
+          <div class="card__footer">
+            <span class="card__price">590 ₽</span>
+            <button class="card__add" aria-label="Добавить Маргариту">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-item-id="10" data-category="pizza">
+        <div class="card__visual">
+          <img class="card__img" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/All_Good_pizza_%2838501728345%29.jpg/960px-All_Good_pizza_%2838501728345%29.jpg" alt="Пепперони" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Пепперони</h3>
+          <p class="card__desc">Острая пепперони, моцарелла, томатный соус.</p>
+          <div class="card__footer">
+            <span class="card__price">690 ₽</span>
+            <button class="card__add" aria-label="Добавить Пепперони">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-item-id="11" data-category="pizza">
+        <div class="card__visual">
+          <img class="card__img" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Four_Cheese_-_Pizza_500_2023-11-10.jpg/960px-Four_Cheese_-_Pizza_500_2023-11-10.jpg" alt="Кватро Формаджи" />
+          <span class="card__tag">ШЭФ</span>
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Кватро Формаджи</h3>
+          <p class="card__desc">Моцарелла, пармезан, горгонзола, фета. Четыре сыра, один огонь.</p>
+          <div class="card__footer">
+            <span class="card__price">790 ₽</span>
+            <button class="card__add" aria-label="Добавить Кватро Формаджи">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-item-id="12" data-category="pizza">
+        <div class="card__visual">
+          <img class="card__img" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Hawaiian_pizza.jpg/960px-Hawaiian_pizza.jpg" alt="Гавайская" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Гавайская</h3>
+          <p class="card__desc">Ветчина, ананас, моцарелла, томатный соус.</p>
+          <div class="card__footer">
+            <span class="card__price">670 ₽</span>
+            <button class="card__add" aria-label="Добавить Гавайскую">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-item-id="13" data-category="pizza">
+        <div class="card__visual">
+          <img class="card__img" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Vegetarian_pizza.jpg/960px-Vegetarian_pizza.jpg" alt="Вегетарианская" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Вегетарианская</h3>
+          <p class="card__desc">Перец, грибы, оливки, томаты, моцарелла. Без мяса — с огнём.</p>
+          <div class="card__footer">
+            <span class="card__price">620 ₽</span>
+            <button class="card__add" aria-label="Добавить Вегетарианскую">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-item-id="14" data-category="pizza">
+        <div class="card__visual">
+          <img class="card__img" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/B.B.Q._Chicken_Pizza_%2826679384893%29.jpg/960px-B.B.Q._Chicken_Pizza_%2826679384893%29.jpg" alt="Барбекю Куриная" />
+          <span class="card__tag card__tag--gold">🔥 НОВОЕ</span>
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Барбекю Куриная</h3>
+          <p class="card__desc">Курица гриль, соус BBQ, красный лук, моцарелла.</p>
+          <div class="card__footer">
+            <span class="card__price">720 ₽</span>
+            <button class="card__add" aria-label="Добавить Барбекю Куриную">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Десерт -->
+      <div class="card" data-item-id="15" data-category="dessert">
+        <div class="card__visual">
+          <img class="card__img" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/A_slice_of_tiramisu_cake.jpg/960px-A_slice_of_tiramisu_cake.jpg" alt="Тирамису" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Тирамису</h3>
+          <p class="card__desc">Нью-Йорк чизкейк с ягодным соусом. После огня — прохлада.</p>
+          <div class="card__footer">
+            <span class="card__price">320 ₽</span>
+            <button class="card__add" aria-label="Добавить Тирамису">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Напитки -->
+      <div class="card" data-item-id="16" data-category="drinks">
+        <div class="card__visual">
+          <img class="card__img" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/15-09-26-RalfR-WLC-0098_-_Coca-Cola_glass_bottle_%28Germany%29.jpg/960px-15-09-26-RalfR-WLC-0098_-_Coca-Cola_glass_bottle_%28Germany%29.jpg" alt="Cola 0.5" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Cola 0.5</h3>
+          <p class="card__desc">Классическая Coca-Cola 0.5л. Холодная.</p>
+          <div class="card__footer">
+            <span class="card__price">150 ₽</span>
+            <button class="card__add" aria-label="Добавить Cola">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-item-id="17" data-category="drinks">
+        <div class="card__visual">
+          <img class="card__img" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Fresh_lemonade_and_lemons.jpg/960px-Fresh_lemonade_and_lemons.jpg" alt="Лимонад домашний" />
+          <span class="card__tag card__tag--gold">СВОЙ</span>
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Лимонад домашний</h3>
+          <p class="card__desc">Клюквенный морс 0.5л. Варим сами, не из сиропа.</p>
+          <div class="card__footer">
+            <span class="card__price">190 ₽</span>
+            <button class="card__add" aria-label="Добавить лимонад">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Закуски -->
+      <div class="card" data-item-id="18" data-category="snacks">
+        <div class="card__visual">
+          <img class="card__img" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Garlic_bread.jpg/960px-Garlic_bread.jpg" alt="Чесночные узелочки" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Чесночные узелочки</h3>
+          <p class="card__desc">Тесто, чесночное масло, пармезан. С пылу с жару.</p>
+          <div class="card__footer">
+            <span class="card__price">240 ₽</span>
+            <button class="card__add" aria-label="Добавить узелочки">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-item-id="19" data-category="snacks">
+        <div class="card__visual">
+          <img class="card__img" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Buffalo_wings.jpg/960px-Buffalo_wings.jpg" alt="Крылышки BBQ" />
+          <span class="card__tag card__tag--hit">🔥 ХИТ</span>
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Крылышки BBQ</h3>
+          <p class="card__desc">Куриные крылышки на гриле, соус BBQ. Румяные, с дымком.</p>
+          <div class="card__footer">
+            <span class="card__price">390 ₽</span>
+            <button class="card__add" aria-label="Добавить крылышки">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-item-id="20" data-category="snacks">
+        <div class="card__visual">
+          <img class="card__img" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Bruschetta.jpg/960px-Bruschetta.jpg" alt="Брускетта" />
+        </div>
+        <div class="card__body">
+          <h3 class="card__title">Брускетта</h3>
+          <p class="card__desc">Подсушенный хлеб, томаты, базилик, оливковое масло.</p>
+          <div class="card__footer">
+            <span class="card__price">280 ₽</span>
+            <button class="card__add" aria-label="Добавить брускетту">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ HOW IT WORKS ============================ -->
+<section class="section--charcoal" id="how">
+  <div class="container">
+    <span class="eyebrow">Как это работает</span>
+    <h2 class="h-section">От огня до двери — 4 шага</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step__num">01</div>
+        <h3 class="step__title">Выбери блюда</h3>
+        <p class="step__text">Собери корзину прямо на этой странице — или открой меню в боте.</p>
+      </div>
+      <div class="step">
+        <div class="step__num">02</div>
+        <h3 class="step__title">Жми «Заказать»</h3>
+        <p class="step__text">Корзина улетит в Telegram-бот одним кликом. Без звонков, без повторений.</p>
+      </div>
+      <div class="step">
+        <div class="step__num">03</div>
+        <h3 class="step__title">Введи адрес</h3>
+        <p class="step__text">Имя, телефон, адрес — прямо в чате. Промокод HELLO снимет 15% с первого заказа.</p>
+      </div>
+      <div class="step">
+        <div class="step__num">04</div>
+        <h3 class="step__title">Отслеживай</h3>
+        <p class="step__text">Бот пишет статусы: приняли → готовится на огне → в пути → доставлен.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ REVIEWS ============================ -->
+<section id="reviews">
+  <div class="container">
+    <span class="eyebrow">Отзывы</span>
+    <h2 class="h-section">Что говорят гости</h2>
+    <div class="reviews">
+      <div class="review">
+        <div class="review__author">
+          <div class="review__avatar" style="background: #b8552e;">Д</div>
+          <div class="review__name">Дмитрий</div>
+          <div class="review__time">вчера</div>
+        </div>
+        <p class="review__text">Заказал Маргариту с крылышками в пробке. К моменту приезда — уже ждал. Дымок на корочке реально чувствуется 🔥</p>
+      </div>
+      <div class="review">
+        <div class="review__author">
+          <div class="review__avatar" style="background: #c98a17;">М</div>
+          <div class="review__name">Марина</div>
+          <div class="review__time">2 дня назад</div>
+        </div>
+        <p class="review__text">У нас в офисе бот заменил все звонки в доставку. Каждый заказывает своё, оплата по-отдельности. Лимонад тут — огонь 👍</p>
+      </div>
+      <div class="review">
+        <div class="review__author">
+          <div class="review__avatar" style="background: #5d7e2f;">К</div>
+          <div class="review__name">Костя</div>
+          <div class="review__time">3 дня назад</div>
+        </div>
+        <p class="review__text">Крылышки BBQ — лучшие в городе. И не надо отдельное приложение качать, всё в Телеге.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FAQ ============================ -->
+<section class="section--charcoal" id="faq">
+  <div class="container">
+    <span class="eyebrow">Вопросы</span>
+    <h2 class="h-section">Ещё сомневаешься?</h2>
+    <div class="faq">
+      <details class="faq__item" open>
+        <summary>Правда готовите на углях, а не в обычной печи?</summary>
+        <p class="faq__answer">Да. Пицца и мясо идут на живом огне — угольный гриль даёт ту самую хрустящую корочку и аромат дымка, который не подделаешь конвекционной печью.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Нужно ли ставить отдельное приложение?</summary>
+        <p class="faq__answer">Нет. Всё работает прямо в Telegram — если он установлен, больше ничего ставить не нужно. Бот открывается по ссылке за секунду.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Как оплатить заказ?</summary>
+        <p class="faq__answer">Тремя способами: картой через Telegram Pay прямо в чате, через СБП по QR, или наличными курьеру при получении. Бот запоминает твой способ — в следующий раз не придётся вводить заново.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Сколько идёт доставка?</summary>
+        <p class="faq__answer">В среднем 30 минут с момента подтверждения. В часы пик — до 45 минут. Бот показывает актуальное время до подтверждения и обновляет статусы в реальном времени.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Можно изменить или отменить заказ?</summary>
+        <p class="faq__answer">Да, пока пицца не ушла на огонь — обычно первые 3-5 минут. Открой заказ в чате и нажми «Изменить» или «Отменить». Деньги вернутся автоматически.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Что со скидками и промокодами?</summary>
+        <p class="faq__answer">Промокод <b>HELLO</b> даёт 15% на первый заказ — применяется в корзине бота перед оплатой. Дальше бонусы копятся сами: 5% от суммы идут на следующие заказы.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FINAL CTA ============================ -->
+<section>
+  <div class="container cta">
+    <span class="eyebrow">Открой бота</span>
+    <h2 class="cta__title">Голоден? Зажигай <span class="accent">огонь</span>.</h2>
+    <p class="cta__sub">Первый заказ — скидка 15% по промокоду <span class="promo-code">HELLO</span>. Сработает прямо в чате.</p>
+    <a href="https://t.me/RestoBots_bot?start=landing" class="btn btn--primary" target="_blank" rel="noopener">
+      🔥 Открыть в Telegram
+    </a>
+  </div>
+</section>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__col">
+        <div class="logo">
+          <span class="logo__mark">🔥</span>
+          <span class="logo__text">
+            На Огне!
+            <small>гриль-бар</small>
+          </span>
+        </div>
+        <p style="font-size: 14px; color: var(--color-ash); max-width: 280px; margin-top: 12px;">
+          Пицца на углях, крылышки BBQ, домашний лимонад. Доставка через Telegram-бота. Быстро, на огне, без звонков.
+        </p>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Меню</div>
+        <a href="#menu">Пицца</a>
+        <a href="#menu">Закуски</a>
+        <a href="#menu">Напитки</a>
+        <a href="#menu">Десерты</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Гриль-бар</div>
+        <a href="#how">Как это работает</a>
+        <a href="#reviews">Отзывы</a>
+        <a href="#faq">Вопросы</a>
+        <a href="#">Вакансии</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Связь</div>
+        <a href="https://t.me/RestoBots_bot?start=landing" target="_blank" rel="noopener">Telegram-бот</a>
+        <a href="mailto:hello@naogne.example">hello@naogne.example</a>
+        <a href="#">+7 (000) 000-00-00</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 На Огне! Гриль-бар. Сделано с 🔥 в Telegram.</span>
+      <span>Политика конфиденциальности · Условия</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================ CART FAB ============================ -->
+<button id="cartFab" class="cart-fab" aria-label="Открыть корзину">
+  <span class="cart-fab__icon">🛒</span>
+  <span class="cart-fab__count" id="cartCount">0</span>
+  <span class="cart-fab__total" id="cartTotal">0 ₽</span>
+</button>
+
+<!-- ============================ CART OVERLAY ============================ -->
+<div id="cartOverlay" class="cart-overlay" role="dialog" aria-modal="true" aria-label="Корзина">
+  <div class="cart-panel">
+    <div class="cart-head">
+      <h3>Корзина</h3>
+      <button class="cart-close" id="cartClose" aria-label="Закрыть">×</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-foot">
+      <div class="cart-sum-row">
+        <span class="cart-sum-row__label">Итого</span>
+        <span class="cart-sum-row__val" id="cartSumVal">0 ₽</span>
+      </div>
+      <button class="cart-checkout" id="cartCheckout">Заказать в Telegram →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Scroll-to-top -->
+<button class="scroll-top" id="scrollTop" aria-label="Наверх">↑</button>
+
+<script>
+  // Menu filter — tabs actually filter cards
+  const tabs = document.querySelectorAll('.tab');
+  const cards = document.querySelectorAll('#menuGrid .card');
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => t.classList.remove('tab--active'));
+      tab.classList.add('tab--active');
+      const cat = tab.dataset.cat;
+      cards.forEach((card) => {
+        if (cat === 'all' || card.dataset.category === cat) {
+          card.hidden = false;
+        } else {
+          card.hidden = true;
+        }
+      });
+    });
+  });
+
+  // ====== CART STATE ======
+  const cart = new Map(); // key: dish name -> { name, price, qty, img, alt, itemId }
+
+  function parsePrice(el) {
+    const txt = el.textContent.replace(/[^\d]/g, '');
+    return parseInt(txt, 10) || 0;
+  }
+
+  const cartFab = document.getElementById('cartFab');
+  const cartOverlay = document.getElementById('cartOverlay');
+  const cartItemsEl = document.getElementById('cartItems');
+  const cartCountEl = document.getElementById('cartCount');
+  const cartTotalEl = document.getElementById('cartTotal');
+  const cartSumValEl = document.getElementById('cartSumVal');
+
+  function updateFab() {
+    let count = 0;
+    let total = 0;
+    for (const item of cart.values()) {
+      count += item.qty;
+      total += item.qty * item.price;
+    }
+    if (count > 0) {
+      cartFab.classList.add('is-visible');
+      cartCountEl.textContent = count;
+      cartTotalEl.textContent = total.toLocaleString('ru-RU') + ' ₽';
+    } else {
+      cartFab.classList.remove('is-visible');
+    }
+  }
+
+  function renderCart() {
+    if (cart.size === 0) {
+      cartItemsEl.innerHTML = `
+        <div class="cart-empty">
+          <div class="cart-empty__icon">🔥</div>
+          <div>Корзина пуста</div>
+          <div style="font-size:13px;margin-top:6px;opacity:.7;">Добавь блюда из меню</div>
+        </div>`;
+      cartSumValEl.textContent = '0 ₽';
+      return;
+    }
+    let html = '';
+    let total = 0;
+    for (const item of cart.values()) {
+      const lineSum = item.qty * item.price;
+      total += lineSum;
+      html += `
+        <div class="cart-item" data-name="${item.name}">
+          <img class="cart-item__img" src="${item.img}" alt="${item.alt || ''}" />
+          <div class="cart-item__info">
+            <div class="cart-item__name">${item.name}</div>
+            <div class="cart-item__price">${item.price.toLocaleString('ru-RU')} ₽</div>
+          </div>
+          <div class="cart-item__qty">
+            <button class="qty-btn" data-act="dec" aria-label="Убрать">−</button>
+            <span class="qty-val">${item.qty}</span>
+            <button class="qty-btn" data-act="inc" aria-label="Добавить">+</button>
+          </div>
+        </div>`;
+    }
+    cartItemsEl.innerHTML = html;
+    cartSumValEl.textContent = total.toLocaleString('ru-RU') + ' ₽';
+
+    cartItemsEl.querySelectorAll('.qty-btn').forEach((qbtn) => {
+      qbtn.addEventListener('click', () => {
+        const row = qbtn.closest('.cart-item');
+        const name = row.dataset.name;
+        const item = cart.get(name);
+        if (!item) return;
+        if (qbtn.dataset.act === 'inc') {
+          item.qty += 1;
+        } else {
+          item.qty -= 1;
+          if (item.qty <= 0) cart.delete(name);
+        }
+        renderCart();
+        updateFab();
+      });
+    });
+  }
+
+  function openCart() {
+    renderCart();
+    cartOverlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeCart() {
+    cartOverlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  cartFab.addEventListener('click', openCart);
+  document.getElementById('cartClose').addEventListener('click', closeCart);
+  cartOverlay.addEventListener('click', (e) => {
+    if (e.target === cartOverlay) closeCart();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && cartOverlay.classList.contains('is-open')) closeCart();
+  });
+
+  // Checkout -> open Telegram bot with deep-link payload
+  document.getElementById('cartCheckout').addEventListener('click', () => {
+    const parts = [];
+    let total = 0;
+    let hasIds = true;
+    for (const item of cart.values()) {
+      if (item.itemId) {
+        parts.push(`${item.itemId}x${item.qty}`);
+      } else {
+        hasIds = false;
+      }
+      total += item.qty * item.price;
+    }
+
+    let url;
+    if (hasIds && parts.length > 0) {
+      // Telegram start= принимает только [A-Za-z0-9_-], до 64 символа.
+      // Запятая НЕ разрешена — разделитель '-'.
+      url = `https://t.me/RestoBots_bot?start=order_${parts.join('-')}`;
+    } else {
+      url = `https://t.me/RestoBots_bot?start=landing`;
+    }
+    window.open(url, '_blank', 'noopener');
+  });
+
+  // Card "+" -> ADD TO CART
+  document.querySelectorAll('.card__add').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.card');
+      const name = card.querySelector('.card__title').textContent.trim();
+      const price = parsePrice(card.querySelector('.card__price'));
+      const imgEl = card.querySelector('.card__img');
+      const img = imgEl ? imgEl.src : '';
+      const alt = imgEl ? imgEl.alt : '';
+      const itemId = parseInt(card.dataset.itemId, 10) || null;
+
+      const existing = cart.get(name);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.set(name, { name, price, qty: 1, img, alt, itemId });
+      }
+
+      // Visual feedback
+      const original = btn.textContent;
+      btn.textContent = '✓';
+      btn.style.background = 'var(--color-basil)';
+      btn.style.transform = 'scale(1.1)';
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.style.background = '';
+        btn.style.transform = '';
+      }, 500);
+
+      updateFab();
+      cartFab.animate(
+        [{ transform: 'scale(1)' }, { transform: 'scale(1.12)' }, { transform: 'scale(1)' }],
+        { duration: 300, easing: 'ease-out' }
+      );
+    });
+  });
+
+  // Scroll-to-top
+  const scrollTopBtn = document.getElementById('scrollTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) {
+      scrollTopBtn.classList.add('is-visible');
+    } else {
+      scrollTopBtn.classList.remove('is-visible');
+    }
+  });
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>
