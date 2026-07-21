@@ -301,19 +301,22 @@
   }
   .phone {
     width: 320px;
-    background: linear-gradient(145deg, #5a4a38 0%, #3a2e22 50%, #4a3a28 100%);
+    background:
+      linear-gradient(180deg, rgba(255,240,220,0.12) 0%, transparent 8%),
+      linear-gradient(145deg, #7a6450 0%, #4a3a2a 45%, #5a4636 100%);
     border-radius: 44px;
     padding: 12px;
     box-shadow:
       0 40px 90px -15px rgba(0,0,0,0.9),
       0 15px 50px rgba(0,0,0,0.7),
       0 0 70px rgba(168,42,0,0.2),
-      inset 0 1px 0 rgba(255,230,200,0.15),
-      inset 0 0 0 1.5px rgba(255,210,160,0.1);
+      inset 0 1.5px 0 rgba(255,235,200,0.25),
+      inset 0 -1px 0 rgba(0,0,0,0.3),
+      inset 0 0 0 1.5px rgba(255,210,160,0.12);
     position: relative;
     z-index: 2;
-    border: 1px solid #6a5440;
-    outline: 2px solid rgba(255,200,150,0.08);
+    border: 1px solid #8a6f50;
+    outline: 2px solid rgba(255,200,150,0.1);
   }
   /* Боковые кнопки — power справа, volume слева */
   .phone::before {
