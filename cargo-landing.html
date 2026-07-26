@@ -55,7 +55,7 @@ section{padding-block:var(--section-gap);position:relative}
 .hero__sub{font-size:clamp(16px,2.5vw,20px);color:rgba(255,255,255,0.8);margin-bottom:28px;line-height:1.5}
 .hero__markers{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:32px;list-style:none}
 .hero__markers li{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.9);background:rgba(255,255,255,0.08);padding:8px 14px;border-radius:20px}
-.hero__markers li::before{content:"✓";color:var(--orange);font-weight:700}
+.hero__markers li::before{content:"";display:inline-block;width:14px;height:14px;background:var(--orange);mask-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3'%3E%3Cpolyline points='20,6 9,17 4,12'/%3E%3C/svg%3E\");mask-size:contain;mask-repeat:no-repeat;-webkit-mask-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3'%3E%3Cpolyline points='20,6 9,17 4,12'/%3E%3C/svg%3E\");-webkit-mask-size:contain}
 .hero__cta{display:flex;flex-wrap:wrap;gap:12px}
 .btn{padding:16px 28px;border-radius:10px;font-weight:700;font-size:16px;transition:transform .2s,box-shadow .2s,background .2s;white-space:nowrap}
 .btn--primary{background:var(--orange);color:#fff;box-shadow:0 4px 16px rgba(232,96,10,0.3)}
