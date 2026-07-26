@@ -125,9 +125,8 @@ section{padding-block:var(--section-gap);position:relative}
 @keyframes cta-pulse{0%{transform:scale(1);box-shadow:0 4px 20px var(--accent-glow)}50%{transform:scale(1.03);box-shadow:0 0 30px rgba(245,158,11,0.5)}100%{transform:scale(1);box-shadow:0 4px 20px var(--accent-glow)}}
 
 /* ==================== SCROLL TOP ==================== */
-.scroll-top{position:fixed;bottom:24px;right:24px;z-index:50;width:44px;height:44px;border-radius:8px;background:var(--graphite);border:1px solid var(--metal);color:var(--neon);font-size:20px;display:none;place-items:center;cursor:pointer;transition:background .2s,transform .2s}
-.scroll-top.is-visible{display:grid}
-.scroll-top:hover{background:var(--neon);color:#fff;transform:translateY(-2px)}
+.scroll-top{position:fixed;bottom:24px;right:24px;z-index:50;width:48px;height:48px;border-radius:8px;background:var(--neon);color:#fff;display:grid;place-items:center;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 16px var(--accent-glow)}
+.scroll-top:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--accent-glow)}
 
 /* ==================== RESPONSIVE ==================== */
 @media(max-width:768px){
@@ -316,7 +315,7 @@ section{padding-block:var(--section-gap);position:relative}
 <script>
 if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){gsap.registerPlugin(ScrollTrigger);gsap.utils.toArray('.reveal').forEach(b=>{gsap.to(b,{opacity:1,y:0,duration:.8,ease:"power2.out",scrollTrigger:{trigger:b,start:"top 80%",toggleActions:"play none none reverse"}})})}
 // Scroll to top
-const st=document.getElementById('scrollTop');window.addEventListener('scroll',()=>{st.classList.toggle('is-visible',window.scrollY>400)});st.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'})});
+document.getElementById('scrollTop').addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'})});
 </script>
 </body>
 </html>
