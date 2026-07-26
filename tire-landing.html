@@ -221,7 +221,7 @@ section{padding-block:var(--section-gap);position:relative}
         </ul>
       </div>
       <div class="offer__visual">
-        <img src="img/tire/tire-change.webp" alt="Замена шин" loading="lazy">
+        <img src="img/tire/tire-hero.webp" alt="Шиномонтаж" loading="lazy">
       </div>
     </div>
   </div>
@@ -327,11 +327,16 @@ if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
   gsap.registerPlugin(ScrollTrigger);
   gsap.defaults({duration:0.8,ease:"power2.out"});
 
-  // Заголовки — буквы появляются по одной (ручной SplitText для CDN)
+  // Заголовки — слова появляются снизу (сохраняем <br> и <span>)
   document.querySelectorAll('.hero__title').forEach(el=>{
-    const text=el.textContent.trim();
-    el.innerHTML=text.split('').map((c,i)=>`<span class="char" style="display:inline-block">${c===' '?'&nbsp;':c}</span>`).join('');
-    gsap.from(el.querySelectorAll('.char'),{opacity:0,y:30,rotationX:-90,duration:.6,stagger:.03,ease:"back.out(1.7)",delay:.3});
+    const words=[];
+    el.childNodes.forEach(node=>{
+      if(node.nodeType===3){words.push(...node.textContent.trim().split(/\s+/).filter(w=>w))}
+      else if(node.tagName==='BR'){words.push('<br>')}
+      else{words.push(node.outerHTML)}
+    });
+    el.innerHTML=words.map(w=>w==='<br>'?'<br>':`<span class="hw" style="display:inline-block">${w}</span>`).join(' ');
+    gsap.from(el.querySelectorAll('.hw'),{opacity:0,y:30,duration:.5,stagger:.08,delay:.3,ease:"back.out(1.7)"});
   });
 
   // Подзаголовки — слова появляются снизу
