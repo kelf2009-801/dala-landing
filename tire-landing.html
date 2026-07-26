@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Шиномонтаж — Премиальный сервис. Замена, балансировка, ремонт</title>
+<meta name="description" content="Профессиональный шиномонтаж. Замена шин за 15 минут. Балансировка, ремонт проколов, сезонное хранение. Премиум-сервис.">
+<meta name="keywords" content="шиномонтаж, замена шин, балансировка, ремонт проколов, хранение шин">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root {
+  --steel: #1a1d23; --steel-light: #252830; --graphite: #2d3038;
+  --metal: #3a3e48; --metal-light: #4a4e58;
+  --neon: #0066ff; --neon-glow: #0088ff; --neon-dim: #0044aa;
+  --white: #e8eaed; --text: #b0b4bc; --text-light: #7a7e86;
+  --accent: #0066ff; --accent-glow: rgba(0,102,255,0.3);
+  --font: 'Manrope', sans-serif;
+  --shadow: 0 4px 24px rgba(0,0,0,0.5); --shadow-lg: 0 12px 40px rgba(0,0,0,0.6);
+  --radius: 8px; --radius-lg: 12px;
+  --max: 1200px; --section-gap: clamp(64px,10vw,120px);
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font);background:var(--steel);color:var(--text);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+img{display:block;max-width:100%}
+::selection{background:var(--neon);color:#fff}
+
+.container{max-width:var(--max);margin:0 auto;padding:0 clamp(16px,5vw,40px)}
+section{padding-block:var(--section-gap);position:relative}
+.eyebrow{display:inline-block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--neon);margin-bottom:12px}
+.h2{font-size:clamp(28px,6vw,44px);font-weight:800;line-height:1.1;color:var(--white);margin-bottom:16px}
+.h2 .accent{color:var(--neon)}
+.lead{font-size:clamp(15px,2.5vw,18px);color:var(--text-light);max-width:600px;line-height:1.6}
+.section--dark{background:var(--steel-light)}
+.section--metal{background:var(--graphite)}
+
+/* ==================== NAV ==================== */
+.nav{position:sticky;top:0;z-index:50;background:rgba(26,29,35,0.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.06)}
+.nav__inner{display:flex;align-items:center;justify-content:space-between;padding-block:14px}
+.logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800;color:var(--white);letter-spacing:-0.02em}
+.logo__icon{width:36px;height:36px;background:var(--neon);border-radius:6px;display:grid;place-items:center}
+.logo__icon svg{width:20px;height:20px}
+.nav__cta{padding:10px 22px;background:var(--neon);color:#fff;border-radius:6px;font-weight:700;font-size:14px;transition:background .2s,box-shadow .2s}
+.nav__cta:hover{background:var(--neon-glow);box-shadow:0 0 20px var(--accent-glow)}
+
+/* ==================== HERO ==================== */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;background:var(--steel)}
+.hero__bg{position:absolute;inset:0;z-index:0}
+.hero__bg img{width:100%;height:100%;object-fit:cover;opacity:0.75}
+.hero__overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,transparent 0%,rgba(26,29,35,0.5) 50%,var(--steel) 100%)}
+.hero__fog{position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at 30% 80%,rgba(0,102,255,0.08) 0%,transparent 60%)}
+.hero>.container{position:relative;z-index:2;padding-top:clamp(40px,8vw,120px);padding-bottom:clamp(40px,8vw,80px)}
+.hero__content{max-width:640px}
+.hero__title{font-size:clamp(34px,8vw,60px);font-weight:800;line-height:1.05;color:var(--white);margin-bottom:20px;letter-spacing:-0.02em}
+.hero__title .accent{color:var(--neon)}
+.hero__sub{font-size:clamp(16px,2.5vw,20px);color:var(--text-light);margin-bottom:32px;line-height:1.5}
+.hero__cta{display:flex;flex-wrap:wrap;gap:12px}
+.btn{padding:16px 28px;border-radius:8px;font-weight:700;font-size:16px;transition:transform .2s,box-shadow .2s,background .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:8px}
+.btn--primary{background:var(--neon);color:#fff;box-shadow:0 4px 20px var(--accent-glow)}
+.btn--primary:hover{background:var(--neon-glow);transform:translateY(-1px);box-shadow:0 8px 30px var(--accent-glow)}
+.btn--ghost{background:transparent;color:var(--white);border:1.5px solid var(--metal-light)}
+.btn--ghost:hover{border-color:var(--neon);color:var(--neon);transform:translateY(-1px)}
+.btn--lg{padding:18px 32px;font-size:18px;min-height:56px}
+
+/* ==================== FEATURES ==================== */
+.features__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:40px}
+.feature{background:var(--graphite);border:1px solid var(--metal);border-radius:var(--radius-lg);padding:28px;transition:transform .25s,border-color .25s,box-shadow .25s}
+.feature:hover{transform:translateY(-4px);border-color:var(--neon);box-shadow:0 8px 30px rgba(0,102,255,0.1)}
+.feature__icon{width:44px;height:44px;background:var(--steel);border:1px solid var(--metal);border-radius:8px;display:grid;place-items:center;margin-bottom:16px}
+.feature__icon svg{width:22px;height:22px}
+.feature__title{font-size:18px;font-weight:700;color:var(--white);margin-bottom:8px}
+.feature__text{font-size:14px;color:var(--text-light);line-height:1.5}
+
+/* ==================== OFFER ==================== */
+.offer{background:var(--steel-light);border-top:1px solid var(--metal);border-bottom:1px solid var(--metal)}
+.offer__grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-top:40px}
+.offer__bullets{list-style:none;display:grid;gap:12px;margin-top:20px}
+.offer__bullets li{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--text);padding:12px 16px;background:var(--graphite);border-radius:var(--radius);border:1px solid var(--metal)}
+.offer__bullets li::before{content:"";display:inline-block;width:8px;height:8px;background:var(--neon);border-radius:50%;flex-shrink:0}
+.offer__visual{position:relative}
+.offer__visual img{width:100%;border-radius:var(--radius-lg);border:1px solid var(--metal);box-shadow:var(--shadow-lg)}
+
+/* ==================== MENU ==================== */
+.menu__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:40px}
+.menu-card{background:var(--graphite);border:1px solid var(--metal);border-radius:var(--radius-lg);overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s}
+.menu-card:hover{transform:translateY(-4px);border-color:var(--neon);box-shadow:0 8px 30px rgba(0,102,255,0.1)}
+.menu-card__img{width:100%;height:200px;object-fit:cover}
+.menu-card__body{padding:20px}
+.menu-card__title{font-size:18px;font-weight:700;color:var(--white);margin-bottom:8px}
+.menu-card__text{font-size:14px;color:var(--text-light);line-height:1.5;margin-bottom:14px}
+.menu-card__price{font-size:24px;font-weight:800;color:var(--neon)}
+
+/* ==================== FAQ ==================== */
+.faq__list{margin-top:32px;max-width:700px;margin-inline:auto}
+.faq__item{border:1px solid var(--metal);border-radius:var(--radius);margin-bottom:6px;background:var(--graphite);overflow:hidden;transition:border-color .3s}
+.faq__item[open]{border-color:var(--neon)}
+.faq__item summary{padding:16px 20px;font-weight:600;font-size:15px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;color:var(--white)}
+.faq__item summary::after{content:"+";font-size:20px;color:var(--neon);transition:transform .3s}
+.faq__item[open] summary::after{content:"−"}
+.faq__item[open] summary{color:var(--neon)}
+.faq__answer{padding:0 20px 16px;font-size:14px;color:var(--text-light);line-height:1.6}
+
+/* ==================== CTA FINAL ==================== */
+.cta-final{background:var(--steel);text-align:center}
+.cta-final .h2{color:var(--white)}
+.cta-final .lead{color:var(--text-light);margin-inline:auto}
+.cta-final__btns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:32px}
+
+/* ==================== FOOTER ==================== */
+.footer{background:var(--steel-light);color:var(--text-light);padding-block:40px;font-size:14px;border-top:1px solid var(--metal)}
+.footer__inner{display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between}
+.footer__col{min-width:160px}
+.footer__col-title{font-weight:700;color:var(--white);margin-bottom:12px;font-size:15px}
+.footer__col a{display:block;color:var(--text-light);margin-bottom:6px;transition:color .2s}
+.footer__col a:hover{color:var(--neon)}
+.footer__bottom{margin-top:32px;padding-top:16px;border-top:1px solid var(--metal);text-align:center;font-size:12px}
+
+/* ==================== EFFECTS ==================== */
+.reveal{opacity:0;transform:translateY(40px)}
+.btn--primary.btn--lg{animation:cta-pulse 2s infinite}
+@keyframes cta-pulse{0%{transform:scale(1);box-shadow:0 4px 20px var(--accent-glow)}50%{transform:scale(1.03);box-shadow:0 0 30px rgba(0,136,255,0.5)}100%{transform:scale(1);box-shadow:0 4px 20px var(--accent-glow)}}
+
+/* ==================== RESPONSIVE ==================== */
+@media(max-width:768px){
+  .hero__cta{flex-direction:column}
+  .hero__cta .btn{width:100%;text-align:center;justify-content:center}
+  .hero__cta .btn--lg{padding:16px 20px;font-size:16px;min-height:52px}
+  .offer__grid{grid-template-columns:1fr}
+  .features__grid{grid-template-columns:1fr}
+  .menu__grid{grid-template-columns:1fr}
+  .cta-final__btns{flex-direction:column;align-items:stretch}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+<!-- ==================== NAV ==================== -->
+<nav class="nav">
+  <div class="container nav__inner">
+    <a href="#" class="logo"><span class="logo__icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>ШИНСЕРВИС</a>
+    <a href="tel:+77001234567" class="nav__cta">Записаться</a>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero__bg"><img src="img/tire/tire-hero.webp" alt="Шиномонтаж премиум-класса" loading="eager"></div>
+  <div class="hero__overlay"></div>
+  <div class="hero__fog"></div>
+  <div class="container">
+    <div class="hero__content">
+      <h1 class="hero__title">Шиномонтаж<br><span class="accent">премиум-класса</span></h1>
+      <p class="hero__sub">Замена шин за 15 минут. Балансировка с точностью до грамма. Ремонт проколов за 10 минут. Холодный свет, горячие руки.</p>
+      <div class="hero__cta">
+        <a href="tel:+77001234567" class="btn btn--primary btn--lg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.19 18.85 19.5 19.5 0 0 1 5.19 12.85 19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Записаться</a>
+        <a href="#services" class="btn btn--ghost btn--lg">Смотреть услуги</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FEATURES ==================== -->
+<section class="section--metal reveal">
+  <div class="container">
+    <span class="eyebrow">Преимущества</span>
+    <h2 class="h2">Точность. <span class="accent">Скорость.</span> Надёжность.</h2>
+    <div class="features__grid">
+      <div class="feature">
+        <div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--neon)" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg></div>
+        <h3 class="feature__title">Скорость</h3>
+        <p class="feature__text">Замена 4-х шин за 15 минут. Очереди нет. Работает 4 поста одновременно. Ваше время — наш приоритет.</p>
+      </div>
+      <div class="feature">
+        <div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--neon)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></div>
+        <h3 class="feature__title">Надёжность</h3>
+        <p class="feature__text">Профессиональное оборудование. Динамометрический контроль затяжки. Балансировка с точностью до 1 грамма.</p>
+      </div>
+      <div class="feature">
+        <div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--neon)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3 class="feature__title">Профессионализм</h3>
+        <p class="feature__text">Мастера с опытом от 7 лет. Работаем с любыми марками: от седанов до внедорожников. Гарантия на все работы.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== OFFER ==================== -->
+<section class="offer reveal">
+  <div class="container">
+    <div class="offer__grid">
+      <div>
+        <span class="eyebrow">Главное предложение</span>
+        <h2 class="h2">Замена шин <span class="accent">за 15 минут</span></h2>
+        <p class="lead">Комплексный шиномонтаж с гарантией качества. Никакой очереди — 4 поста работают одновременно.</p>
+        <ul class="offer__bullets">
+          <li>Динамометрическая затяжка — исключён перекос диска</li>
+          <li>Балансировка с точностью до 1 грамма</li>
+          <li>Обработка ступицы и шпилек антикором</li>
+          <li>Гарантия 30 дней на все виды работ</li>
+        </ul>
+      </div>
+      <div class="offer__visual">
+        <img src="img/tire/tire-change.webp" alt="Замена шин" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== MENU ==================== -->
+<section class="section--metal reveal" id="services">
+  <div class="container">
+    <span class="eyebrow">Услуги</span>
+    <h2 class="h2">Что мы <span class="accent">делаем</span></h2>
+    <div class="menu__grid">
+      <div class="menu-card">
+        <img class="menu-card__img" src="img/tire/tire-change.webp" alt="Замена шин" loading="lazy">
+        <div class="menu-card__body">
+          <h3 class="menu-card__title">Замена шин</h3>
+          <p class="menu-card__text">Снятие, монтаж, демонтаж. Современный гайковёрт, динамометрический ключ. Обработка ступицы.</p>
+          <span class="menu-card__price">от 4 000 ₸</span>
+        </div>
+      </div>
+      <div class="menu-card">
+        <img class="menu-card__img" src="img/tire/tire-balance.webp" alt="Балансировка" loading="lazy">
+        <div class="menu-card__body">
+          <h3 class="menu-card__title">Балансировка</h3>
+          <p class="menu-card__text">Высокоточный стенд. Балансировка с точностью до 1 грамма. Устранение вибраций на скорости.</p>
+          <span class="menu-card__price">от 2 000 ₸</span>
+        </div>
+      </div>
+      <div class="menu-card">
+        <img class="menu-card__img" src="img/tire/tire-repair.webp" alt="Ремонт проколов" loading="lazy">
+        <div class="menu-card__body">
+          <h3 class="menu-card__title">Ремонт проколов</h3>
+          <p class="menu-card__text">Горячая вулканизация. Жгут, грибок, заплатка. Выездной ремонт — приедем за 30 минут.</p>
+          <span class="menu-card__price">от 1 500 ₸</span>
+        </div>
+      </div>
+      <div class="menu-card">
+        <img class="menu-card__img" src="img/tire/tire-storage.webp" alt="Хранение шин" loading="lazy">
+        <div class="menu-card__body">
+          <h3 class="menu-card__title">Сезонное хранение</h3>
+          <p class="menu-card__text">Отапливаемый склад. Мойка и упаковка в пакеты. Маркировка. Доступ 24/7 по записи.</p>
+          <span class="menu-card__price">от 5 000 ₸/сезон</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FAQ ==================== -->
+<section class="reveal" id="faq">
+  <div class="container">
+    <span class="eyebrow">Вопросы</span>
+    <h2 class="h2">Часто <span class="accent">спрашивают</span></h2>
+    <div class="faq__list">
+      <details class="faq__item"><summary>Сколько времени занимает замена шин?</summary><p class="faq__answer">Замена 4-х шин — 15 минут. С балансировкой — 25 минут. Работает 4 поста одновременно, очереди нет.</p></details>
+      <details class="faq__item"><summary>Работаете ли с RunFlat и низкопрофильными шинами?</summary><p class="faq__answer">Да. Специальный станок для RunFlat и низкопрофильных шин. Опыт работы с размерами от R13 до R22.</p></details>
+      <details class="faq__item"><summary>Какая гарантия на работы?</summary><p class="faq__answer">30 дней на все виды шиномонтажа. Если балансировка нарушилась — переделаем бесплатно.</p></details>
+      <details class="faq__item"><summary>Есть ли выездной шиномонтаж?</summary><p class="faq__answer">Да. Выезжаем по городу в течение 30 минут. Мобильный компрессор, гайковёрт, балансировочный стенд в фургоне.</p></details>
+      <details class="faq__item"><summary>Принимаете ли карты и переводы?</summary><p class="faq__answer">Да. Оплата: наличные, карта, Kaspi Gold, перевод. Чек и гарантийный талон после каждой услуги.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FINAL CTA ==================== -->
+<section class="cta-final reveal">
+  <div class="container">
+    <h2 class="h2">Готовы к <span class="accent">выезду</span>?</h2>
+    <p class="lead">Запишитесь — и через 15 минут ваши шины будут как новые. Или вызывайте мобильный шиномонтаж.</p>
+    <div class="cta-final__btns">
+      <a href="tel:+77001234567" class="btn btn--primary btn--lg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.19 18.85 19.5 19.5 0 0 1 5.19 12.85 19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Записаться сейчас</a>
+      <a href="https://wa.me/77001234567" class="btn btn--ghost btn--lg" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.5 3.52 1.35 5L2 22l5.18-1.35C8.48 21.5 10.18 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm-1 15l-1-1-4 1 1-4-1-1 3-7 8 5-4 4 1 1-3 2z"/></svg>WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__col">
+        <div class="footer__col-title">ШИНСЕРВИС</div>
+        <p>Премиальный шиномонтаж. Замена, балансировка, ремонт, хранение. Работаем с 2018 года.</p>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Услуги</div>
+        <a href="#">Замена шин</a><a href="#">Балансировка</a><a href="#">Ремонт проколов</a><a href="#">Хранение</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Контакты</div>
+        <a href="tel:+77001234567"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.19 18.85 19.5 19.5 0 0 1 5.19 12.85 19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>+7 (700) 123-45-67</a>
+        <a href="https://wa.me/77001234567"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.5 3.52 1.35 5L2 22l5.18-1.35C8.48 21.5 10.18 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm-1 15l-1-1-4 1 1-4-1-1 3-7 8 5-4 4 1 1-3 2z"/></svg>WhatsApp</a>
+      </div>
+    </div>
+    <div class="footer__bottom">© 2026 ШИНСЕРВИС. Премиальный шиномонтаж. Все права защищены.</div>
+  </div>
+</footer>
+
+<script>
+if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){gsap.registerPlugin(ScrollTrigger);gsap.utils.toArray('.reveal').forEach(b=>{gsap.to(b,{opacity:1,y:0,duration:.8,ease:"power2.out",scrollTrigger:{trigger:b,start:"top 80%",toggleActions:"play none none reverse"}})})}
+</script>
+</body>
+</html>
