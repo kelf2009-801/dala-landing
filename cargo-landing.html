@@ -46,8 +46,8 @@ section{padding-block:var(--section-gap);position:relative}
 /* ==================== HERO ==================== */
 .hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;background:var(--navy)}
 .hero__bg{position:absolute;inset:0;z-index:0}
-.hero__bg img{width:100%;height:100%;object-fit:cover;opacity:0.35}
-.hero__overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,transparent 0%,rgba(11,26,46,0.7) 60%,var(--navy) 100%)}
+.hero__bg img{width:100%;height:100%;object-fit:cover;opacity:0.5}
+.hero__overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,transparent 0%,rgba(11,26,46,0.4) 60%,var(--navy) 100%)}
 .hero>.container{position:relative;z-index:2;padding-top:clamp(40px,8vw,120px);padding-bottom:clamp(40px,8vw,80px)}
 .hero__content{max-width:640px}
 .hero__title{font-size:clamp(30px,8vw,56px);font-weight:800;line-height:1.1;color:var(--white);margin-bottom:20px}
@@ -160,8 +160,8 @@ section{transition:opacity .4s ease,transform .4s ease}
 <!-- ==================== NAV ==================== -->
 <nav class="nav">
   <div class="container nav__inner">
-    <a href="#" class="logo"><span class="logo__icon">🚛</span>ГрузТакси</a>
-    <a href="https://wa.me/77001234567" class="nav__cta" target="_blank" rel="noopener">💬 WhatsApp</a>
+    <a href="#" class="logo"><span class="logo__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><rect x="8" y="6" width="10" height="15"/><circle cx="18" cy="18" r="2"/></svg></span>ГрузТакси</a>
+    <a href="https://wa.me/77001234567" class="nav__cta" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.5 3.52 1.35 5L2 22l5.18-1.35C8.48 21.5 10.18 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm-1 15l-1-1-4 1 1-4-1-1 3-7 8 5-4 4 1 1-3 2z"/></svg> WhatsApp</a>
   </div>
 </nav>
 
@@ -180,8 +180,8 @@ section{transition:opacity .4s ease,transform .4s ease}
         <li>Подача за 60 мин</li>
       </ul>
       <div class="hero__cta">
-        <a href="https://wa.me/77001234567" class="btn btn--primary btn--lg" target="_blank" rel="noopener">💬 Рассчитать в WhatsApp</a>
-                <a href="https://t.me/GruzTaxiBot" class="btn btn--ghost btn--lg" target="_blank" rel="noopener">📱 Telegram</a>
+        <a href="https://wa.me/77001234567" class="btn btn--primary btn--lg" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" style="vertical-align:middle;margin-right:6px"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.5 3.52 1.35 5L2 22l5.18-1.35C8.48 21.5 10.18 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm-1 15l-1-1-4 1 1-4-1-1 3-7 8 5-4 4 1 1-3 2z"/></svg>Рассчитать в WhatsApp</a>
+                <a href="https://t.me/GruzTaxiBot" class="btn btn--ghost btn--lg" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" style="vertical-align:middle;margin-right:6px"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.05-.2-.06-.06-.15-.04-.22-.02-.09.02-1.55.98-4.38 2.89-.41.28-.79.42-1.13.41-.37-.01-1.09-.21-1.62-.38-.65-.21-1.17-.33-1.12-.69.02-.19.29-.39.79-.59 3.1-1.35 5.17-2.24 6.21-2.67 2.96-1.23 3.57-1.44 3.97-1.45.09 0 .28.02.41.12.11.09.14.21.15.3.01.07.02.22.01.34z"/></svg>Telegram</a>
       </div>
     </div>
   </div>
@@ -194,12 +194,12 @@ section{transition:opacity .4s ease,transform .4s ease}
     <h2 class="h2">Перевозки без <span class="accent">головной боли</span></h2>
     <p class="lead">Собственный автопарк, опытные водители, фиксированная цена — вы просто грузите и едете.</p>
     <div class="features__grid">
-      <div class="feature card-hover"><div class="feature__icon">🚛</div><h3 class="feature__title">Собственный автопарк</h3><p class="feature__text">Газель Next в идеальном состоянии. Регулярное ТО, чистый кузов. Без посредников.</p></div>
-      <div class="feature card-hover"><div class="feature__icon">👨‍✈️</div><h3 class="feature__title">Опытные водители</h3><p class="feature__text">Стаж от 5 лет, знание города и трасс. Аккуратное вождение, вежливость, помощь с погрузкой.</p></div>
-      <div class="feature card-hover"><div class="feature__icon">💰</div><h3 class="feature__title">Фиксированная цена</h3><p class="feature__text">Озвучиваем стоимость до начала работ. Никаких доплат за этажи, простой или пробки.</p></div>
-      <div class="feature card-hover"><div class="feature__icon">🛡️</div><h3 class="feature__title">Страховка груза</h3><p class="feature__text">Материальная ответственность по договору. Каждый груз застрахован до 5 млн тенге.</p></div>
-      <div class="feature card-hover"><div class="feature__icon">📍</div><h3 class="feature__title">GPS-контроль 24/7</h3><p class="feature__text">Отслеживание машины в реальном времени. Вы всегда знаете, где ваш груз.</p></div>
-      <div class="feature card-hover"><div class="feature__icon">⏱️</div><h3 class="feature__title">Подача за 60 минут</h3><p class="feature__text">Машина приедет через час после звонка. Работаем без выходных и праздников.</p></div>
+      <div class="feature card-hover"><div class="feature__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><rect x="8" y="6" width="10" height="15"/><circle cx="18" cy="18" r="2"/></svg></div><h3 class="feature__title">Собственный автопарк</h3><p class="feature__text">Газель Next в идеальном состоянии. Регулярное ТО, чистый кузов. Без посредников.</p></div>
+      <div class="feature card-hover"><div class="feature__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2"/></svg></div><h3 class="feature__title">Опытные водители</h3><p class="feature__text">Стаж от 5 лет, знание города и трасс. Аккуратное вождение, вежливость, помощь с погрузкой.</p></div>
+      <div class="feature card-hover"><div class="feature__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><text x="12" y="15" text-anchor="middle" fill="white" font-size="12" font-weight="bold">₸</text></svg></div><h3 class="feature__title">Фиксированная цена</h3><p class="feature__text">Озвучиваем стоимость до начала работ. Никаких доплат за этажи, простой или пробки.</p></div>
+      <div class="feature card-hover"><div class="feature__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2L3 7v5c0 5.5 4 10.5 9 12 5-1.5 9-6.5 9-12V7l-9-5z"/></svg></div><h3 class="feature__title">Страховка груза</h3><p class="feature__text">Материальная ответственность по договору. Каждый груз застрахован до 5 млн тенге.</p></div>
+      <div class="feature card-hover"><div class="feature__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7z"/></svg></div><h3 class="feature__title">GPS-контроль 24/7</h3><p class="feature__text">Отслеживание машины в реальном времени. Вы всегда знаете, где ваш груз.</p></div>
+      <div class="feature card-hover"><div class="feature__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></div><h3 class="feature__title">Подача за 60 минут</h3><p class="feature__text">Машина приедет через час после звонка. Работаем без выходных и праздников.</p></div>
     </div>
   </div>
 </section>
@@ -211,12 +211,12 @@ section{transition:opacity .4s ease,transform .4s ease}
     <h2 class="h2">Что мы <span class="accent">перевозим</span></h2>
     <p class="lead">Газель Next с будкой 12 м³ — вместит всё. От коробки до квартирного переезда.</p>
     <div class="services__grid">
-      <div class="service card-hover"><div class="service__icon">🏙️</div><h3 class="service__title">По городу</h3><p class="service__text">Доставка мебели, техники, стройматериалов по Актобе. Любой район, любое время.</p><span class="service__price">от 3000 ₸</span></div>
-      <div class="service card-hover"><div class="service__icon">🛣️</div><h3 class="service__title">Межгород</h3><p class="service__text">Актобе → Атырау, Уральск, Актау, Нур-Султан. Доставка «от двери до двери».</p><span class="service__price">от 25 000 ₸</span></div>
-      <div class="service card-hover"><div class="service__icon">📦</div><h3 class="service__title">Квартирный переезд</h3><p class="service__text">Разберём, упакуем, перевезём, соберём. Грузчики с опытом. Фиксированная цена за весь переезд.</p><span class="service__price">от 15 000 ₸</span></div>
-      <div class="service card-hover"><div class="service__icon">🏢</div><h3 class="service__title">Для бизнеса</h3><p class="service__text">Регулярная доставка для магазинов, производства, маркетплейсов. Закрывающие документы.</p><span class="service__price">договорная</span></div>
-      <div class="service card-hover"><div class="service__icon">🏗️</div><h3 class="service__title">Стройматериалы</h3><p class="service__text">Доставка кирпича, цемента, песка, металла со склада на объект. Любые объёмы.</p><span class="service__price">от 4000 ₸</span></div>
-      <div class="service card-hover"><div class="service__icon">📋</div><h3 class="service__title">Сборные грузы</h3><p class="service__text">Доставка попутного груза по Казахстану. Экономия до 40% на межгороде.</p><span class="service__price">от 20 000 ₸</span></div>
+      <div class="service card-hover"><div class="service__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="6" height="20"/><rect x="14" y="6" width="6" height="16"/><line x1="10" y1="6" x2="14" y2="6"/><line x1="10" y1="10" x2="14" y2="10"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div><h3 class="service__title">По городу</h3><p class="service__text">Доставка мебели, техники, стройматериалов по Актобе. Любой район, любое время.</p><span class="service__price">от 3000 ₸</span></div>
+      <div class="service card-hover"><div class="service__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M6 6l-4 6 4 6M18 6l4 6-4 6"/></svg></div><h3 class="service__title">Межгород</h3><p class="service__text">Актобе → Атырау, Уральск, Актау, Нур-Султан. Доставка «от двери до двери».</p><span class="service__price">от 25 000 ₸</span></div>
+      <div class="service card-hover"><div class="service__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><h3 class="service__title">Квартирный переезд</h3><p class="service__text">Разберём, упакуем, перевезём, соберём. Грузчики с опытом. Фиксированная цена за весь переезд.</p><span class="service__price">от 15 000 ₸</span></div>
+      <div class="service card-hover"><div class="service__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20"/><rect x="8" y="8" width="3" height="3"/><rect x="13" y="8" width="3" height="3"/><rect x="8" y="14" width="3" height="3"/><rect x="13" y="14" width="3" height="3"/></svg></div><h3 class="service__title">Для бизнеса</h3><p class="service__text">Регулярная доставка для магазинов, производства, маркетплейсов. Закрывающие документы.</p><span class="service__price">договорная</span></div>
+      <div class="service card-hover"><div class="service__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20M6 16V8l6-4 4 2v10M6 16h12"/><rect x="10" y="10" width="4" height="6"/></svg></div><h3 class="service__title">Стройматериалы</h3><p class="service__text">Доставка кирпича, цемента, песка, металла со склада на объект. Любые объёмы.</p><span class="service__price">от 4000 ₸</span></div>
+      <div class="service card-hover"><div class="service__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="12" y2="15"/></svg></div><h3 class="service__title">Сборные грузы</h3><p class="service__text">Доставка попутного груза по Казахстану. Экономия до 40% на межгороде.</p><span class="service__price">от 20 000 ₸</span></div>
     </div>
   </div>
 </section>
@@ -284,7 +284,7 @@ section{transition:opacity .4s ease,transform .4s ease}
   <div class="container">
     <div class="footer__inner">
       <div class="footer__col">
-        <div class="footer__col-title">🚛 ГрузТакси</div>
+        <div class="footer__col-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="vertical-align:middle;margin-right:4px"><rect x="1" y="3" width="15" height="13"/><rect x="8" y="6" width="10" height="15"/><circle cx="18" cy="18" r="2"/></svg>ГрузТакси</div>
         <p>Грузоперевозки на Газели Next по Актобе и Казахстану. Надёжно, быстро, без скрытых платежей.</p>
       </div>
       <div class="footer__col">
@@ -296,9 +296,9 @@ section{transition:opacity .4s ease,transform .4s ease}
       </div>
       <div class="footer__col">
         <div class="footer__col-title">Контакты</div>
-        <a href="tel:+77001234567">📞 +7 (700) 123-45-67</a>
-        <a href="https://wa.me/77001234567">💬 WhatsApp</a>
-        <a href="mailto:info@gruztaxi.kz">✉️ info@gruztaxi.kz</a>
+        <a href="tel:+77001234567"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>+7 (700) 123-45-67</a>
+        <a href="https://wa.me/77001234567"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.5 3.52 1.35 5L2 22l5.18-1.35C8.48 21.5 10.18 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm-1 15l-1-1-4 1 1-4-1-1 3-7 8 5-4 4 1 1-3 2z"/></svg>WhatsApp</a>
+        <a href="mailto:info@gruztaxi.kz"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,8 12,15 22,8"/></svg>info@gruztaxi.kz</a>
       </div>
     </div>
     <div class="footer__bottom">© 2026 ГрузТакси. Грузоперевозки Актобе. Все права защищены.</div>
