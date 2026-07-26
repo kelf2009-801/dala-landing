@@ -327,10 +327,24 @@ if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
   gsap.registerPlugin(ScrollTrigger);
   gsap.defaults({duration:0.8,ease:"power2.out"});
 
-  // Reveal-анимации через ScrollTrigger.batch() — группирует элементы, заходящие в вьюпорт
+  // Заголовки — буквы появляются по одной (ручной SplitText для CDN)
+  document.querySelectorAll('.hero__title').forEach(el=>{
+    const text=el.textContent.trim();
+    el.innerHTML=text.split('').map((c,i)=>`<span class="char" style="display:inline-block">${c===' '?'&nbsp;':c}</span>`).join('');
+    gsap.from(el.querySelectorAll('.char'),{opacity:0,y:30,rotationX:-90,duration:.6,stagger:.03,ease:"back.out(1.7)",delay:.3});
+  });
+
+  // Подзаголовки — слова появляются снизу
+  document.querySelectorAll('.hero__sub').forEach(el=>{
+    const text=el.textContent.trim();
+    el.innerHTML=text.split(' ').map(w=>`<span class="word" style="display:inline-block">${w}&nbsp;</span>`).join('');
+    gsap.from(el.querySelectorAll('.word'),{opacity:0,y:20,duration:.5,stagger:.08,delay:.6,ease:"power2.out"});
+  });
+
+  // CTA-кнопки — появляются с масштабом
+  gsap.from('.hero__cta .btn',{opacity:0,scale:.8,duration:.5,stagger:.15,delay:1,ease:"back.out(1.7)"});
   ScrollTrigger.batch(".reveal",{
     onEnter:(elements)=>{gsap.to(elements,{opacity:1,y:0,stagger:0.1})},
-    onLeaveBack:(elements)=>{gsap.set(elements,{opacity:0,y:40})},
     start:"top 80%",once:true
   });
 
