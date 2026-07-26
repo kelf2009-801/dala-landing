@@ -323,7 +323,32 @@ section{padding-block:var(--section-gap);position:relative}
 </button>
 
 <script>
-if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){gsap.registerPlugin(ScrollTrigger);gsap.utils.toArray('.reveal').forEach(b=>{gsap.to(b,{opacity:1,y:0,duration:.8,ease:"power2.out",scrollTrigger:{trigger:b,start:"top 80%",toggleActions:"play none none reverse"}})})}
+if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.defaults({duration:0.8,ease:"power2.out"});
+
+  // Reveal-анимации через ScrollTrigger.batch() — группирует элементы, заходящие в вьюпорт
+  ScrollTrigger.batch(".reveal",{
+    onEnter:(elements)=>{gsap.to(elements,{opacity:1,y:0,stagger:0.1})},
+    onLeaveBack:(elements)=>{gsap.set(elements,{opacity:0,y:40})},
+    start:"top 80%",once:true
+  });
+
+  // Респонсив-анимации через matchMedia
+  let mm=gsap.matchMedia();
+  mm.add("(min-width:769px)",()=>{
+    // На десктопе — карточки с hover
+    gsap.utils.toArray(".menu-card").forEach(card=>{
+      card.addEventListener("mouseenter",()=>gsap.to(card,{y:-6,duration:.3}));
+      card.addEventListener("mouseleave",()=>gsap.to(card,{y:0,duration:.3}));
+    });
+    return ()=>{/* cleanup при ресайзе */};
+  });
+  mm.add("(prefers-reduced-motion:reduce)",()=>{
+    gsap.globalTimeline.timeScale(0);
+  });
+}
+
 // Scroll to top
 const st=document.getElementById('scrollTop');window.addEventListener('scroll',()=>{st.classList.toggle('is-visible',window.scrollY>300)});st.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'})});
 </script>
