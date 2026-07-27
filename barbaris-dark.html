@@ -564,7 +564,7 @@ body {
 
 /* ========== RESPONSIVE ========== */
 
-.nav__links.open, .nav__links[style*="display: flex"] {
+.nav__links.open {
   display: flex !important;
   flex-direction: column;
   position: absolute; top: 100%; left: 0; right: 0;
@@ -631,7 +631,7 @@ body {
 
 <!-- Nav -->
 <nav class="nav">
-  <a href="#" class="nav__logo"><img src="barbaris-images/logo-b.webp" alt="BARBARIS" style="height:36px;width:auto;"></a>
+  <a href="#" class="nav__logo"><img src="barbaris-images/logo-b.webp" alt="BARBARIS" style="height:36px;width:auto;vertical-align:middle;"> <span style="vertical-align:middle;">BARBARIS</span></a>
   <ul class="nav__links">
     <li><a href="#about">О нас</a></li>
     <li><a href="#services">Услуги</a></li>
@@ -1168,17 +1168,20 @@ document.querySelectorAll('.service-card').forEach(card => {
   const navCta = document.querySelector('.nav__cta');
   if (!burger || !navLinks) return;
   burger.addEventListener('click', () => {
-    const isOpen = navLinks.style.display === 'flex';
-    navLinks.style.display = isOpen ? '' : 'flex';
-    if (navCta) navCta.style.display = isOpen ? '' : 'flex';
-    burger.classList.toggle('active', !isOpen);
+    const isOpen = navLinks.classList.contains('open');
+    if (isOpen) {
+      navLinks.classList.remove('open');
+      burger.classList.remove('active');
+    } else {
+      navLinks.classList.add('open');
+      burger.classList.add('active');
+    }
   });
   // Close on link click
   navLinks.querySelectorAll('a').forEach(a => {
     a.addEventListener('click', () => {
       if (window.innerWidth <= 900) {
-        navLinks.style.display = '';
-        if (navCta) navCta.style.display = '';
+        navLinks.classList.remove('open');
         burger.classList.remove('active');
       }
     });
