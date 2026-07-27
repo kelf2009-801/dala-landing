@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Портфолио — Grove Street Families</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Manrope',sans-serif;background:#0d0d12;color:#ccc;line-height:1.6}
+a{color:inherit;text-decoration:none}
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+header{padding:40px 0 20px}
+header h1{font-size:clamp(28px,6vw,48px);font-weight:800;color:#fff;letter-spacing:-0.02em}
+header p{color:#777;font-size:15px;margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;padding:20px 0 60px}
+.card{background:#16161d;border:1px solid #222;border-radius:12px;overflow:hidden;transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-4px);border-color:#f59e0b}
+.card__img{height:180px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.card__img--fire{background:linear-gradient(135deg,#1a0a04,#3a1008)}
+.card__img--fire span{color:#e8600a}
+.card__img--pizza{background:linear-gradient(135deg,#fffefb,#f5ead8)}
+.card__img--pizza span{color:#ff4f00}
+.card__img--cargo{background:linear-gradient(135deg,#14100c,#1a3a5c)}
+.card__img--cargo span{color:#1e5aaf}
+.card__img--tire{background:linear-gradient(135deg,#1a1d23,#3a3e48)}
+.card__img--tire span{color:#f59e0b}
+.card__body{padding:20px}
+.card__tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;color:#f59e0b}
+.card__title{font-size:22px;font-weight:800;color:#fff;margin-bottom:6px}
+.card__desc{font-size:13px;color:#888;line-height:1.5;margin-bottom:14px}
+.card__link{font-size:13px;font-weight:600;color:#f59e0b;display:inline-flex;align-items:center;gap:6px;transition:gap .2s}
+.card__link:hover{gap:10px}
+.card__link svg{width:14px;height:14px}
+footer{padding:30px 0;border-top:1px solid #222;text-align:center;font-size:12px;color:#555}
+@media(max-width:500px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Портфолио</h1>
+    <p>Grove Street Families — 4 боевых лендинга</p>
+  </header>
+
+  <div class="grid">
+    <!-- На Огне! -->
+    <div class="card">
+      <div class="card__img card__img--fire"><span>На Огне!</span></div>
+      <div class="card__body">
+        <div class="card__tag">Гриль-бар</div>
+        <div class="card__title">На Огне!</div>
+        <div class="card__desc">Пицца на углях, доставка в Telegram. Тёмный стиль, canvas-эффект костра (угли, искры, дым), GSAP reveal, телефон-мокап.</div>
+        <a href="https://kelf2009-801.github.io/dala-landing/na-ogne-landing.html" class="card__link" target="_blank">Открыть<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+
+    <!-- RestoBots -->
+    <div class="card">
+      <div class="card__img card__img--pizza"><span>RestoBots</span></div>
+      <div class="card__body">
+        <div class="card__tag">Пицца-бот</div>
+        <div class="card__title">RestoBots</div>
+        <div class="card__desc">Заказ пиццы через Telegram-бота. Светлый стиль, hero-анимация, карточки меню, телефон-мокап без notch.</div>
+        <a href="https://kelf2009-801.github.io/dala-landing/pizza-bot-landing.html" class="card__link" target="_blank">Открыть<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+
+    <!-- ГрузТакси -->
+    <div class="card">
+      <div class="card__img card__img--cargo"><span>ГрузТакси</span></div>
+      <div class="card__body">
+        <div class="card__tag">Грузоперевозки</div>
+        <div class="card__title">ГрузТакси</div>
+        <div class="card__desc">Газель Next по Актобе. Mobile-first, navy+оранжевый, SVG-иконки, 0 эмодзи, WhatsApp+Telegram, GSAP reveal.</div>
+        <a href="https://kelf2009-801.github.io/dala-landing/cargo-landing.html" class="card__link" target="_blank">Открыть<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+
+    <!-- ШинСервис -->
+    <div class="card">
+      <div class="card__img card__img--tire"><span>ШинСервис</span></div>
+      <div class="card__body">
+        <div class="card__tag">Шиномонтаж</div>
+        <div class="card__title">ШинСервис</div>
+        <div class="card__desc">Премиум-шиномонтаж. Индустриальный стиль, сталь+янтарь, 5 AI-картинок, SplitText-анимация, ScrollTrigger.batch, цены в рублях.</div>
+        <a href="https://kelf2009-801.github.io/dala-landing/tire-landing.html" class="card__link" target="_blank">Открыть<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">Grove Street Families · <a href="https://github.com/kelf2009-801/dala-landing" style="color:#f59e0b">github.com/kelf2009-801/dala-landing</a></div>
+</footer>
+
+</body>
+</html>
