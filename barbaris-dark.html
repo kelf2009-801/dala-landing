@@ -123,11 +123,25 @@ body {
 .hero {
   position: relative;
   min-height: 100vh;
-  background: linear-gradient(rgba(20,16,12,0.75), rgba(20,16,12,0.85)), url("barbaris-images/interior-bg.webp") center/cover no-repeat;
   display: flex; align-items: center; justify-content: center;
+  background: #14100c;
   text-align: center;
   padding: 120px 24px 80px;
   overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("barbaris-images/interior-bg.webp") center/cover no-repeat;
+  filter: brightness(1.5);
+  z-index: 0;
+}
+.hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(rgba(20,16,12,0.75), rgba(20,16,12,0.85));
+  z-index: 1;
 }
 .hero__content {
   position: relative; z-index: 10;
@@ -631,7 +645,7 @@ body {
 
 <!-- Nav -->
 <nav class="nav">
-  <a href="#" class="nav__logo"><img src="barbaris-images/logo-b.webp" alt="BARBARIS" style="height:72px;width:auto;vertical-align:middle;mix-blend-mode:lighten;filter:brightness(1.2);"> <span style="vertical-align:middle;">BARBARIS</span></a>
+  <a href="#" class="nav__logo"><img src="barbaris-images/logo-b.webp" alt="BARBARIS" style="height:72px;width:auto;vertical-align:middle;mix-blend-mode:screen;filter:brightness(1.2);"></a>
   <ul class="nav__links">
     <li><a href="#about">О нас</a></li>
     <li><a href="#services">Услуги</a></li>
