@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BARBARIS — Стиль мужества</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<style>
+:root {
+  --bg: #f5f0e8;
+  --surface: #ffffff;
+  --accent: #8b4513;
+  --accent-hover: #6b3410;
+  --gold: #d4a853;
+  --text: #1a1410;
+  --text-secondary: #6b5e4e;
+  --border: rgba(139,69,19,0.1);
+  --hero-bg: #1a1410;
+  --hero-text: #ffffff;
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+html{scroll-behavior:smooth}
+
+body{
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── Floating Orbs ── */
+.bg-blobs{
+  position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+}
+.bg-blobs .blob{
+  position:absolute;border-radius:50%;filter:blur(100px);opacity:0.25;
+  animation:blobFloat 22s infinite ease-in-out;
+}
+.bg-blobs .blob:nth-child(1){
+  background:#d4a853;top:5%;left:5%;width:400px;height:400px;
+}
+.bg-blobs .blob:nth-child(2){
+  background:#8b4513;top:55%;right:8%;width:320px;height:320px;
+  animation-delay:-7s;
+}
+.bg-blobs .blob:nth-child(3){
+  background:#d4a853;bottom:10%;left:25%;width:280px;height:280px;
+  animation-delay:-14s;
+}
+.bg-blobs .blob:nth-child(4){
+  background:rgba(139,69,19,0.3);top:30%;right:20%;width:220px;height:220px;
+  animation-delay:-18s;
+}
+@keyframes blobFloat{
+  0%,100%{transform:translate(0,0) scale(1)}
+  25%{transform:translate(60px,-90px) scale(1.12)}
+  50%{transform:translate(-40px,70px) scale(0.88)}
+  75%{transform:translate(80px,50px) scale(1.06)}
+}
+
+/* ── Nav ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(245,240,232,0.85);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;
+  transition:background 0.3s;
+  opacity:0;transform:translateY(-100%);
+}
+nav.scrolled{background:rgba(245,240,232,0.95);box-shadow:0 1px 20px rgba(0,0,0,0.06)}
+.nav-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:72px;
+}
+.nav-logo{
+  font-family:var(--font-heading);font-weight:700;font-size:1.5rem;
+  color:var(--text);text-decoration:none;letter-spacing:-0.5px;
+}
+.nav-logo span{color:var(--gold)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{
+  font-size:0.9rem;font-weight:500;color:var(--text-secondary);
+  text-decoration:none;position:relative;padding:4px 0;
+  transition:color 0.3s;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:0;left:0;width:0;height:2px;
+  background:var(--accent);transition:width 0.3s;
+}
+.nav-links a:hover{color:var(--accent)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{
+  padding:10px 24px;background:var(--accent);color:#fff;
+  border-radius:50px;font-family:var(--font-body);font-weight:600;
+  font-size:0.85rem;text-decoration:none;border:none;cursor:pointer;
+  transition:background 0.3s,transform 0.2s;
+  position:relative;overflow:hidden;
+}
+.nav-cta:hover{background:var(--accent-hover);transform:translateY(-1px)}
+.nav-cta::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);
+  transition:left 0.5s;
+}
+.nav-cta:hover::before{left:100%}
+
+/* Mobile nav toggle */
+.nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;z-index:101}
+.nav-toggle span{display:block;width:24px;height:2px;background:var(--text);margin:5px 0;transition:0.3s}
+
+/* ── Hero ── */
+.hero{
+  position:relative;z-index:1;
+  background:linear-gradient(rgba(26,20,16,0.7), rgba(26,20,16,0.85)), url("barbaris-images/interior-bg.webp") center/cover no-repeat;
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:120px 2rem 80px;
+  overflow:hidden;
+}
+.hero-grid-bg{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(212,168,83,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(212,168,83,0.04) 1px,transparent 1px);
+  background-size:70px 70px;
+  mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%);
+}
+.hero-content{
+  position:relative;z-index:2;text-align:center;max-width:800px;
+}
+.hero-badge{
+  display:inline-block;padding:6px 18px;border:1px solid rgba(212,168,83,0.4);
+  border-radius:50px;color:var(--gold);font-size:0.8rem;font-weight:500;
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:2rem;
+  animation:floatUp 4s ease-in-out infinite;
+}
+@keyframes floatUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.hero h1{
+  font-family:var(--font-heading);font-weight:700;
+  font-size:clamp(42px,8vw,80px);line-height:1.05;
+  color:var(--hero-text);margin-bottom:1.5rem;
+  letter-spacing:-1.5px;
+}
+.hero h1 .gradient{
+  background:linear-gradient(135deg,var(--gold),#c49a3c,var(--gold));
+  background-size:200% 200%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:gradientShift 4s ease-in-out infinite;
+}
+@keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero p{
+  font-size:1.15rem;color:rgba(255,255,255,0.7);max-width:500px;
+  margin:0 auto 2.5rem;line-height:1.7;
+}
+.hero-cta-group{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 36px;background:var(--accent);color:#fff;
+  border-radius:50px;font-family:var(--font-body);font-weight:600;
+  font-size:0.95rem;text-decoration:none;border:none;cursor:pointer;
+  transition:background 0.3s,transform 0.2s,box-shadow 0.3s;
+  position:relative;overflow:hidden;
+}
+.btn-primary:hover{background:var(--accent-hover);transform:translateY(-2px);box-shadow:0 8px 30px rgba(139,69,19,0.3)}
+.btn-primary::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);
+  transition:left 0.5s;
+}
+.btn-primary:hover::before{left:100%}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 36px;background:transparent;color:var(--hero-text);
+  border:1.5px solid rgba(255,255,255,0.25);border-radius:50px;
+  font-family:var(--font-body);font-weight:600;font-size:0.95rem;
+  text-decoration:none;cursor:pointer;transition:all 0.3s;
+}
+.btn-secondary:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.4)}
+
+/* ── Sections Shared ── */
+.section{
+  position:relative;z-index:1;
+  padding:100px 2rem;
+}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-label{
+  display:inline-block;font-size:0.8rem;font-weight:600;letter-spacing:2px;
+  text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;
+}
+.section-title{
+  font-family:var(--font-heading);font-weight:700;
+  font-size:clamp(28px,5vw,44px);line-height:1.15;
+  color:var(--text);margin-bottom:1rem;letter-spacing:-0.5px;
+}
+.section-subtitle{
+  font-size:1.05rem;color:var(--text-secondary);max-width:550px;
+  margin-bottom:3rem;line-height:1.7;
+}
+
+/* ── Services ── */
+.services-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:1.5rem;
+}
+
+.service-photo {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  background: #e8ddd0;
+}
+
+.service-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:2rem;
+  transition:transform 0.3s,box-shadow 0.3s;
+  position:relative;overflow:hidden;
+}
+.service-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,0.08)}
+.service-card::after{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(212,168,83,0.08),transparent 50%);
+  opacity:0;transition:opacity 0.4s;pointer-events:none;
+}
+.service-card:hover::after{opacity:1}
+.service-icon{
+  width:52px;height:52px;display:flex;align-items:center;justify-content:center;
+  background:rgba(139,69,19,0.08);border-radius:12px;margin-bottom:1.25rem;
+}
+.service-icon svg{width:26px;height:26px;color:var(--accent)}
+.service-card h3{font-family:var(--font-heading);font-weight:600;font-size:1.15rem;margin-bottom:0.5rem}
+.service-card p{color:var(--text-secondary);font-size:0.9rem;line-height:1.6;margin-bottom:1rem}
+.service-price{font-family:var(--font-heading);font-weight:700;font-size:1.1rem;color:var(--gold);margin-top:auto}
+
+/* ── About / Stats ── */
+.about-stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;
+  margin-top:3rem;
+}
+.stat-item{text-align:center;padding:2rem 1rem}
+.stat-number{
+  font-family:var(--font-heading);font-weight:700;
+  font-size:clamp(32px,5vw,56px);color:var(--accent);
+  line-height:1;margin-bottom:0.5rem;
+}
+.stat-label{font-size:0.9rem;color:var(--text-secondary);font-weight:500}
+
+/* ── Masters ── */
+.masters-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1.5rem;
+}
+.master-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;text-align:center;
+  transition:transform 0.3s,box-shadow 0.3s;
+}
+.master-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,0.08)}
+.master-img{
+  width:100%;height:300px;background:linear-gradient(135deg,rgba(139,69,19,0.1),rgba(212,168,83,0.1));
+  display:flex;align-items:center;justify-content:center;
+}
+.master-img svg{width:60px;height:60px;color:var(--text-secondary);opacity:0.3}
+.master-body{padding:1.5rem}
+.master-body h3{font-family:var(--font-heading);font-weight:600;font-size:1.1rem;margin-bottom:0.25rem}
+.master-body .role{font-size:0.85rem;color:var(--gold);font-weight:500;margin-bottom:0.5rem}
+.master-body p{font-size:0.85rem;color:var(--text-secondary);line-height:1.5}
+
+/* ── Gallery ── */
+.gallery-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;
+}
+.gallery-item{
+  aspect-ratio:1;border-radius:12px;overflow:hidden;
+  background:linear-gradient(135deg,rgba(139,69,19,0.08),rgba(212,168,83,0.08));
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 0.3s;
+}
+.gallery-item:hover{transform:scale(1.03)}
+.gallery-item svg{width:36px;height:36px;color:var(--text-secondary);opacity:0.25}
+
+/* ── Reviews ── */
+.reviews-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:1.5rem;
+}
+.review-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:2rem;
+}
+.review-stars{display:flex;gap:4px;margin-bottom:1rem}
+.review-stars svg{width:18px;height:18px;color:var(--gold)}
+.review-text{font-size:0.95rem;color:var(--text);line-height:1.7;margin-bottom:1.25rem;font-style:italic}
+.review-author{font-weight:600;font-size:0.9rem;color:var(--text)}
+.review-date{font-size:0.8rem;color:var(--text-secondary)}
+
+/* ── CTA ── */
+.cta-section{
+  position:relative;z-index:1;
+  padding:100px 2rem;
+}
+.cta-box{
+  max-width:800px;margin:0 auto;text-align:center;
+  background:var(--hero-bg);border-radius:24px;
+  padding:clamp(40px,8vw,80px) 2rem;
+  color:var(--hero-text);
+}
+.cta-box h2{
+  font-family:var(--font-heading);font-weight:700;
+  font-size:clamp(28px,5vw,42px);line-height:1.15;
+  margin-bottom:1rem;letter-spacing:-0.5px;
+}
+.cta-box p{font-size:1.05rem;color:rgba(255,255,255,0.65);margin-bottom:2rem;max-width:450px;margin-left:auto;margin-right:auto}
+.cta-box .btn-primary{background:var(--gold);color:#1a1410;font-size:1rem;padding:16px 40px}
+.cta-box .btn-primary:hover{background:#c49a3c;box-shadow:0 8px 30px rgba(212,168,83,0.3)}
+
+/* ── Footer ── */
+footer{
+  position:relative;z-index:1;
+  border-top:1px solid var(--border);
+  padding:2rem;
+  text-align:center;
+}
+footer p{font-size:0.85rem;color:var(--text-secondary)}
+footer .brand{font-family:var(--font-heading);font-weight:700;color:var(--text);margin-bottom:0.5rem}
+footer .brand span{color:var(--gold)}
+
+/* ── Reveal ── */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s cubic-bezier(0.22,1,0.36,1),transform 0.8s cubic-bezier(0.22,1,0.36,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-toggle{display:block}
+  .nav-links.open{
+    display:flex;flex-direction:column;position:absolute;top:72px;left:0;right:0;
+    background:var(--bg);padding:1.5rem 2rem;gap:1rem;border-bottom:1px solid var(--border);
+  }
+  .about-stats{grid-template-columns:repeat(2,1fr)}
+  .gallery-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-cta-group{flex-direction:column;align-items:center}
+  .hero-cta-group .btn-primary,.hero-cta-group .btn-secondary{width:100%;max-width:300px;justify-content:center}
+}
+@media(max-width:480px){
+  nav{padding:0 1rem}
+  .section{padding:60px 1rem}
+  .hero{padding:100px 1rem 60px}
+  .hero h1{font-size:36px}
+  .about-stats{grid-template-columns:1fr 1fr;gap:1rem}
+  .stat-item{padding:1rem 0.5rem}
+  .gallery-grid{grid-template-columns:1fr 1fr}
+  .cta-section{padding:60px 1rem}
+  .cta-box{padding:40px 1.5rem}
+  .services-grid{grid-template-columns:1fr}
+  .masters-grid{grid-template-columns:1fr}
+  .reviews-grid{grid-template-columns:1fr}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- Floating Orbs -->
+<div class="bg-blobs">
+  <div class="blob"></div>
+  <div class="blob"></div>
+  <div class="blob"></div>
+  <div class="blob"></div>
+</div>
+
+<!-- Nav -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">BARBA<span>RIS</span></a>
+    <ul class="nav-links">
+      <li><a href="#services">Услуги</a></li>
+      <li><a href="#about">О нас</a></li>
+      <li><a href="#masters">Мастера</a></li>
+      <li><a href="#gallery">Галерея</a></li>
+      <li><a href="#reviews">Отзывы</a></li>
+    </ul>
+    <a href="#" class="nav-cta">Записаться</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Barbershop &amp; Grooming</div>
+    <h1 id="heroTitle">
+      Стиль <span class="gradient">мужества</span><br>в каждой детали
+    </h1>
+    <p>BARBARIS — это место, где классика встречается с современностью. Безупречные стрижки, королевское бритьё и атмосфера настоящего мужского клуба.</p>
+    <div class="hero-cta-group">
+      <a href="#" class="btn-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Записаться в Telegram
+      </a>
+      <a href="#services" class="btn-secondary">Наши услуги</a>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section class="section" id="services">
+  <div class="section-inner">
+    <div class="section-label reveal">Услуги</div>
+    <h2 class="section-title reveal">Что мы предлагаем</h2>
+    <p class="section-subtitle reveal">От классической стрижки до королевского бритья — каждый ритуал продуман до мелочей.</p>
+    <div class="services-grid">
+      <div class="service-card reveal" style="transition-delay:0.05s">
+      <div class="service-photo"><img src="barbaris-images/service-haircut.webp" alt="Услуга" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:12px;"></div>
+      <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M10 22v-5L8 7"/><path d="M14 22v-5l2-10"/></svg>
+        </div>
+        <h3>Мужская стрижка</h3>
+        <p>Классические и современные стрижки с учётом формы лица и структуры волос.</p>
+        <div class="service-price">от 2 500 ₽</div>
+      </div>
+      <div class="service-card reveal" style="transition-delay:0.1s">
+      <div class="service-photo"><img src="barbaris-images/service-camouflage.webp" alt="Камуфляж седины" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:12px;"></div>
+      <h3>Камуфляж седины</h3>
+        <p>Деликатное тонирование для естественного и мужественного образа.</p>
+        <div class="service-price">от 3 500 ₽</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="section" id="about">
+  <div class="section-inner">
+    <div class="section-label reveal">О нас</div>
+    <h2 class="section-title reveal">BARBARIS — это философия</h2>
+    <p class="section-subtitle reveal">Мы создали пространство, где каждый мужчина чувствует себя уверенно. Наши мастера — профессионалы с многолетним опытом, а атмосфера располагает к расслаблению и качественному отдыху.</p>
+    <div class="about-stats">
+      <div class="stat-item reveal" style="transition-delay:0.05s">
+        <div class="stat-number"><span class="counter" data-target="12">0</span></div>
+        <div class="stat-label">Лет опыта</div>
+      </div>
+      <div class="stat-item reveal" style="transition-delay:0.1s">
+        <div class="stat-number"><span class="counter" data-target="15000">0</span>+</div>
+        <div class="stat-label">Довольных клиентов</div>
+      </div>
+      <div class="stat-item reveal" style="transition-delay:0.15s">
+        <div class="stat-number"><span class="counter" data-target="8">0</span></div>
+        <div class="stat-label">Мастеров</div>
+      </div>
+      <div class="stat-item reveal" style="transition-delay:0.2s">
+        <div class="stat-number"><span class="counter" data-target="100">0</span>%</div>
+        <div class="stat-label">Качество</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Masters -->
+<section class="section" id="masters" style="background:var(--surface)">
+  <div class="section-inner">
+    <div class="section-label reveal">Мастера</div>
+    <h2 class="section-title reveal">Команда профессионалов</h2>
+    <p class="section-subtitle reveal">Каждый мастер BARBARIS — это художник своего дела. Мы постоянно учимся и следим за трендами.</p>
+    <div class="masters-grid">
+      <div class="master-card reveal" style="transition-delay:0.05s">
+        <div class="master-img">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="master-body">
+          <h3>Алексей Волков</h3>
+          <div class="role">Ведущий мастер</div>
+          <p>12 лет опыта. Специализация: классические мужские стрижки и опасное бритьё.</p>
+        </div>
+      </div>
+      <div class="master-card reveal" style="transition-delay:0.1s">
+        <div class="master-img">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="master-body">
+          <h3>Дмитрий Соколов</h3>
+          <div class="role">Барбер-стилист</div>
+          <p>Эксперт по бородам и стайлингу. Создаёт образы, которые подчёркивают характер.</p>
+        </div>
+      </div>
+      <div class="master-card reveal" style="transition-delay:0.15s">
+        <div class="master-img">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="master-body">
+          <h3>Максим Орлов</h3>
+          <div class="role">Мастер-колорист</div>
+          <p>Специалист по камуфляжу седины и современным техникам окрашивания.</p>
+        </div>
+      </div>
+      <div class="master-card reveal" style="transition-delay:0.2s">
+        <div class="master-img">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="master-body">
+          <h3>Артём Кузнецов</h3>
+          <div class="role">Junior барбер</div>
+          <p>Молодой талант с острым взглядом на тренды. Фейды и текстуры — его конёк.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Gallery -->
+<section class="section" id="gallery">
+  <div class="section-inner">
+    <div class="section-label reveal">Галерея</div>
+    <h2 class="section-title reveal">Наши работы</h2>
+    <p class="section-subtitle reveal">Каждая стрижка — это произведение. Убедитесь сами.</p>
+    <div class="gallery-grid">
+      <div class="gallery-item reveal" style="transition-delay:0.05s">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      </div>
+      <div class="gallery-item reveal" style="transition-delay:0.1s">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      </div>
+      <div class="gallery-item reveal" style="transition-delay:0.15s">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      </div>
+      <div class="gallery-item reveal" style="transition-delay:0.2s">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      </div>
+      <div class="gallery-item reveal" style="transition-delay:0.25s">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      </div>
+      <div class="gallery-item reveal" style="transition-delay:0.3s">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Reviews -->
+<section class="section" id="reviews" style="background:var(--surface)">
+  <div class="section-inner">
+    <div class="section-label reveal">Отзывы</div>
+    <h2 class="section-title reveal">Что говорят клиенты</h2>
+    <p class="section-subtitle reveal">Нам доверяют свой стиль тысячи мужчин. Вот что они говорят о BARBARIS.</p>
+    <div class="reviews-grid">
+      <div class="review-card reveal" style="transition-delay:0.05s">
+        <div class="review-stars">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="review-text">«Лучший барбершоп в городе. Хожу только к Алексею — мастер с золотыми руками. Каждый раз выхожу с идеальной стрижкой.»</p>
+        <div class="review-author">Сергей М.</div>
+        <div class="review-date">2 недели назад</div>
+      </div>
+      <div class="review-card reveal" style="transition-delay:0.1s">
+        <div class="review-stars">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="review-text">«Атмосфера — огонь. Виски с кофе, хорошая музыка, и главное — стригут так, что потом комплименты собираешь неделю.»</p>
+        <div class="review-author">Андрей К.</div>
+        <div class="review-date">1 месяц назад</div>
+      </div>
+      <div class="review-card reveal" style="transition-delay:0.15s">
+        <div class="review-stars">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="review-text">«Первый раз попробовал королевское бритьё — это нечто. Расслабляет и чувствуешь себя королём. Рекомендую!»</p>
+        <div class="review-author">Иван П.</div>
+        <div class="review-date">3 недели назад</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="book">
+  <div class="cta-box reveal">
+    <h2>Готовы к преображению?</h2>
+    <p>Запишитесь прямо сейчас в Telegram и получите скидку 15% на первое посещение.</p>
+    <a href="#" class="btn-primary" style="background:var(--gold);color:#1a1410;font-size:1rem;padding:16px 40px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Записаться в Telegram
+    </a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="brand">BARBA<span>RIS</span></div>
+  <p>Стиль мужества. Москва, ул. Примерная, 15. Ежедневно с 10:00 до 22:00.</p>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ── Nav slide-in ──
+gsap.to('#nav', {opacity:1, y:0, duration:0.7, ease:'power2.out', delay:0.3});
+
+// Nav scroll background
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50);
+});
+
+// Mobile nav toggle
+document.getElementById('navToggle').addEventListener('click',()=>{
+  document.querySelector('.nav-links').classList.toggle('open');
+});
+
+// ── 3D tilt on hero title ──
+const hero = document.getElementById('hero');
+const heroTitle = document.getElementById('heroTitle');
+hero.addEventListener('mousemove',(e)=>{
+  const r=hero.getBoundingClientRect();
+  const x=(e.clientX-r.left)/r.width-0.5;
+  const y=(e.clientY-r.top)/r.height-0.5;
+  heroTitle.style.transform=`perspective(1000px) rotateX(${y*-4}deg) rotateY(${x*4}deg)`;
+  heroTitle.style.transition='transform 0.15s ease-out';
+  heroTitle.style.willChange='transform';
+});
+hero.addEventListener('mouseleave',()=>{
+  heroTitle.style.transform='perspective(1000px) rotateX(0) rotateY(0)';
+});
+
+// ── Scroll Reveal ──
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// ── Counter Animation ──
+function animateCounters(){
+  const counterObserver=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.querySelectorAll('.counter').forEach(counter=>{
+          const target=parseInt(counter.dataset.target);
+          const duration=2000;
+          const startTime=performance.now();
+          function update(now){
+            const progress=Math.min((now-startTime)/duration,1);
+            const eased=1-Math.pow(1-progress,3);
+            counter.textContent=Math.floor(eased*target);
+            if(progress<1)requestAnimationFrame(update);
+          }
+          requestAnimationFrame(update);
+        });
+        counterObserver.unobserve(entry.target);
+      }
+    });
+  },{threshold:0.5});
+  document.querySelectorAll('.about-stats').forEach(el=>counterObserver.observe(el));
+}
+animateCounters();
+
+// ── Feature card light tracking ──
+document.querySelectorAll('.service-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+    card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+  });
+});
+
+// ── GSAP ScrollTrigger for service cards stagger ──
+ScrollTrigger.batch('.service-card',{
+  onEnter:(elements)=>{
+    gsap.from(elements,{opacity:0,y:40,stagger:0.08,duration:0.7,ease:'power2.out'});
+  },
+  start:'top 85%',
+  once:true
+});
+
+// ── GSAP ScrollTrigger for master cards ──
+ScrollTrigger.batch('.master-card',{
+  onEnter:(elements)=>{
+    gsap.from(elements,{opacity:0,y:40,stagger:0.08,duration:0.7,ease:'power2.out'});
+  },
+  start:'top 85%',
+  once:true
+});
+
+// ── GSAP ScrollTrigger for review cards ──
+ScrollTrigger.batch('.review-card',{
+  onEnter:(elements)=>{
+    gsap.from(elements,{opacity:0,y:40,stagger:0.08,duration:0.7,ease:'power2.out'});
+  },
+  start:'top 85%',
+  once:true
+});
+
+// ── GSAP ScrollTrigger for gallery items ──
+ScrollTrigger.batch('.gallery-item',{
+  onEnter:(elements)=>{
+    gsap.from(elements,{opacity:0,scale:0.9,stagger:0.06,duration:0.6,ease:'back.out(1.4)'});
+  },
+  start:'top 85%',
+  once:true
+});
+</script>
+
+</body>
+</html>
