@@ -73,14 +73,24 @@ body {
   from { transform: translateY(-100%); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
-.nav__logo {
+.nav__logo-img {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
   font-family: 'Montserrat', sans-serif;
-  font-weight: 800; font-size: 22px;
-  letter-spacing: -0.5px;
+  font-weight: 800; font-size: 24px;
   color: var(--accent);
-  text-transform: uppercase;
   text-decoration: none;
+  transition: all 0.3s;
+  flex-shrink: 0;
 }
+.nav__logo-img:hover {
+  background: rgba(212,168,83,0.1);
+  box-shadow: 0 0 20px rgba(212,168,83,0.2);
+}
+
+.nav__logo { text-decoration: none; display: flex; align-items: center; }
 .nav__links {
   display: flex; gap: 32px; list-style: none;
 }
@@ -415,6 +425,25 @@ body {
 }
 
 /* ========== PRICE ========== */
+/* Price section bg */
+.price-section {
+  position: relative;
+  background: #1a1612;
+}
+.price-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("barbaris-images/price-bg.webp") center/cover no-repeat;
+  filter: brightness(1.8);
+  z-index: 0;
+}
+.price-section::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(rgba(26,22,18,0.5), rgba(26,22,18,0.6));
+  z-index: 1;
+}
+.price-section .container { position: relative; z-index: 2; }
 .price__table {
   max-width: 700px;
   margin: 0 auto;
@@ -645,7 +674,7 @@ body {
 
 <!-- Nav -->
 <nav class="nav">
-  <a href="#" class="nav__logo"><img src="barbaris-images/logo-b.webp" alt="BARBARIS" style="height:72px;width:auto;vertical-align:middle;mix-blend-mode:screen;filter:brightness(1.2);"></a>
+  <a href="#" class="nav__logo"><span class="nav__logo-img">B</span></a>
   <ul class="nav__links">
     <li><a href="#about">О нас</a></li>
     <li><a href="#services">Услуги</a></li>
@@ -808,7 +837,7 @@ body {
 </section>
 
 <!-- Price -->
-<section class="section" id="price">
+<section class="section price-section" id="price">
   <div class="container">
     <div class="section__header reveal">
       <div class="section__label">Прайс</div>
