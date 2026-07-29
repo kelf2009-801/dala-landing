@@ -43,15 +43,17 @@ footer{text-align:center;padding:2rem;border-top:1px solid rgba(201,168,76,.1);c
 <section class="hero"><div class="hero-bg"><img src="dasha-images/dasha-main.webp" alt=""></div><div class="hero-text"><h1>Dasha</h1><div class="line"></div><p class="tag">Живу с огоньком</p></div></section>
 <section class="section" id="about"><div class="section-inner"><div class="s-label">Обо мне</div><h2 class="s-title">Привет, я Даша!</h2><p class="s-text">Молодая, бойкая, красивая — это всё про меня. Люблю жизнь во всех её проявлениях: путешествия, кофе по утрам, закаты на крыше и искренние разговоры.</p></div></section>
 <section class="section" id="gallery"><div class="s-label">Галерея</div><h2 class="s-title" style="color:var(--text)">Мои моменты</h2><div class="gallery">
-<a href="dasha-images/photo-144149_49035515.webp" data-fslightbox="g"><img src="dasha-images/photo-144149_49035515.webp" loading="lazy"></a>
-<a href="dasha-images/photo-144210_e2e80d69.webp" data-fslightbox="g"><img src="dasha-images/photo-144210_e2e80d69.webp" loading="lazy"></a>
-<a href="dasha-images/photo-144223_2c7bcb19.webp" data-fslightbox="g"><img src="dasha-images/photo-144223_2c7bcb19.webp" loading="lazy"></a>
-<a href="dasha-images/photo-144249_59a08520.webp" data-fslightbox="g"><img src="dasha-images/photo-144249_59a08520.webp" loading="lazy"></a>
-<a href="dasha-images/photo-144304_ad39401a.webp" data-fslightbox="g"><img src="dasha-images/photo-144304_ad39401a.webp" loading="lazy"></a>
-<a href="dasha-images/photo-144318_47f7fd75.webp" data-fslightbox="g"><img src="dasha-images/photo-144318_47f7fd75.webp" loading="lazy"></a>
+<a href="dasha-images/photo-144149_49035515.webp" class="glightbox"><img src="dasha-images/photo-144149_49035515.webp" loading="lazy"></a>
+<a href="dasha-images/photo-144210_e2e80d69.webp" class="glightbox"><img src="dasha-images/photo-144210_e2e80d69.webp" loading="lazy"></a>
+<a href="dasha-images/photo-144223_2c7bcb19.webp" class="glightbox"><img src="dasha-images/photo-144223_2c7bcb19.webp" loading="lazy"></a>
+<a href="dasha-images/photo-144249_59a08520.webp" class="glightbox"><img src="dasha-images/photo-144249_59a08520.webp" loading="lazy"></a>
+<a href="dasha-images/photo-144304_ad39401a.webp" class="glightbox"><img src="dasha-images/photo-144304_ad39401a.webp" loading="lazy"></a>
+<a href="dasha-images/photo-144318_47f7fd75.webp" class="glightbox"><img src="dasha-images/photo-144318_47f7fd75.webp" loading="lazy"></a>
 </div></section>
 <section class="section" id="contacts"><div class="section-inner"><div class="s-label">Контакты</div><h2 class="s-title">Давай дружить!</h2><div class="social"><a href="#" title="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a><a href="#" title="Telegram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></a></div></div></section>
 <footer><p>DASHA &copy; 2026</p></footer>
-<script src="https://cdn.jsdelivr.net/npm/fslightbox@3.3.1/index.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css">
+<script src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
+<script>GLightbox({selector:".glightbox"});</script>
 </body>
 </html>

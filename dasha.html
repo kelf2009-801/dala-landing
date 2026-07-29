@@ -113,12 +113,12 @@ footer p{font-size:.75rem;color:var(--text2);letter-spacing:1px}
     <div class="s-label">Галерея</div>
     <h2 class="s-title">Мои моменты</h2>
     <div class="gallery">
-      <a href="dasha-images/photo-144149_49035515.webp" data-fslightbox="gallery"><img src="dasha-images/photo-144149_49035515.webp" alt="Фото 1" loading="lazy"></a>
-      <a href="dasha-images/photo-144210_e2e80d69.webp" data-fslightbox="gallery"><img src="dasha-images/photo-144210_e2e80d69.webp" alt="Фото 2" loading="lazy"></a>
-      <a href="dasha-images/photo-144223_2c7bcb19.webp" data-fslightbox="gallery"><img src="dasha-images/photo-144223_2c7bcb19.webp" alt="Фото 3" loading="lazy"></a>
-      <a href="dasha-images/photo-144249_59a08520.webp" data-fslightbox="gallery"><img src="dasha-images/photo-144249_59a08520.webp" alt="Фото 4" loading="lazy"></a>
-      <a href="dasha-images/photo-144304_ad39401a.webp" data-fslightbox="gallery"><img src="dasha-images/photo-144304_ad39401a.webp" alt="Фото 5" loading="lazy"></a>
-      <a href="dasha-images/photo-144318_47f7fd75.webp" data-fslightbox="gallery"><img src="dasha-images/photo-144318_47f7fd75.webp" alt="Фото 6" loading="lazy"></a>
+      <a href="dasha-images/photo-144149_49035515.webp" ><img src="dasha-images/photo-144149_49035515.webp" alt="Фото 1" loading="lazy"></a>
+      <a href="dasha-images/photo-144210_e2e80d69.webp" ><img src="dasha-images/photo-144210_e2e80d69.webp" alt="Фото 2" loading="lazy"></a>
+      <a href="dasha-images/photo-144223_2c7bcb19.webp" ><img src="dasha-images/photo-144223_2c7bcb19.webp" alt="Фото 3" loading="lazy"></a>
+      <a href="dasha-images/photo-144249_59a08520.webp" ><img src="dasha-images/photo-144249_59a08520.webp" alt="Фото 4" loading="lazy"></a>
+      <a href="dasha-images/photo-144304_ad39401a.webp" ><img src="dasha-images/photo-144304_ad39401a.webp" alt="Фото 5" loading="lazy"></a>
+      <a href="dasha-images/photo-144318_47f7fd75.webp" ><img src="dasha-images/photo-144318_47f7fd75.webp" alt="Фото 6" loading="lazy"></a>
     </div>
   </div>
 </section>
@@ -137,7 +137,9 @@ footer p{font-size:.75rem;color:var(--text2);letter-spacing:1px}
 
 <footer><p>DASHA &copy; 2026</p></footer>
 
-<script src="https://cdn.jsdelivr.net/npm/fslightbox@3.3.1/index.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/baguettebox.js@1.12.0/dist/baguetteBox.min.css">
+<script src="https://cdn.jsdelivr.net/npm/baguettebox.js@1.12.0/dist/baguetteBox.min.js"></script>
+<script>baguetteBox.run(".gallery");</script>
 <script>
 // Gold particles
 (function(){
