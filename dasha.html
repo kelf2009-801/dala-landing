@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
 <style>
 :root{--gold:#c9a84c;--gold-light:#e0c878;--text:#2a2520;--text2:#8a8078;--bg:#faf8f5;--font-h:'Cormorant Garamond',serif;--font-b:'Inter',sans-serif}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -46,9 +46,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;background:rg
 
 /* Gallery — Swiper grid */
 .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.gallery-grid .swiper-slide{height:auto!important;aspect-ratio:3/4;border-radius:6px;overflow:hidden;cursor:pointer}
-.gallery-grid .swiper-slide img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s}
-.gallery-grid .swiper-slide:hover img{transform:scale(1.05)}
+.gallery-card{aspect-ratio:3/4;border-radius:6px;overflow:hidden;cursor:pointer}
+.gallery-card img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s}
+.gallery-card:hover img{transform:scale(1.05)}
+
+
+
 
 /* Lightbox — fullscreen Swiper */
 .lightbox{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.95)}
@@ -58,10 +61,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;background:rg
 .lightbox .swiper-slide img{max-width:95vw;max-height:90vh;object-fit:contain;border-radius:4px}
 .lb-close{position:fixed;top:16px;right:16px;z-index:10000;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.3s}
 .lb-close:hover{background:rgba(255,255,255,0.25)}
-.swiper-button-next,.swiper-button-prev{color:rgba(255,255,255,0.7)!important;--swiper-navigation-size:28px}
-.swiper-button-next:hover,.swiper-button-prev:hover{color:#fff!important}
-.swiper-pagination-bullet{background:rgba(255,255,255,0.4)!important}
-.swiper-pagination-bullet-active{background:var(--gold)!important}
+.lb-prev,.lb-next{position:fixed;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.12);border:none;color:#fff;font-size:30px;cursor:pointer;z-index:10000;display:flex;align-items:center;justify-content:center;transition:background 0.3s}
+.lb-prev{left:12px}.lb-next{right:12px}
+.lb-prev:hover,.lb-next:hover{background:rgba(255,255,255,0.25)}
+.lb-counter{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.7);font-size:14px;z-index:10000;font-family:var(--font-b)}
+
 
 /* Social */
 .social{display:flex;gap:1rem;justify-content:center;margin-top:1.5rem}
@@ -148,15 +152,13 @@ footer p{font-size:0.75rem;color:var(--text2);letter-spacing:1px}
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox">
   <button class="lb-close" id="lbClose">&times;</button>
-  <div class="swiper" id="lbSwiper">
-    <div class="swiper-wrapper"></div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-pagination"></div>
-  </div>
+  <button class="lb-prev" id="lbPrev">&#8249;</button>
+  <img src="" alt="" id="lbImg">
+  <button class="lb-next" id="lbNext">&#8250;</button>
+  <div class="lb-counter" id="lbCounter"></div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
 <script>
 // Gallery images
 var photos = [
@@ -172,41 +174,57 @@ var photos = [
 var grid = document.getElementById('galleryGrid');
 photos.forEach(function(src, i){
   var div = document.createElement('div');
-  div.className = 'swiper-slide';
+  div.className = 'gallery-card';
   div.innerHTML = '<img src="'+src+'" alt="Фото '+(i+1)+'" loading="lazy">';
   div.addEventListener('click', function(){ openLightbox(i); });
   grid.appendChild(div);
 });
 
-// Swiper lightbox
-var lbSwiper = null;
+// Lightbox
+var lbCurrent = 0;
 function openLightbox(idx){
+  lbCurrent = idx;
+  document.getElementById('lbImg').src = photos[idx];
+  document.getElementById('lbCounter').textContent = (idx+1) + ' / ' + photos.length;
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
-  
-  var wrapper = document.querySelector('#lbSwiper .swiper-wrapper');
-  wrapper.innerHTML = '';
-  photos.forEach(function(src){
-    wrapper.innerHTML += '<div class="swiper-slide"><img src="'+src+'" alt=""></div>';
-  });
-  
-  if(lbSwiper) lbSwiper.destroy();
-  lbSwiper = new Swiper('#lbSwiper', {
-    initialSlide: idx,
-    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-    pagination: { el: '.swiper-pagination', clickable: true },
-    keyboard: { enabled: true },
-    loop: true
-  });
 }
-
-document.getElementById('lbClose').addEventListener('click', function(){
+function lbClose(){
   document.getElementById('lightbox').classList.remove('open');
   document.body.style.overflow = '';
+}
+function lbNext(){
+  lbCurrent = (lbCurrent + 1) % photos.length;
+  document.getElementById('lbImg').src = photos[lbCurrent];
+  document.getElementById('lbCounter').textContent = (lbCurrent+1) + ' / ' + photos.length;
+}
+function lbPrev(){
+  lbCurrent = (lbCurrent - 1 + photos.length) % photos.length;
+  document.getElementById('lbImg').src = photos[lbCurrent];
+  document.getElementById('lbCounter').textContent = (lbCurrent+1) + ' / ' + photos.length;
+}
+document.getElementById('lbClose').addEventListener('click', lbClose);
+document.getElementById('lbNext').addEventListener('click', lbNext);
+document.getElementById('lbPrev').addEventListener('click', lbPrev);
+document.getElementById('lightbox').addEventListener('click', function(e){
+  if(e.target === this) lbClose();
+});
+document.addEventListener('keydown', function(e){
+  if(!document.getElementById('lightbox').classList.contains('open')) return;
+  if(e.key === 'Escape') lbClose();
+  if(e.key === 'ArrowLeft') lbPrev();
+  if(e.key === 'ArrowRight') lbNext();
 });
 
-document.getElementById('lightbox').addEventListener('click', function(e){
-  if(e.target === this){ document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow = ''; }
+// Touch swipe for lightbox
+var touchStartX = 0;
+document.getElementById('lightbox').addEventListener('touchstart', function(e){ touchStartX = e.touches[0].clientX; });
+document.getElementById('lightbox').addEventListener('touchend', function(e){
+  var diff = touchStartX - e.changedTouches[0].clientX;
+  if(Math.abs(diff) > 50){
+    if(diff > 0) lbNext();
+    else lbPrev();
+  }
 });
 
 // Gold particles
