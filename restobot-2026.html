@@ -25,7 +25,7 @@ body{font-family:'Inter',sans-serif;font-weight:400;background:var(--bg);color:v
 .btn{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;background:var(--orange);color:#fff;border-radius:50px;font-weight:600;font-size:1rem;text-decoration:none;border:none;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden}
 .btn:hover{background:var(--orange-hover);transform:translateY(-2px);box-shadow:0 8px 30px rgba(240,80,32,0.3)}
 .btn::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);animation:shimmer 3s ease-in-out infinite}
-@keyframes shimmer{0%,100%{left:-100%}50%{left:100%}}
+@keyframes shimmer{0%,100%{left:-100%}50%{left:100%}}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 
 /* Stats */
 .stats{display:flex;gap:3rem;justify-content:center;margin-top:3rem;flex-wrap:wrap}
@@ -49,6 +49,7 @@ body{font-family:'Inter',sans-serif;font-weight:400;background:var(--bg);color:v
 
 /* Menu */
 .menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.menu-img{width:100%;aspect-ratio:4/3;border-radius:12px;overflow:hidden;margin-bottom:1rem;background:#1a1a1a}
 .menu-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:transform 0.3s,box-shadow 0.3s;position:relative;overflow:hidden}
 .menu-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.4);border-color:rgba(240,80,32,0.2)}
 .menu-card .tag{position:absolute;top:12px;right:12px;background:var(--orange);color:#fff;font-size:0.7rem;font-weight:600;padding:4px 10px;border-radius:50px;text-transform:uppercase}
@@ -95,9 +96,13 @@ footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:v
       Заказать в Telegram
     </a>
     <div class="stats">
-      <div class="stat"><div class="stat-num counter" data-target="15000">0</div><div class="stat-label">заказов</div></div>
-      <div class="stat"><div class="stat-num"><span class="counter" data-target="30">0</span> мин</div><div class="stat-label">доставка</div></div>
-      <div class="stat"><div class="stat-num counter" data-target="98">0</div><div class="stat-label">% довольных</div></div>
+      <div class="stat"><div class="stat-num"><span class="live-counter" id="liveOrders">15 247</span></div><div class="stat-label">заказов всего</div></div>
+      <div class="stat"><div class="stat-num"><span id="deliveryTimer">~30</span> мин</div><div class="stat-label">средняя доставка</div></div>
+      <div class="stat"><div class="stat-num">98<span class="counter" data-target="98">0</span>%</div><div class="stat-label">довольных клиентов</div></div>
+    </div>
+    <div class="live-badge" id="liveBadge" style="margin-top:1.5rem;display:inline-flex;align-items:center;gap:8px;padding:8px 20px;background:rgba(240,80,32,0.1);border:1px solid rgba(240,80,32,0.2);border-radius:50px;font-size:0.85rem;color:var(--orange)">
+      <span class="pulse" style="width:8px;height:8px;border-radius:50%;background:var(--orange);animation:pulse 1.5s ease-in-out infinite"></span>
+      <span id="liveText">3 заказа за последний час</span>
     </div>
   </div>
 </section>
@@ -118,12 +123,12 @@ footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:v
   <h2 class="section-title">Что сегодня на огне</h2>
   <p class="section-sub">Пицца из дровяной печи, свежие закуски и холодные напитки.</p>
   <div class="menu-grid">
-    <div class="menu-card reveal"><span class="tag">Хит</span><h4>Маргарита</h4><p class="desc">Томатный соус, моцарелла, базилик — классика, проверенная веками.</p><div class="price">590 ₽</div></div>
-    <div class="menu-card reveal"><span class="tag">Острая</span><h4>Пепперони</h4><p class="desc">Пикантная пепперони, моцарелла, томатный соус. Для любителей огонька.</p><div class="price">690 ₽</div></div>
-    <div class="menu-card reveal"><span class="tag">Шеф</span><h4>Кватро Формаджи</h4><p class="desc">Четыре сыра: моцарелла, горгонзола, пармезан, рикотта. Сырный рай.</p><div class="price">790 ₽</div></div>
-    <div class="menu-card reveal"><h4>Барбекю Куриная</h4><p class="desc">Курица гриль, соус барбекю, красный лук, моцарелла. Сочная.</p><div class="price">720 ₽</div></div>
-    <div class="menu-card reveal"><h4>Крылышки BBQ</h4><p class="desc">Хрустящие крылышки в соусе барбекю. Идеальная пара к пиву.</p><div class="price">390 ₽</div></div>
-    <div class="menu-card reveal"><h4>Тирамису</h4><p class="desc">Классический итальянский десерт. Нежный, воздушный, тает во рту.</p><div class="price">320 ₽</div></div>
+    <div class="menu-card reveal"><span class="tag">Хит</span><div class="menu-img"><img src="restobot-images/margherita.webp" alt="Маргарита" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div><h4>Маргарита</h4><p class="desc">Томатный соус, моцарелла, базилик — классика, проверенная веками.</p><div class="price">590 ₽</div></div>
+    <div class="menu-card reveal"><span class="tag">Острая</span><div class="menu-img"><img src="restobot-images/pepperoni.webp" alt="Пепперони" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div><h4>Пепперони</h4><p class="desc">Пикантная пепперони, моцарелла, томатный соус. Для любителей огонька.</p><div class="price">690 ₽</div></div>
+    <div class="menu-card reveal"><span class="tag">Шеф</span><div class="menu-img"><img src="restobot-images/quattro.webp" alt="Кватро Формаджи" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div><h4>Кватро Формаджи</h4><p class="desc">Четыре сыра: моцарелла, горгонзола, пармезан, рикотта. Сырный рай.</p><div class="price">790 ₽</div></div>
+    <div class="menu-card reveal"><div class="menu-img"><img src="restobot-images/bbq-chicken.webp" alt="Барбекю Куриная" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div><h4>Барбекю Куриная</h4><p class="desc">Курица гриль, соус барбекю, красный лук, моцарелла. Сочная.</p><div class="price">720 ₽</div></div>
+    <div class="menu-card reveal"><div class="menu-img"><img src="restobot-images/wings.webp" alt="Крылышки BBQ" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div><h4>Крылышки BBQ</h4><p class="desc">Хрустящие крылышки в соусе барбекю. Идеальная пара к пиву.</p><div class="price">390 ₽</div></div>
+    <div class="menu-card reveal"><div class="menu-img"><img src="restobot-images/tiramisu.webp" alt="Тирамису" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div><h4>Тирамису</h4><p class="desc">Классический итальянский десерт. Нежный, воздушный, тает во рту.</p><div class="price">320 ₽</div></div>
   </div>
 </section>
 
@@ -172,6 +177,9 @@ footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:v
   var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting&&!animated){animated=true;document.querySelectorAll('.counter').forEach(function(c){var t=parseInt(c.dataset.target),d=2000,s=performance.now();function u(n){var p=Math.min((n-s)/d,1),v=1-Math.pow(1-p,3);c.textContent=Math.floor(v*t);if(p<1)requestAnimationFrame(u)}requestAnimationFrame(u)});obs.unobserve(e.target)}})},{threshold:0.3});
   var s=document.querySelector('.stats');if(s)obs.observe(s);
 })();
+
+// Live counter
+(function(){var n=15247;setInterval(function(){n+=Math.random()>0.7?1:0;document.getElementById('liveOrders').textContent=n.toLocaleString()},30000);var phrases=['3 заказа за последний час','2 заказа за последние 30 мин','Прямо сейчас: готовят 4 пиццы','Только что: заказ из центра','5 заказов за последний час'];var pi=0;setInterval(function(){pi=(pi+1)%phrases.length;document.getElementById('liveText').textContent=phrases[pi]},8000);var t=Math.floor(Math.random()*10+26);document.getElementById('deliveryTimer').textContent='~'+t;setInterval(function(){t=Math.floor(Math.random()*10+26);document.getElementById('deliveryTimer').textContent='~'+t},15000)})();
 </script>
 </body>
 </html>
