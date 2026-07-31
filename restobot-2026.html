@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RestoBot — заказ еды в Telegram</title>
+<meta name="description" content="RestoBot — бот для заказа пиццы и еды в Telegram. Быстро, удобно, без приложений.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0b0c;--surface:#131416;--orange:#f05020;--orange-hover:#ff6a3d;--text:#e8e4e0;--text2:#8a8078;--border:rgba(255,255,255,0.06)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;font-weight:400;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(240,80,32,0.08) 0%,transparent 70%);z-index:0}
+.hero-content{position:relative;z-index:1;max-width:700px}
+.hero-badge{display:inline-block;padding:6px 18px;border:1px solid rgba(240,80,32,0.3);border-radius:50px;color:var(--orange);font-size:0.8rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;margin-bottom:1.5rem}
+.hero h1{font-size:clamp(36px,7vw,64px);font-weight:700;line-height:1.1;letter-spacing:-1px;margin-bottom:1rem;color:#fff}
+.hero h1 .rotating{color:var(--orange);display:inline-block;min-width:140px;text-align:left}
+.hero p{font-size:1.1rem;color:var(--text2);max-width:460px;margin:0 auto 2.5rem;line-height:1.7}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;background:var(--orange);color:#fff;border-radius:50px;font-weight:600;font-size:1rem;text-decoration:none;border:none;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden}
+.btn:hover{background:var(--orange-hover);transform:translateY(-2px);box-shadow:0 8px 30px rgba(240,80,32,0.3)}
+.btn::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);animation:shimmer 3s ease-in-out infinite}
+@keyframes shimmer{0%,100%{left:-100%}50%{left:100%}}
+
+/* Stats */
+.stats{display:flex;gap:3rem;justify-content:center;margin-top:3rem;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:2rem;font-weight:700;color:var(--orange)}
+.stat-label{font-size:0.8rem;color:var(--text2);margin-top:0.25rem}
+
+/* Sections */
+.section{padding:80px 2rem;max-width:1100px;margin:0 auto}
+.section-label{font-size:0.7rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:0.75rem;text-align:center}
+.section-title{font-size:clamp(26px,4vw,40px);font-weight:700;text-align:center;letter-spacing:-0.5px;margin-bottom:1rem;color:#fff}
+.section-sub{font-size:1rem;color:var(--text2);text-align:center;max-width:500px;margin:0 auto 3rem;line-height:1.7}
+.section-dark{background:var(--surface)}
+
+/* Steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:1rem}
+.step{text-align:center;padding:2rem}
+.step-num{width:48px;height:48px;border-radius:50%;background:rgba(240,80,32,0.1);color:var(--orange);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;margin:0 auto 1.5rem}
+.step h3{font-size:1.1rem;font-weight:600;margin-bottom:0.5rem;color:#fff}
+.step p{font-size:0.9rem;color:var(--text2);line-height:1.6}
+
+/* Menu */
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.menu-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:transform 0.3s,box-shadow 0.3s;position:relative;overflow:hidden}
+.menu-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.4);border-color:rgba(240,80,32,0.2)}
+.menu-card .tag{position:absolute;top:12px;right:12px;background:var(--orange);color:#fff;font-size:0.7rem;font-weight:600;padding:4px 10px;border-radius:50px;text-transform:uppercase}
+.menu-card h4{font-size:1.1rem;font-weight:600;margin-bottom:0.25rem;color:#fff}
+.menu-card .desc{font-size:0.85rem;color:var(--text2);line-height:1.5;margin-bottom:1rem}
+.menu-card .price{font-size:1.3rem;font-weight:700;color:var(--orange)}
+
+/* Reviews */
+.reviews{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.review{border:1px solid var(--border);border-radius:16px;padding:2rem;background:var(--surface)}
+.review .stars{color:var(--orange);font-size:1rem;margin-bottom:0.75rem}
+.review p{font-size:0.95rem;color:var(--text);line-height:1.7;font-style:italic;margin-bottom:1rem}
+.review .author{font-size:0.85rem;color:var(--text2)}
+
+/* CTA block */
+.cta-block{text-align:center;padding:80px 2rem;background:var(--surface);border-radius:24px;max-width:800px;margin:0 auto}
+.cta-block h2{font-size:clamp(26px,4vw,38px);font-weight:700;color:#fff;margin-bottom:1rem}
+.cta-block p{font-size:1rem;color:var(--text2);margin-bottom:2rem;max-width:450px;margin-left:auto;margin-right:auto}
+
+/* Footer */
+footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:var(--text2);font-size:0.8rem}
+
+/* Reveal */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.6s ease,transform 0.6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* Grid bg */
+.grid-bg{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.03;background-image:linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px);background-size:60px 60px}
+
+@media(max-width:768px){.steps{grid-template-columns:1fr}.stats{gap:1.5rem}.section{padding:50px 1.5rem}.hero{padding:4rem 1.5rem}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Telegram-бот для заказа еды</div>
+    <h1>Закажи пиццу<br>в <span class="rotating" id="rotating">3 клика</span></h1>
+    <p>Без приложений, без звонков, без ожидания на линии. Открываешь Telegram — и через минуту заказ уже готовится.</p>
+    <a href="https://t.me/RestoBots_bot" class="btn" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Заказать в Telegram
+    </a>
+    <div class="stats">
+      <div class="stat"><div class="stat-num counter" data-target="15000">0</div><div class="stat-label">заказов</div></div>
+      <div class="stat"><div class="stat-num"><span class="counter" data-target="30">0</span> мин</div><div class="stat-label">доставка</div></div>
+      <div class="stat"><div class="stat-num counter" data-target="98">0</div><div class="stat-label">% довольных</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-dark"><div class="section">
+  <div class="section-label">Как это работает</div>
+  <h2 class="section-title">Три шага до горячей пиццы</h2>
+  <p class="section-sub">Никаких регистраций и паролей. Только Telegram и голод.</p>
+  <div class="steps">
+    <div class="step reveal"><div class="step-num">1</div><h3>Открой бота</h3><p>Нажми «Заказать» — и ты в меню. Бот уже знает, что ты голоден.</p></div>
+    <div class="step reveal"><div class="step-num">2</div><h3>Выбери блюда</h3><p>Пицца, закуски, напитки. Добавь в корзину — бот сам посчитает.</p></div>
+    <div class="step reveal"><div class="step-num">3</div><h3>Подтверди заказ</h3><p>Адрес, телефон, оплата. Курьер уже выезжает.</p></div>
+  </div>
+</div></section>
+
+<section class="section">
+  <div class="section-label">Меню</div>
+  <h2 class="section-title">Что сегодня на огне</h2>
+  <p class="section-sub">Пицца из дровяной печи, свежие закуски и холодные напитки.</p>
+  <div class="menu-grid">
+    <div class="menu-card reveal"><span class="tag">Хит</span><h4>Маргарита</h4><p class="desc">Томатный соус, моцарелла, базилик — классика, проверенная веками.</p><div class="price">590 ₽</div></div>
+    <div class="menu-card reveal"><span class="tag">Острая</span><h4>Пепперони</h4><p class="desc">Пикантная пепперони, моцарелла, томатный соус. Для любителей огонька.</p><div class="price">690 ₽</div></div>
+    <div class="menu-card reveal"><span class="tag">Шеф</span><h4>Кватро Формаджи</h4><p class="desc">Четыре сыра: моцарелла, горгонзола, пармезан, рикотта. Сырный рай.</p><div class="price">790 ₽</div></div>
+    <div class="menu-card reveal"><h4>Барбекю Куриная</h4><p class="desc">Курица гриль, соус барбекю, красный лук, моцарелла. Сочная.</p><div class="price">720 ₽</div></div>
+    <div class="menu-card reveal"><h4>Крылышки BBQ</h4><p class="desc">Хрустящие крылышки в соусе барбекю. Идеальная пара к пиву.</p><div class="price">390 ₽</div></div>
+    <div class="menu-card reveal"><h4>Тирамису</h4><p class="desc">Классический итальянский десерт. Нежный, воздушный, тает во рту.</p><div class="price">320 ₽</div></div>
+  </div>
+</section>
+
+<section class="section-dark"><div class="section">
+  <div class="section-label">Отзывы</div>
+  <h2 class="section-title">Что говорят клиенты</h2>
+  <p class="section-sub">15 000+ заказов. 98% довольных. И ни одного оправдания.</p>
+  <div class="reviews">
+    <div class="review reveal"><div class="stars">★★★★★</div><p>«Заказал пиццу в 2 часа ночи. Думал — никто не ответит. Через 35 минут курьер стоял у двери. Бот реально работает 24/7.»</p><div class="author">Артём, Москва</div></div>
+    <div class="review reveal"><div class="stars">★★★★★</div><p>«Удобно, что не нужно скачивать приложение. Открыл Telegram, три клика — и заказ оформлен. Жена теперь тоже пользуется.»</p><div class="author">Денис, Питер</div></div>
+    <div class="review reveal"><div class="stars">★★★★★</div><p>«Заказываем в офис каждую пятницу. 8 пицц за 2 минуты. Бот помнит адрес — не нужно вводить заново. Экономия времени.»</p><div class="author">Ольга, Казань</div></div>
+  </div>
+</div></section>
+
+<section class="section">
+  <div class="cta-block reveal">
+    <div class="section-label">Готов заказать?</div>
+    <h2>Пицца ждёт. Не заставляй её скучать.</h2>
+    <p>Открой бота в Telegram и получи скидку 15% на первый заказ по промокоду HELLO.</p>
+    <a href="https://t.me/RestoBots_bot" class="btn" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Заказать в Telegram
+    </a>
+  </div>
+</section>
+
+<footer><p>RestoBot &copy; 2026 · Доставка еды через Telegram</p></footer>
+
+<script>
+// Rotating words
+(function(){
+  var words=['3 клика','минуту','Telegram','пару тапов'],i=0,el=document.getElementById('rotating');
+  setInterval(function(){i=(i+1)%words.length;el.style.opacity='0';setTimeout(function(){el.textContent=words[i];el.style.opacity='1'},200)},2500);
+  el.style.transition='opacity 0.2s';
+})();
+
+// Scroll reveal
+(function(){
+  var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el)});
+})();
+
+// Counter animation
+(function(){
+  var animated=false;
+  var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting&&!animated){animated=true;document.querySelectorAll('.counter').forEach(function(c){var t=parseInt(c.dataset.target),d=2000,s=performance.now();function u(n){var p=Math.min((n-s)/d,1),v=1-Math.pow(1-p,3);c.textContent=Math.floor(v*t);if(p<1)requestAnimationFrame(u)}requestAnimationFrame(u)});obs.unobserve(e.target)}})},{threshold:0.3});
+  var s=document.querySelector('.stats');if(s)obs.observe(s);
+})();
+</script>
+</body>
+</html>
