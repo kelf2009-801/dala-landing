@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- SEO -->
+<title>Маникюр в Telegram — запись на ногти через бота @nail163_bot</title>
+<meta name="description" content="Запись на маникюр прямо в Telegram. Выбери дизайн, выбери время — бот подтвердит за секунду. Без звонков, без ожидания." />
+<meta name="keywords" content="маникюр, Telegram бот, запись на ногти, nail bot, маникюр бот, запись онлайн" />
+<meta name="robots" content="index, follow" />
+<meta property="og:title" content="Маникюр в Telegram — запись через бота" />
+<meta property="og:description" content="Запись на маникюр прямо в Telegram. Без звонков, без ожидания." />
+<meta property="og:type" content="website" />
+
+<!-- Google Fonts: Manrope + Playfair Display -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<style>
+:root {
+  --bg-primary: #fff9f8;
+  --bg-secondary: #fdf0ee;
+  --bg-card: #ffffff;
+  --accent: #b03560;
+  --accent-light: #e85d8a;
+  --accent-dark: #9a2a52;
+  --accent-glow: rgba(196, 60, 107, 0.10);
+  --text-primary: #1a1018;
+  --text-secondary: #5c4a52;
+  --text-muted: #6b5a62;
+  --green: #1a7a3a;
+  --green-light: #e8f7ed;
+  --border: #f0e0e4;
+  --shadow-sm: 0 2px 6px rgba(40, 20, 30, 0.06);
+  --shadow-md: 0 6px 18px rgba(40, 20, 30, 0.08);
+  --shadow-lg: 0 12px 32px rgba(40, 20, 30, 0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-lg: 24px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Manrope", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.container { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+
+/* ===== HEADER ===== */
+header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255, 249, 248, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  transition: var(--transition);
+}
+header.scrolled { box-shadow: var(--shadow-sm); }
+
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0; gap: 16px;
+}
+
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 800; font-size: 1.15rem; color: var(--text-primary);
+  text-decoration: none;
+}
+.logo-icon { width: 32px; height: 32px; }
+
+nav { display: flex; gap: 28px; }
+nav a {
+  color: var(--text-secondary); text-decoration: none;
+  font-size: 0.95rem; font-weight: 500; transition: var(--transition);
+}
+nav a:hover { color: var(--accent); }
+
+.header-cta {
+  background: var(--accent); color: #fff; padding: 10px 22px;
+  border-radius: var(--radius-sm); text-decoration: none;
+  font-weight: 600; font-size: 0.95rem;
+  transition: var(--transition); white-space: nowrap;
+}
+.header-cta:hover { background: var(--accent-dark); transform: translateY(-1px); }
+
+/* ===== HERO ===== */
+.hero {
+  position: relative; padding: 80px 0 60px;
+  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -30%; right: -10%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px; align-items: center;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(196, 60, 107, 0.1); color: var(--accent-dark);
+  padding: 6px 14px; border-radius: 999px;
+  font-size: 0.85rem; font-weight: 600; margin-bottom: 20px;
+}
+.hero-badge .dot {
+  width: 8px; height: 8px; background: var(--green);
+  border-radius: 50%;
+}
+
+.hero h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 2.8rem; line-height: 1.15; font-weight: 700;
+  margin-bottom: 18px; color: var(--text-primary);
+}
+.hero h1 .highlight { color: var(--accent); }
+
+.hero-sub {
+  font-size: 1.15rem; color: var(--text-secondary);
+  margin-bottom: 28px; max-width: 520px;
+}
+
+.hero-cta-row {
+  display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  margin-bottom: 20px;
+}
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent); color: #fff;
+  padding: 15px 32px; border-radius: var(--radius-sm);
+  text-decoration: none; font-weight: 700; font-size: 1.05rem;
+  transition: var(--transition);
+}
+.btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); }
+
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: var(--text-primary);
+  padding: 15px 28px; border-radius: var(--radius-sm);
+  text-decoration: none; font-weight: 600; font-size: 1.05rem;
+  border: 2px solid var(--border); transition: var(--transition);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+.hero-meta {
+  display: flex; gap: 20px; flex-wrap: wrap;
+  font-size: 0.9rem; color: var(--text-muted);
+}
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+.hero-meta svg { width: 16px; height: 16px; color: var(--accent); }
+
+/* ===== PHONE MOCKUP ===== */
+.phone-mockup {
+  justify-self: center; width: 310px; position: relative;
+  animation: phone-float 5s ease-in-out infinite;
+}
+@keyframes phone-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+.phone-body {
+  background: linear-gradient(145deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+  border-radius: 42px; padding: 10px;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 16px 48px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.1);
+  position: relative;
+}
+.phone-body::before {
+  content: ''; position: absolute; right: -3px; top: 120px;
+  width: 4px; height: 62px;
+  background: linear-gradient(90deg, #1a1a1a, #3a3a3a 50%, #1a1a1a);
+  border-radius: 0 3px 3px 0;
+}
+.phone-body::after {
+  content: ''; position: absolute; left: -3px; top: 100px;
+  width: 4px; height: 32px;
+  background: linear-gradient(270deg, #1a1a1a, #3a3a3a 50%, #1a1a1a);
+  border-radius: 3px 0 0 3px;
+}
+
+.phone-screen {
+  background: var(--bg-secondary); border-radius: 34px;
+  overflow: hidden; position: relative;
+  display: flex; flex-direction: column; min-height: 460px;
+}
+
+.phone-notch {
+  position: absolute; top: 8px; left: 50%;
+  transform: translateX(-50%);
+  width: 100px; height: 28px;
+  background: #0a0a0a; border-radius: 16px; z-index: 10;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 10px;
+}
+.phone-notch::after {
+  content: ''; width: 8px; height: 8px;
+  background: #0a0a0a; border-radius: 50%;
+  box-shadow: inset 0 0 2px rgba(100,100,140,0.3);
+}
+
+.phone-statusbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 22px 6px; font-size: 0.75rem; font-weight: 600;
+  color: var(--text-primary);
+}
+.phone-statusbar .time { font-weight: 700; }
+.phone-statusbar .icons { display: flex; gap: 4px; align-items: center; }
+.phone-statusbar .icons svg { width: 14px; height: 14px; }
+
+.phone-chat {
+  flex: 1; padding: 8px 14px 16px;
+  display: flex; flex-direction: column; gap: 10px; overflow: hidden;
+}
+
+.chat-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0 10px; border-bottom: 1px solid var(--border);
+}
+.chat-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.chat-avatar svg { width: 20px; height: 20px; color: #fff; }
+.chat-name { font-weight: 700; font-size: 0.9rem; line-height: 1.2; }
+.chat-status { font-size: 0.72rem; color: var(--green); }
+
+.msg { max-width: 82%; padding: 9px 13px; border-radius: 16px; font-size: 0.82rem; line-height: 1.4; }
+.msg-bot { background: #fff; color: var(--text-primary); align-self: flex-start; border-bottom-left-radius: 4px; }
+.msg-user { background: var(--accent); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+
+.appointment-card {
+  background: #fff; border-radius: 16px; padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 6px;
+  border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+  align-self: flex-start; max-width: 82%; border-bottom-left-radius: 4px;
+}
+.appointment-header {
+  display: flex; align-items: center; gap: 8px;
+  font-weight: 700; font-size: 0.82rem; color: var(--accent-dark);
+}
+.appointment-header svg { width: 18px; height: 18px; color: var(--accent); }
+.appointment-row { font-size: 0.8rem; color: var(--text-secondary); display: flex; justify-content: space-between; }
+.appointment-row strong { color: var(--text-primary); }
+
+/* ===== SECTIONS ===== */
+section { padding: 70px 0; }
+
+.section-label {
+  text-align: center; font-size: 0.85rem; font-weight: 700;
+  color: var(--accent); text-transform: uppercase; letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+.section-title {
+  text-align: center; font-family: "Playfair Display", serif;
+  font-size: 2rem; font-weight: 700;
+  margin-bottom: 16px; color: var(--text-primary); max-width: 600px;
+  margin-left: auto; margin-right: auto;
+}
+.section-sub {
+  text-align: center; font-size: 1.05rem; color: var(--text-secondary);
+  margin-bottom: 48px; max-width: 560px;
+  margin-left: auto; margin-right: auto;
+}
+
+/* ===== STEPS ===== */
+.steps-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+}
+.step-card {
+  background: var(--bg-card); border-radius: var(--radius);
+  padding: 28px 22px; text-align: center;
+  border: 1px solid var(--border); transition: var(--transition);
+}
+.step-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--accent-light); }
+.step-num {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--accent); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 1.1rem; margin: 0 auto 16px;
+}
+.step-icon { width: 48px; height: 48px; margin: 0 auto 16px; color: var(--accent); }
+.step-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+.step-card p { font-size: 0.92rem; color: var(--text-secondary); }
+
+/* ===== FEATURES ===== */
+.features { background: var(--bg-secondary); }
+.features-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+}
+.feature-card {
+  background: var(--bg-card); border-radius: var(--radius);
+  padding: 28px; border: 1px solid var(--border);
+  transition: var(--transition);
+}
+.feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.feature-icon {
+  width: 52px; height: 52px; border-radius: var(--radius-sm);
+  background: var(--accent-glow); display: flex;
+  align-items: center; justify-content: center; margin-bottom: 16px;
+}
+.feature-icon svg { width: 26px; height: 26px; color: var(--accent); }
+.feature-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+.feature-card p { font-size: 0.95rem; color: var(--text-secondary); }
+
+/* ===== SERVICES / PRICING ===== */
+.services-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+  max-width: 860px; margin: 0 auto;
+}
+.service-card {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--bg-card); border-radius: var(--radius);
+  padding: 20px 24px; border: 1px solid var(--border);
+  transition: var(--transition);
+}
+.service-card:hover { border-color: var(--accent-light); box-shadow: var(--shadow-sm); }
+.service-info h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+.service-info p { font-size: 0.88rem; color: var(--text-muted); }
+.service-price { font-size: 1.2rem; font-weight: 800; color: var(--accent); white-space: nowrap; }
+
+/* ===== DEMO ===== */
+.demo-chat {
+  max-width: 520px; margin: 0 auto;
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 20px; border: 1px solid var(--border);
+  box-shadow: var(--shadow-md); display: flex; flex-direction: column; gap: 14px;
+}
+.demo-header {
+  display: flex; align-items: center; gap: 12px;
+  padding-bottom: 14px; border-bottom: 1px solid var(--border);
+}
+.demo-header .chat-avatar { width: 44px; height: 44px; }
+.demo-header .chat-name { font-size: 1rem; }
+
+.demo-msg { max-width: 75%; padding: 12px 16px; border-radius: 16px; font-size: 0.9rem; }
+.demo-msg-bot { background: var(--bg-secondary); align-self: flex-start; border-bottom-left-radius: 4px; }
+.demo-msg-user { background: var(--accent); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+
+.demo-appointment {
+  align-self: flex-start; max-width: 90%;
+  background: var(--accent-glow); border: 1px solid var(--accent-light);
+  border-radius: 16px; padding: 14px 16px; display: flex; gap: 12px; align-items: center;
+}
+.demo-appointment .icon { width: 32px; height: 32px; color: var(--accent); flex-shrink: 0; }
+.demo-appointment .text { font-size: 0.85rem; }
+.demo-appointment .text strong { color: var(--accent-dark); font-size: 1rem; }
+
+/* ===== AUDIENCE ===== */
+.audience-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+  max-width: 860px; margin: 0 auto;
+}
+.audience-card {
+  display: flex; gap: 16px; align-items: flex-start;
+  background: var(--bg-card); border-radius: var(--radius);
+  padding: 24px; border: 1px solid var(--border);
+  transition: var(--transition);
+}
+.audience-card:hover { border-color: var(--accent-light); box-shadow: var(--shadow-sm); }
+.audience-icon { width: 40px; height: 40px; color: var(--accent); flex-shrink: 0; }
+.audience-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
+.audience-card p { font-size: 0.9rem; color: var(--text-secondary); }
+
+/* ===== FINAL CTA ===== */
+.final-cta {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  text-align: center; padding: 80px 0; color: #fff;
+  position: relative; overflow: hidden;
+}
+.final-cta::before {
+  content: ''; position: absolute; top: 50%; left: 50%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+  transform: translate(-50%, -50%); pointer-events: none;
+}
+.final-cta h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 2.2rem; font-weight: 700; margin-bottom: 16px;
+  max-width: 600px; margin-left: auto; margin-right: auto;
+}
+.final-cta p { font-size: 1.1rem; opacity: 0.95; margin-bottom: 32px; }
+.final-cta .btn-primary { background: #fff; color: var(--accent-dark); }
+.final-cta .btn-primary:hover { background: var(--bg-secondary); }
+.final-cta .btn-primary svg { color: var(--accent-dark); }
+
+/* ===== FOOTER ===== */
+footer {
+  background: var(--text-primary); color: rgba(255,255,255,0.7);
+  padding: 40px 0; text-align: center;
+}
+footer .footer-logo {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-weight: 700; color: #fff; margin-bottom: 8px;
+}
+footer .footer-logo svg { width: 24px; height: 24px; }
+footer p { font-size: 0.9rem; }
+footer .bot-link { color: var(--accent-light); }
+
+/* ===== SCROLL TO TOP ===== */
+.scroll-top {
+  position: fixed; right: 24px; bottom: 24px; z-index: 90;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--accent); color: #fff; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-md); opacity: 0; pointer-events: none;
+  transition: background 0.4s ease, transform 0.3s ease, opacity 0.3s ease;
+  animation: st-pulse 2.5s infinite;
+}
+@keyframes st-pulse {
+  0%, 100% { box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+  50% { box-shadow: 0 4px 24px rgba(0,0,0,0.22), 0 0 0 8px rgba(196,60,107,0.08); }
+}
+.scroll-top.is-visible { opacity: 1; pointer-events: auto; }
+.scroll-top:hover {
+  background: var(--text-primary);
+  transform: translateY(-3px) scale(1.08);
+  animation: st-pulse-hover 1.5s infinite;
+}
+@keyframes st-pulse-hover {
+  0%, 100% { box-shadow: 0 6px 24px rgba(26,16,24,0.5), 0 0 0 8px rgba(26,16,24,0.1); }
+  50% { box-shadow: 0 6px 32px rgba(26,16,24,0.6), 0 0 0 14px rgba(26,16,24,0.06); }
+}
+.scroll-top svg { width: 22px; height: 22px; transition: transform 0.3s ease; }
+.scroll-top:hover svg { transform: translateY(-2px); }
+
+/* ===== REVEAL ANIMATION ===== */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.in { opacity: 1; transform: translateY(0); }
+.reveal-left { opacity: 0; transform: translateX(-60px); transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94); }
+.reveal-left.in { opacity: 1; transform: translateX(0); }
+.reveal-right { opacity: 0; transform: translateX(60px); transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94); }
+.reveal-right.in { opacity: 1; transform: translateX(0); }
+.reveal-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal-up.in { opacity: 1; transform: translateY(0); }
+.reveal-stagger-1 { transition-delay: 0.1s; }
+.reveal-stagger-2 { transition-delay: 0.2s; }
+.reveal-stagger-3 { transition-delay: 0.3s; }
+.reveal-stagger-4 { transition-delay: 0.4s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-left, .reveal-right, .reveal-up { opacity: 1; transform: none; transition: none; }
+  .phone-mockup, .scroll-top { animation: none; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+  .hero-sub { margin-left: auto; margin-right: auto; }
+  .hero-cta-row { justify-content: center; }
+  .hero-meta { justify-content: center; }
+  .phone-mockup { margin: 0 auto; }
+  .steps-grid { grid-template-columns: repeat(2, 1fr); }
+  .features-grid { grid-template-columns: 1fr; }
+  .services-grid { grid-template-columns: 1fr; }
+  nav { display: none; }
+}
+@media (max-width: 600px) {
+  .hero { padding: 50px 0 40px; }
+  .hero h1 { font-size: 2rem; }
+  section { padding: 50px 0; }
+  .section-title { font-size: 1.6rem; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .audience-grid { grid-template-columns: 1fr; }
+  .final-cta h2 { font-size: 1.6rem; }
+  .phone-mockup { width: 270px; }
+  .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="header">
+  <div class="container">
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <svg class="logo-icon" viewBox="0 0 32 32" fill="none">
+          <path d="M16 4 C12 4 10 8 10 14 L10 24 C10 26 12 28 16 28 C20 28 22 26 22 24 L22 14 C22 8 20 4 16 4 Z" fill="#c43c6b"/>
+          <path d="M14 12 L14 22 M18 10 L18 20" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Nail Bot
+      </a>
+      <nav aria-label="Основная навигация">
+        <a href="#how">Как это работает</a>
+        <a href="#features">Преимущества</a>
+        <a href="#services">Услуги</a>
+        <a href="#demo">Демо</a>
+      </nav>
+      <a href="https://t.me/nail163_bot" class="header-cta" target="_blank" rel="noopener">Записаться</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Запись на маникюр в Telegram
+        </div>
+        <h1>Маникюр без звонков. <span class="highlight">Запись в Telegram.</span></h1>
+        <p class="hero-sub">Выбери дизайн, выбери время, получи подтверждение за секунду. Прямо в Telegram, без звонков и ожидания.</p>
+        <div class="hero-cta-row">
+          <a href="https://t.me/nail163_bot" class="btn-primary" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.25-1.51 1.25h-3.52z" fill="#fff"/></svg>
+            Открыть бота в Telegram
+          </a>
+          <a href="#how" class="btn-secondary">Как это работает</a>
+        </div>
+        <div class="hero-meta">
+          <span>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Без звонков
+          </span>
+          <span>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Без регистрации
+          </span>
+          <span>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Прямо в Telegram
+          </span>
+        </div>
+      </div>
+
+      <!-- Phone mockup -->
+      <div class="phone-mockup">
+        <div class="phone-body">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="phone-statusbar">
+              <span class="time">14:32</span>
+              <div class="icons">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 22h2v-6H2v6zm5 0h2V12H7v10zm5 0h2V8h-2v14zm5 0h2V4h-2v18z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C7 3 2.7 5.3 1 8c1.7 2.7 6 5 11 5s9.3-2.3 11-5c-1.7-2.7-6-5-11-5zm0 8a3 3 0 110-6 3 3 0 010 6z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="7" width="18" height="10" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="4" y="9" width="14" height="6" rx="1" fill="currentColor"/><rect x="21" y="10" width="2" height="4" rx="0.5" fill="currentColor"/></svg>
+              </div>
+            </div>
+            <div class="phone-chat">
+              <div class="chat-header">
+                <div class="chat-avatar">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.25-1.51 1.25h-3.52z" fill="#fff"/></svg>
+                </div>
+                <div>
+                  <div class="chat-name">Nail Bot</div>
+                  <div class="chat-status">● в сети</div>
+                </div>
+              </div>
+              <div class="msg msg-bot">Выберите дизайн ногтей</div>
+              <div class="appointment-card">
+                <div class="appointment-header">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M9 11H7v9a2 2 0 002 2h10a2 2 0 002-2v-9h-2M9 11V9a2 2 0 012-2h2a2 2 0 012 2v2M9 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/></svg>
+                  Запись подтверждена
+                </div>
+                <div class="appointment-row"><span>Услуга</span><strong>Маникюр + гель</strong></div>
+                <div class="appointment-row"><span>Дата</span><strong>Сб, 19 авг</strong></div>
+                <div class="appointment-row"><span>Время</span><strong>14:00</strong></div>
+              </div>
+              <div class="msg msg-user">Спасибо!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Всего 3 шага</div>
+      <h2 class="section-title">Как это работает</h2>
+      <p class="section-sub">Открыл бота, выбрал дизайн, получил подтверждение. Всё.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card reveal-left reveal-stagger-1">
+        <div class="step-num">01</div>
+        <svg class="step-icon" viewBox="0 0 24 24" fill="none"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.25-1.51 1.25h-3.52z" fill="currentColor"/></svg>
+        <h3>Открой бота</h3>
+        <p>Нажми кнопку и начни диалог с ботом в Telegram.</p>
+      </div>
+      <div class="step-card reveal-right reveal-stagger-2">
+        <div class="step-num">02</div>
+        <svg class="step-icon" viewBox="0 0 24 24" fill="none"><rect x="4" y="6" width="16" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M9 2v4M15 2v4M8 12h8M8 16h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <h3>Выбери дизайн и время</h3>
+        <p>Бот покажет доступные услуги и свободные слоты.</p>
+      </div>
+      <div class="step-card reveal-left reveal-stagger-3">
+        <div class="step-num">03</div>
+        <svg class="step-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 22a10 10 0 100-20 10 10 0 000 20z" stroke="currentColor" stroke-width="2"/></svg>
+        <h3>Получи подтверждение</h3>
+        <p>Бот подтвердит запись и напомнит перед визитом.</p>
+      </div>
+      <div class="step-card reveal-right reveal-stagger-4">
+        <div class="step-num">04</div>
+        <svg class="step-icon" viewBox="0 0 24 24" fill="none"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3>Приходи к мастеру</h3>
+        <p>Мастер уже знает, что ты придёшь. Без ожидания.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="features">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Преимущества</div>
+      <h2 class="section-title">Почему через бота удобнее</h2>
+      <p class="section-sub">Звонки и переписка с мастером в прошлом.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal-left reveal-stagger-1">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/></svg>
+        </div>
+        <h3>Экономия времени</h3>
+        <p>Запись за 30 секунд. Без звонков и ожидания на линии.</p>
+      </div>
+      <div class="feature-card reveal-up reveal-stagger-2">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Свободные слоты</h3>
+        <p>Бот показывает актуальное расписание мастера в реальном времени.</p>
+      </div>
+      <div class="feature-card reveal-right reveal-stagger-3">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 00-4-5.7V5a2 2 0 10-4 0v.3A6 6 0 006 11v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0v1a3 3 0 01-6 0v-1m6 0H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Напоминания</h3>
+        <p>Бот напомнит о записи заранее, чтобы ты не пропустила визит.</p>
+      </div>
+      <div class="feature-card reveal-left reveal-stagger-1">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Всё в Telegram</h3>
+        <p>Никаких приложений и регистраций. Всё в одном чате.</p>
+      </div>
+      <div class="feature-card reveal-up reveal-stagger-2">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Каталог дизайна</h3>
+        <p>Смотри доступные дизайны прямо в чате и выбирай подходящий.</p>
+      </div>
+      <div class="feature-card reveal-right reveal-stagger-3">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M12 2a10 10 0 100 20 10 10 0 000-20z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Лёгкая отмена</h3>
+        <p>Планы изменились? Отмени или перенеси запись прямо в чате.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Услуги и цены</div>
+      <h2 class="section-title">Прозрачные цены</h2>
+      <p class="section-sub">Выбери услугу и запишись прямо сейчас.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal-left reveal-stagger-1">
+        <div class="service-info">
+          <h3>Маникюр</h3>
+          <p>Классический маникюр без покрытия</p>
+        </div>
+        <div class="service-price">от 1500 ₽</div>
+      </div>
+      <div class="service-card reveal-right reveal-stagger-2">
+        <div class="service-info">
+          <h3>Маникюр + гель-лак</h3>
+          <p>Маникюр с покрытием гель-лаком</p>
+        </div>
+        <div class="service-price">от 2500 ₽</div>
+      </div>
+      <div class="service-card reveal-left reveal-stagger-3">
+        <div class="service-info">
+          <h3>Снятие покрытия</h3>
+          <p>Снятие старого гель-лака</p>
+        </div>
+        <div class="service-price">от 500 ₽</div>
+      </div>
+      <div class="service-card reveal-right reveal-stagger-4">
+        <div class="service-info">
+          <h3>Дизайн ногтей</h3>
+          <p>Роспись, стразы, фольга, втирка</p>
+        </div>
+        <div class="service-price">от 300 ₽</div>
+      </div>
+    </div>
+    <p class="section-sub" style="margin-top:32px;margin-bottom:0;">Точные цены и доступные услуги — в боте.</p>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section id="demo">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Демо</div>
+      <h2 class="section-title">Вот как это выглядит</h2>
+      <p class="section-sub">Живой пример записи через бота в Telegram.</p>
+    </div>
+    <div class="demo-chat reveal">
+      <div class="demo-header">
+        <div class="chat-avatar">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.25-1.51 1.25h-3.52z" fill="#fff"/></svg>
+        </div>
+        <div>
+          <div class="chat-name">Nail Bot</div>
+          <div class="chat-status">● бот на связи</div>
+        </div>
+      </div>
+      <div class="demo-msg demo-msg-user">Хочу записаться на маникюр</div>
+      <div class="demo-msg demo-msg-bot">Выберите услугу: Маникюр, Маникюр + гель, Снятие, Дизайн</div>
+      <div class="demo-msg demo-msg-user">Маникюр + гель</div>
+      <div class="demo-msg demo-msg-bot">Свободные слоты: Сб 19 авг 14:00, 16:00 / Вс 20 авг 12:00, 15:00</div>
+      <div class="demo-msg demo-msg-user">Сб 14:00</div>
+      <div class="demo-appointment">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="text">
+          Запись подтверждена!<br>
+          <strong>Сб, 19 августа в 14:00</strong><br>
+          Маникюр + гель-лак
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUDIENCE -->
+<section class="audience">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Для кого</div>
+      <h2 class="section-title">Это для тех, кто ценит своё время</h2>
+    </div>
+    <div class="audience-grid">
+      <div class="audience-card reveal-left reveal-stagger-1">
+        <svg class="audience-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <div>
+          <h3>Нет времени на звонки?</h3>
+          <p>Запишись за 30 секунд в Telegram, не отвлекаясь от дел.</p>
+        </div>
+      </div>
+      <div class="audience-card reveal-right reveal-stagger-2">
+        <svg class="audience-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <div>
+          <h3>Мастер всегда занят?</h3>
+          <p>Бот показывает свободные слоты, которые ещё не разобрали.</p>
+        </div>
+      </div>
+      <div class="audience-card reveal-left reveal-stagger-3">
+        <svg class="audience-icon" viewBox="0 0 24 24" fill="none"><path d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 00-4-5.7V5a2 2 0 10-4 0v.3A6 6 0 006 11v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0v1a3 3 0 01-6 0v-1m6 0H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <h3>Забываешь о записи?</h3>
+          <p>Бот напомнит заранее, чтобы ты не пропустила визит.</p>
+        </div>
+      </div>
+      <div class="audience-card reveal-right reveal-stagger-4">
+        <svg class="audience-icon" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <h3>Не любишь звонить?</h3>
+          <p>Вся запись в одном чате. Без звонков и переписки с мастером.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="container">
+    <div class="reveal">
+      <h2>Запишись на маникюр за 30 секунд</h2>
+      <p>Без звонков, без ожидания. Прямо в Telegram.</p>
+      <a href="https://t.me/nail163_bot" class="btn-primary" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.25-1.51 1.25h-3.52z" fill="currentColor"/></svg>
+        Открыть бота в Telegram
+      </a>
+      <p style="margin-top:20px;font-size:0.95rem;opacity:0.85;">Быстрый старт прямо сейчас</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-logo">
+      <svg viewBox="0 0 32 32" fill="none">
+        <path d="M16 4 C12 4 10 8 10 14 L10 24 C10 26 12 28 16 28 C20 28 22 26 22 24 L22 14 C22 8 20 4 16 4 Z" fill="#c43c6b"/>
+        <path d="M14 12 L14 22 M18 10 L18 20" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Nail Bot
+    </div>
+    <p><a href="https://t.me/nail163_bot" class="bot-link" target="_blank" rel="noopener">@nail163_bot</a></p>
+    <p style="margin-top:8px;opacity:0.6;">© 2026 Nail Bot. Запись на маникюр в Telegram.</p>
+  </div>
+</footer>
+
+<!-- SCROLL TO TOP -->
+<button class="scroll-top" id="scrollTop" aria-label="Наверх">
+  <svg viewBox="0 0 24 24" fill="none"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<script>
+const header = document.getElementById('header');
+const onScroll = () => { header.classList.toggle('scrolled', window.scrollY > 16); };
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+const scrollTopBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => {
+  scrollTopBtn.classList.toggle('is-visible', window.scrollY > 300);
+}, { passive: true });
+scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-up');
+if (prefersReduced || !('IntersectionObserver' in window)) {
+  reveals.forEach(el => el.classList.add('in'));
+} else {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => io.observe(el));
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
