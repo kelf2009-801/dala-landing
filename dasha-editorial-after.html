@@ -51,10 +51,71 @@ header nav a:hover{color:var(--gold)}
 .social a{width:48px;height:48px;border-radius:50%;border:1px solid #ddd;display:flex;align-items:center;justify-content:center;color:var(--text2);text-decoration:none;transition:all .3s}
 .social a:hover{color:var(--gold);border-color:var(--gold)}
 
+/* Particles background */
+.particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.particles span{position:absolute;display:block;width:3px;height:3px;border-radius:50%;background:var(--gold);opacity:0;animation:float-up 15s linear infinite}
+.particles span:nth-child(1){left:5%;animation-delay:0s;animation-duration:18s}
+.particles span:nth-child(2){left:15%;animation-delay:2s;animation-duration:22s;width:2px;height:2px}
+.particles span:nth-child(3){left:28%;animation-delay:5s;animation-duration:16s}
+.particles span:nth-child(4){left:40%;animation-delay:8s;animation-duration:20s;width:4px;height:4px}
+.particles span:nth-child(5){left:52%;animation-delay:1s;animation-duration:24s}
+.particles span:nth-child(6){left:63%;animation-delay:4s;animation-duration:17s;width:2px;height:2px}
+.particles span:nth-child(7){left:75%;animation-delay:7s;animation-duration:19s}
+.particles span:nth-child(8){left:85%;animation-delay:10s;animation-duration:21s;width:4px;height:4px}
+.particles span:nth-child(9){left:92%;animation-delay:3s;animation-duration:23s;width:2px;height:2px}
+.particles span:nth-child(10){left:33%;animation-delay:6s;animation-duration:18s}
+@keyframes float-up{0%{bottom:-10px;opacity:0;transform:translateY(0)}10%{opacity:0.6}90%{opacity:0.3}100%{bottom:110%;opacity:0;transform:translateY(-20px)}}
+@media(max-width:768px){.particles span:nth-child(n+7){display:none}}
+
+/* Text reveal — fade in on scroll */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* Header h1 — shimmer gold */
+header h1{background:linear-gradient(90deg,var(--text) 0%,var(--gold) 50%,var(--text) 100%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s linear infinite}
+@keyframes shimmer{0%{background-position:0% center}100%{background-position:200% center}}
+
+/* Nav links — underline grow */
+header nav a{position:relative;text-decoration:none}
+header nav a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--gold);transition:width 0.4s ease}
+header nav a:hover::after{width:100%}
+
+/* Hero text — fade slide */
+.hero-text h2{opacity:0;transform:translateX(-20px);animation:slide-in 1s ease 0.3s forwards}
+.hero-text p{opacity:0;transform:translateX(-20px);animation:slide-in 1s ease 0.6s forwards}
+.hero-text .num{opacity:0;animation:fade-in 1s ease 0.1s forwards}
+.hero-text .line{width:0;animation:line-grow 0.8s ease 0.9s forwards}
+@keyframes slide-in{to{opacity:1;transform:translateX(0)}}
+@keyframes fade-in{to{opacity:0.3}}
+@keyframes line-grow{to{width:40px}}
+
+/* About section — fade */
+.about h2,.about p,.about .s-label{opacity:0;transform:translateY(20px)}
+.about .s-label.in,.about h2.in,.about p.in{opacity:1;transform:translateY(0)}
+
+/* Social buttons — pulse on hover */
+.social a{position:relative;overflow:hidden}
+.social a::before{content:'';position:absolute;inset:0;background:var(--gold);opacity:0;border-radius:50%;transition:opacity 0.3s}
+.social a:hover::before{opacity:0.1}
+.social a:hover{transform:scale(1.1) translateY(-2px);box-shadow:0 4px 16px rgba(138,107,30,0.25)}
+
+/* Gallery images — smooth zoom + reveal */
+.gallery-grid a{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
+.gallery-grid a.in{opacity:1;transform:translateY(0)}
+.gallery-grid a:nth-child(2).in{transition-delay:0.1s}
+.gallery-grid a:nth-child(3).in{transition-delay:0.2s}
+.gallery-grid a:nth-child(4).in{transition-delay:0.1s}
+.gallery-grid a:nth-child(5).in{transition-delay:0.2s}
+.gallery-grid a:nth-child(6).in{transition-delay:0.3s}
+
 footer{text-align:center;padding:2rem;border-top:1px solid #eee;color:var(--text2);font-size:.75rem;letter-spacing:2px}
 </style>
 </head>
 <body>
+
+<!-- Particles -->
+<div class="particles"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+
 <header><h1>DASHA</h1><nav><a href="#about">Обо мне</a><a href="#gallery">Галерея</a><a href="#contacts">Контакты</a></nav></header>
 
 <section class="hero">
@@ -67,32 +128,32 @@ footer{text-align:center;padding:2rem;border-top:1px solid #eee;color:var(--text
   </div>
 </section>
 
-<section class="about" id="about"><div class="s-label">Обо мне</div><h2>Привет, я Даша!</h2><p>Здесь мои лучшие моменты, запечатлённые в кадре. Заходи, знакомься, улыбайся!</p></section>
+<section class="about reveal" id="about"><div class="s-label">Обо мне</div><h2>Привет, я Даша!</h2><p>Здесь мои лучшие моменты, запечатлённые в кадре. Заходи, знакомься, улыбайся!</p></section>
 
 <section class="gallery" id="gallery"><h3>Галерея</h3><div class="gallery-grid">
-<a href="images/dasha-gallery/01.jpg?v=2" data-pswp-width="1024" data-pswp-height="1280"><img src="images/dasha-gallery/01.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/02.jpg?v=2" data-pswp-width="853" data-pswp-height="1280"><img src="images/dasha-gallery/02.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/03.jpg?v=2" data-pswp-width="714" data-pswp-height="1280"><img src="images/dasha-gallery/03.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/04.jpg?v=2" data-pswp-width="720" data-pswp-height="1280"><img src="images/dasha-gallery/04.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/05.jpg?v=2" data-pswp-width="960" data-pswp-height="1280"><img src="images/dasha-gallery/05.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/06.jpg?v=2" data-pswp-width="1024" data-pswp-height="1024"><img src="images/dasha-gallery/06.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/07.jpg?v=2" data-pswp-width="1024" data-pswp-height="1024"><img src="images/dasha-gallery/07.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/08.jpg?v=2" data-pswp-width="714" data-pswp-height="1280"><img src="images/dasha-gallery/08.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/09.jpg?v=2" data-pswp-width="848" data-pswp-height="1264"><img src="images/dasha-gallery/09.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/10.jpg?v=2" data-pswp-width="1024" data-pswp-height="1280"><img src="images/dasha-gallery/10.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/11.jpg?v=2" data-pswp-width="1024" data-pswp-height="1024"><img src="images/dasha-gallery/11.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/12.jpg?v=2" data-pswp-width="843" data-pswp-height="1264"><img src="images/dasha-gallery/12.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/13.jpg?v=2" data-pswp-width="942" data-pswp-height="1136"><img src="images/dasha-gallery/13.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/14.jpg?v=2" data-pswp-width="942" data-pswp-height="1136"><img src="images/dasha-gallery/14.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/15.jpg?v=2" data-pswp-width="942" data-pswp-height="1136"><img src="images/dasha-gallery/15.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/16.jpg?v=2" data-pswp-width="942" data-pswp-height="1136"><img src="images/dasha-gallery/16.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/17.jpg?v=2" data-pswp-width="944" data-pswp-height="1136"><img src="images/dasha-gallery/17.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/18.jpg?v=2" data-pswp-width="853" data-pswp-height="1280"><img src="images/dasha-gallery/18.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/19.jpg?v=2" data-pswp-width="853" data-pswp-height="1280"><img src="images/dasha-gallery/19.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/20.jpg?v=2" data-pswp-width="1280" data-pswp-height="853"><img src="images/dasha-gallery/20.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/21.jpg?v=2" data-pswp-width="848" data-pswp-height="1264"><img src="images/dasha-gallery/21.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/22.jpg?v=2" data-pswp-width="928" data-pswp-height="1120"><img src="images/dasha-gallery/22.jpg?v=2" loading="lazy" alt="Даша"></a>
-<a href="images/dasha-gallery/23.jpg?v=1" data-pswp-width="1280" data-pswp-height="960"><img src="images/dasha-gallery/23.jpg?v=1" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/01.jpg?v=2" data-pswp-width="1024" data-pswp-height="1280"><img src="images/dasha-gallery/01.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/02.jpg?v=2" data-pswp-width="853" data-pswp-height="1280"><img src="images/dasha-gallery/02.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/03.jpg?v=2" data-pswp-width="714" data-pswp-height="1280"><img src="images/dasha-gallery/03.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/04.jpg?v=2" data-pswp-width="720" data-pswp-height="1280"><img src="images/dasha-gallery/04.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/05.jpg?v=2" data-pswp-width="960" data-pswp-height="1280"><img src="images/dasha-gallery/05.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/06.jpg?v=2" data-pswp-width="1024" data-pswp-height="1024"><img src="images/dasha-gallery/06.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/07.jpg?v=2" data-pswp-width="1024" data-pswp-height="1024"><img src="images/dasha-gallery/07.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/08.jpg?v=2" data-pswp-width="714" data-pswp-height="1280"><img src="images/dasha-gallery/08.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/09.jpg?v=2" data-pswp-width="848" data-pswp-height="1264"><img src="images/dasha-gallery/09.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/10.jpg?v=2" data-pswp-width="1024" data-pswp-height="1280"><img src="images/dasha-gallery/10.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/11.jpg?v=2" data-pswp-width="1024" data-pswp-height="1024"><img src="images/dasha-gallery/11.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/12.jpg?v=2" data-pswp-width="843" data-pswp-height="1264"><img src="images/dasha-gallery/12.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/13.jpg?v=2" data-pswp-width="942" data-pswp-height="1136"><img src="images/dasha-gallery/13.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/14.jpg?v=2" data-pswp-width="942" data-pswp-height="1136"><img src="images/dasha-gallery/14.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/15.jpg?v=2" data-pswp-width="942" data-pswp-height="1136"><img src="images/dasha-gallery/15.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/16.jpg?v=2" data-pswp-width="942" data-pswp-height="1136"><img src="images/dasha-gallery/16.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/17.jpg?v=2" data-pswp-width="944" data-pswp-height="1136"><img src="images/dasha-gallery/17.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/18.jpg?v=2" data-pswp-width="853" data-pswp-height="1280"><img src="images/dasha-gallery/18.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/19.jpg?v=2" data-pswp-width="853" data-pswp-height="1280"><img src="images/dasha-gallery/19.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/20.jpg?v=2" data-pswp-width="1280" data-pswp-height="853"><img src="images/dasha-gallery/20.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/21.jpg?v=2" data-pswp-width="848" data-pswp-height="1264"><img src="images/dasha-gallery/21.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/22.jpg?v=2" data-pswp-width="928" data-pswp-height="1120"><img src="images/dasha-gallery/22.jpg?v=2" loading="lazy" alt="Даша"></a>
+<a class="reveal" href="images/dasha-gallery/23.jpg?v=1" data-pswp-width="1280" data-pswp-height="960"><img src="images/dasha-gallery/23.jpg?v=1" loading="lazy" alt="Даша"></a>
 </div></section>
 
 <section id="contacts"><div class="social"><a href="#" title="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a><a href="#" title="Telegram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></a></div></section>
@@ -102,6 +163,19 @@ footer{text-align:center;padding:2rem;border-top:1px solid #eee;color:var(--text
 <script type="module">
 import PhotoSwipeLightbox from "https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js";
 new PhotoSwipeLightbox({gallery:"#gallery",children:"a",pswpModule:()=>import("https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js")}).init();
+</script>
+
+<script>
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal, .about .s-label, .about h2, .about p');
+if (!('IntersectionObserver' in window)) {
+  reveals.forEach(el => el.classList.add('in'));
+} else {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => io.observe(el));
+}
 </script>
 </body>
 </html>
