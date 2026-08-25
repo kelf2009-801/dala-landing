@@ -468,6 +468,58 @@ body {
 .channel-detail .app-bar { background: var(--bg-card); }
 .channel-detail-body { flex: 1; overflow-y: auto; padding-bottom: 120px; }
 
+/* Channel members */
+.members-grid {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  padding: 16px 20px;
+}
+.member-chip {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 8px 14px 8px 8px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.member-chip:hover { border-color: var(--accent); background: var(--bg-input); }
+.member-chip.selected { border-color: var(--accent); background: var(--accent-glow); }
+.member-chip.speaking { border-color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
+.member-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.75rem; flex-shrink: 0;
+  position: relative;
+}
+.member-avatar .dot {
+  position: absolute; bottom: -2px; right: -2px;
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 2px solid var(--bg-card);
+}
+.member-avatar .dot.online { background: var(--accent); }
+.member-avatar .dot.offline { background: var(--text-3); }
+.member-name { font-size: 0.8rem; font-weight: 600; }
+
+/* Target selector */
+.target-selector {
+  display: flex; gap: 8px; padding: 12px 20px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+}
+.target-btn {
+  flex: 1; padding: 10px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-2);
+  font-size: 0.8rem; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.target-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
+.target-btn:hover { border-color: var(--accent); }
+
 /* Reveal */
 .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
 .reveal.in { opacity: 1; transform: translateY(0); }
@@ -812,6 +864,39 @@ body {
     </div>
   </div>
 
+  <!-- ===== CHANNEL DETAIL SCREEN ===== -->
+  <div class="channel-detail" id="channelDetail">
+    <div class="app-bar">
+      <button onclick="closeChannelDetail()" style="background:none;border:none;cursor:pointer;color:var(--text-2);padding:8px;border-radius:8px" aria-label="Назад">
+        <svg viewBox="0 0 24 24" fill="none" style="width:22px;height:22px"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="app-bar-title" id="channelDetailName">Канал</div>
+      <button onclick="showToast('Настройки канала')" style="background:none;border:none;cursor:pointer;color:var(--text-2);padding:8px;border-radius:8px" aria-label="Настройки">
+        <svg viewBox="0 0 24 24" fill="none" style="width:22px;height:22px"><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="6" cy="12" r="1.5" fill="currentColor"/><circle cx="18" cy="12" r="1.5" fill="currentColor"/></svg>
+      </button>
+    </div>
+
+    <div class="channel-detail-body">
+      <!-- Target selector: all or individual -->
+      <div class="target-selector">
+        <div class="target-btn active" onclick="selectTarget('all', this)">Всем в канале</div>
+        <div class="target-btn" onclick="selectTarget('individual', this)">Кому-то</div>
+      </div>
+
+      <!-- Members -->
+      <div class="section-label" id="membersLabel">Участники (4 онлайн)</div>
+      <div class="members-grid" id="membersGrid">
+        <!-- filled by JS -->
+      </div>
+
+      <!-- Channel history -->
+      <div class="section-label">История канала</div>
+      <div id="channelHistory">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+
   <!-- ===== PTT BAR ===== -->
   <div class="ptt-bar">
     <div class="ptt-channel" onclick="showToast('Выбор канала')">
@@ -870,8 +955,115 @@ function selectChannel(name) {
 }
 
 function openChannel(name, online) {
+  // Show channel detail screen
+  document.getElementById('channelDetail').classList.add('active');
+  document.getElementById('channelDetailName').textContent = name;
   document.getElementById('pttChannelName').textContent = name;
-  showToast('Открыт канал: ' + name + ' (' + online + ' онлайн)');
+  document.getElementById('membersLabel').textContent = 'Участники (' + online + ' онлайн)';
+
+  // Fill members
+  const members = {
+    'Общий': [
+      {name:'Андрей', initial:'А', online:true, color:'rgba(0,217,126,0.15)', text:'#00d97e'},
+      {name:'Сергей', initial:'С', online:true, color:'rgba(255,152,0,0.15)', text:'#ff9800'},
+      {name:'Дмитрий', initial:'Д', online:true, color:'rgba(33,150,243,0.15)', text:'#2196f3'},
+      {name:'Артур', initial:'А', online:false, color:'rgba(156,39,176,0.15)', text:'#9c27b0'},
+    ],
+    'Сызрань-63': [
+      {name:'Андрей', initial:'А', online:true, color:'rgba(0,217,126,0.15)', text:'#00d97e'},
+      {name:'Сергей', initial:'С', online:true, color:'rgba(255,152,0,0.15)', text:'#ff9800'},
+      {name:'Костя', initial:'К', online:false, color:'rgba(156,39,176,0.15)', text:'#9c27b0'},
+    ],
+    'Грузоперевозки': [
+      {name:'Дмитрий', initial:'Д', online:true, color:'rgba(33,150,243,0.15)', text:'#2196f3'},
+      {name:'Сергей', initial:'С', online:true, color:'rgba(255,152,0,0.15)', text:'#ff9800'},
+    ],
+    'Гараж': [
+      {name:'Артур', initial:'А', online:true, color:'rgba(156,39,176,0.15)', text:'#9c27b0'},
+      {name:'Андрей', initial:'А', online:true, color:'rgba(0,217,126,0.15)', text:'#00d97e'},
+    ],
+    'Работа': [
+      {name:'Нет участников', initial:'?', online:false, color:'rgba(122,139,158,0.15)', text:'#7a8b9e'},
+    ],
+  };
+
+  const list = members[name] || [];
+  const grid = document.getElementById('membersGrid');
+  grid.innerHTML = '';
+  list.forEach((m, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'member-chip';
+    chip.dataset.name = m.name;
+    chip.onclick = function() { toggleMemberSelect(this); };
+    chip.innerHTML = '<div class="member-avatar" style="background:' + m.color + ';color:' + m.text + '">' + m.initial + '<span class="dot ' + (m.online ? 'online' : 'offline') + '"></span></div><span class="member-name">' + m.name + '</span>';
+    grid.appendChild(chip);
+  });
+
+  // Fill channel history
+  const history = document.getElementById('channelHistory');
+  history.innerHTML = '';
+  // Generate fake messages for this channel
+  const msgs = [
+    {name:'Андрей', initial:'А', color:'rgba(0,217,126,0.15)', text:'#00d97e', time:'14:32', dur:'0:08', played:3},
+    {name:'Сергей', initial:'С', color:'rgba(255,152,0,0.15)', text:'#ff9800', time:'14:28', dur:'0:12', played:2},
+  ];
+  msgs.forEach(msg => {
+    const item = document.createElement('div');
+    item.className = 'msg-item';
+    let waveHTML = '';
+    const total = 16;
+    for (let j = 0; j < total; j++) {
+      const h = Math.floor(Math.random() * 60 + 30);
+      const played = j < msg.played ? 'played' : '';
+      waveHTML += '<span class="' + played + '" style="height:' + h + '%"></span>';
+    }
+    item.innerHTML = '<div class="msg-avatar" style="background:' + msg.color + ';color:' + msg.text + '">' + msg.initial + '</div><div class="msg-body"><div class="msg-header"><div class="msg-name">' + msg.name + '</div><div class="msg-time">' + msg.time + '</div></div><div class="msg-audio"><button class="msg-play" onclick="playAudio(this)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button><div class="msg-wave">' + waveHTML + '</div><div class="msg-duration">' + msg.dur + '</div></div></div>';
+    history.appendChild(item);
+  });
+
+  showToast('Канал: ' + name + ' (' + online + ' онлайн)');
+}
+
+function closeChannelDetail() {
+  document.getElementById('channelDetail').classList.remove('active');
+}
+
+let selectedMembers = [];
+let currentTarget = 'all';
+
+function selectTarget(target, el) {
+  document.querySelectorAll('.target-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentTarget = target;
+  selectedMembers = [];
+
+  if (target === 'individual') {
+    showToast('Выбери кому отправить');
+    document.querySelectorAll('.member-chip').forEach(c => { c.style.opacity = '1'; });
+  } else {
+    showToast('Говоришь всем в канале');
+    document.querySelectorAll('.member-chip.selected').forEach(c => c.classList.remove('selected'));
+  }
+}
+
+function toggleMemberSelect(chip) {
+  if (currentTarget !== 'individual') return;
+  chip.classList.toggle('selected');
+  const name = chip.dataset.name;
+
+  if (chip.classList.contains('selected')) {
+    if (!selectedMembers.includes(name)) selectedMembers.push(name);
+  } else {
+    selectedMembers = selectedMembers.filter(n => n !== name);
+  }
+
+  if (selectedMembers.length > 0) {
+    showToast('Выбрано: ' + selectedMembers.join(', '));
+    document.getElementById('pttChannelName').textContent = selectedMembers.join(', ');
+  } else {
+    showToast('Выбери кого позвать');
+    document.getElementById('pttChannelName').textContent = document.getElementById('channelDetailName').textContent;
+  }
 }
 
 let pttActive = false;
