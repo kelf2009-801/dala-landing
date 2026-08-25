@@ -501,24 +501,14 @@ body {
 .member-name { font-size: 0.8rem; font-weight: 600; }
 
 /* Target selector */
-.target-selector {
-  display: flex; gap: 8px; padding: 12px 20px;
+.target-hint {
+  padding: 8px 20px;
   background: var(--bg-card);
   border-bottom: 1px solid var(--border);
-}
-.target-btn {
-  flex: 1; padding: 10px;
-  background: var(--bg-input);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: var(--text-2);
-  font-size: 0.8rem; font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
+  font-size: 0.75rem; color: var(--text-2); font-weight: 600;
   text-align: center;
 }
-.target-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
-.target-btn:hover { border-color: var(--accent); }
+.target-hint .accent { color: var(--accent); }
 
 /* Reveal */
 .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
@@ -877,11 +867,8 @@ body {
     </div>
 
     <div class="channel-detail-body">
-      <!-- Target selector: all or individual -->
-      <div class="target-selector">
-        <div class="target-btn active" onclick="selectTarget('all', this)">Всем в канале</div>
-        <div class="target-btn" onclick="selectTarget('individual', this)">Кому-то</div>
-      </div>
+      <!-- Hint -->
+      <div class="target-hint" id="targetHint">Нажми кнопку — говоришь <span class="accent">всем в канале</span>. Тапни участника — говоришь ему.</div>
 
       <!-- Members -->
       <div class="section-label" id="membersLabel">Участники (4 онлайн)</div>
@@ -955,11 +942,15 @@ function selectChannel(name) {
 }
 
 function openChannel(name, online) {
+  // Reset selection
+  selectedMembers = [];
+
   // Show channel detail screen
   document.getElementById('channelDetail').classList.add('active');
   document.getElementById('channelDetailName').textContent = name;
   document.getElementById('pttChannelName').textContent = name;
   document.getElementById('membersLabel').textContent = 'Участники (' + online + ' онлайн)';
+  document.getElementById('targetHint').innerHTML = 'Нажми кнопку — говоришь <span class="accent">всем в канале</span>. Тапни участника — говоришь ему.';
 
   // Fill members
   const members = {
@@ -1029,27 +1020,15 @@ function closeChannelDetail() {
 }
 
 let selectedMembers = [];
-let currentTarget = 'all';
 
-function selectTarget(target, el) {
-  document.querySelectorAll('.target-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  currentTarget = target;
-  selectedMembers = [];
-
-  if (target === 'individual') {
-    showToast('Выбери кому отправить');
-    document.querySelectorAll('.member-chip').forEach(c => { c.style.opacity = '1'; });
-  } else {
-    showToast('Говоришь всем в канале');
-    document.querySelectorAll('.member-chip.selected').forEach(c => c.classList.remove('selected'));
-  }
-}
+function selectTarget(target, el) { /* deprecated, kept for compat */ }
 
 function toggleMemberSelect(chip) {
-  if (currentTarget !== 'individual') return;
   chip.classList.toggle('selected');
   const name = chip.dataset.name;
+  const hint = document.getElementById('targetHint');
+  const pttName = document.getElementById('pttChannelName');
+  const channelName = document.getElementById('channelDetailName').textContent;
 
   if (chip.classList.contains('selected')) {
     if (!selectedMembers.includes(name)) selectedMembers.push(name);
@@ -1057,12 +1036,16 @@ function toggleMemberSelect(chip) {
     selectedMembers = selectedMembers.filter(n => n !== name);
   }
 
-  if (selectedMembers.length > 0) {
-    showToast('Выбрано: ' + selectedMembers.join(', '));
-    document.getElementById('pttChannelName').textContent = selectedMembers.join(', ');
+  if (selectedMembers.length === 0) {
+    // Nobody selected — speak to all
+    pttName.textContent = channelName;
+    hint.innerHTML = 'Нажми кнопку — говоришь <span class="accent">всем в канале</span>. Тапни участника — говоришь ему.';
+  } else if (selectedMembers.length === 1) {
+    pttName.textContent = selectedMembers[0];
+    hint.innerHTML = 'Говоришь только: <span class="accent">' + selectedMembers[0] + '</span>';
   } else {
-    showToast('Выбери кого позвать');
-    document.getElementById('pttChannelName').textContent = document.getElementById('channelDetailName').textContent;
+    pttName.textContent = selectedMembers.length + ' чел.';
+    hint.innerHTML = 'Говоришь: <span class="accent">' + selectedMembers.join(', ') + '</span>';
   }
 }
 
