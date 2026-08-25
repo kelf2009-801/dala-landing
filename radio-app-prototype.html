@@ -346,46 +346,55 @@ body {
   background: var(--accent); cursor: pointer; border: 2px solid var(--bg);
 }
 
-/* PTT Bar */
+/* PTT Bar — no frame, floating button */
 .ptt-bar {
   position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
   width: 100%; max-width: 420px;
-  background: var(--bg-card);
-  border-top: 1px solid var(--border);
-  padding: 12px 20px 20px;
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  background: transparent;
+  border: none;
+  padding: 0 20px 28px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
   z-index: 50;
+  pointer-events: none;
 }
+.ptt-bar > * { pointer-events: auto; }
 .ptt-channel {
   display: flex; align-items: center; gap: 8px;
   font-size: 0.85rem; font-weight: 600; color: var(--text);
+  background: var(--bg-card);
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
 }
 .ptt-channel .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
 .ptt-channel .chevron { width: 14px; height: 14px; color: var(--text-3); }
-.ptt-status { font-size: 0.75rem; color: var(--text-2); font-weight: 600; min-height: 18px; }
-.ptt-status.speaking { color: var(--accent); }
-.ptt-status.listening { color: var(--danger); }
+.ptt-status { font-size: 0.8rem; color: var(--text-2); font-weight: 600; min-height: 20px; }
+.ptt-status.speaking { color: var(--danger); }
+.ptt-status.listening { color: var(--accent); }
 .ptt-btn {
-  width: 72px; height: 72px; border-radius: 50%;
-  background: var(--bg-input);
-  border: 3px solid var(--text-3);
+  width: 96px; height: 96px; border-radius: 50%;
+  background: var(--accent);
+  border: 4px solid rgba(0, 217, 126, 0.3);
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: all 0.15s ease;
   user-select: none; touch-action: none;
+  box-shadow: 0 4px 20px rgba(0, 217, 126, 0.25);
 }
-.ptt-btn svg { width: 32px; height: 32px; color: var(--text-2); transition: color 0.15s; }
+.ptt-btn svg { width: 42px; height: 42px; color: #000; transition: color 0.15s; }
 .ptt-btn.pressed {
-  background: var(--accent); border-color: var(--accent-dark);
-  transform: scale(1.1);
+  background: var(--danger);
+  border-color: rgba(255, 68, 68, 0.4);
+  transform: scale(1.08);
+  box-shadow: 0 4px 30px rgba(255, 68, 68, 0.4);
 }
-.ptt-btn.pressed svg { color: #000; }
+.ptt-btn.pressed svg { color: #fff; }
 .ptt-btn.listening {
-  background: var(--danger-glow); border-color: var(--danger);
+  background: var(--accent);
+  border-color: rgba(0, 217, 126, 0.3);
   animation: pulse-listen 1s infinite;
 }
-.ptt-btn.listening svg { color: var(--danger); }
-@keyframes pulse-listen { 0%,100% { box-shadow: 0 0 0 0 var(--danger-glow); } 50% { box-shadow: 0 0 0 10px transparent; } }
+@keyframes pulse-listen { 0%,100% { box-shadow: 0 0 0 0 rgba(0,217,126,0.3); } 50% { box-shadow: 0 0 0 16px transparent; } }
 .ptt-label { font-size: 0.7rem; color: var(--text-3); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
 
 /* VU meter */
@@ -879,7 +888,6 @@ function pttDown(e) {
   status.className = 'ptt-status speaking';
   vu.classList.add('active');
   pttActive = true;
-  // VU meter animation
   vuInterval = setInterval(() => {
     vu.querySelectorAll('span').forEach(s => {
       s.style.height = (Math.random() * 20 + 4) + 'px';
