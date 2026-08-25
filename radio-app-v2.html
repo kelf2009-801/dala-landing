@@ -346,7 +346,7 @@ body {
   background: var(--accent); cursor: pointer; border: 2px solid var(--bg);
 }
 
-/* PTT Bar — no frame, floating button */
+/* PTT Bar — no frame, floating button, above all screens */
 .ptt-bar {
   position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
   width: 100%; max-width: 420px;
@@ -354,7 +354,7 @@ body {
   border: none;
   padding: 0 20px 28px;
   display: flex; flex-direction: column; align-items: center; gap: 8px;
-  z-index: 50;
+  z-index: 100;
   pointer-events: none;
 }
 .ptt-bar > * { pointer-events: auto; }
@@ -466,25 +466,25 @@ body {
 }
 .channel-detail.active { display: flex; }
 .channel-detail .app-bar { background: var(--bg-card); }
-.channel-detail-body { flex: 1; overflow-y: auto; padding-bottom: 120px; }
+.channel-detail-body { flex: 1; overflow-y: auto; padding-bottom: 160px; }
 
-/* Channel members */
-.members-grid {
-  display: flex; flex-wrap: wrap; gap: 12px;
-  padding: 16px 20px;
+/* Channel members — vertical list */
+.members-list {
+  padding: 8px 20px;
 }
-.member-chip {
-  display: flex; align-items: center; gap: 8px;
+.member-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 14px;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  padding: 8px 14px 8px 8px;
-  border-radius: 999px;
+  border-radius: 14px;
+  margin-bottom: 8px;
   cursor: pointer;
   transition: all 0.2s;
 }
-.member-chip:hover { border-color: var(--accent); background: var(--bg-input); }
-.member-chip.selected { border-color: var(--accent); background: var(--accent-glow); }
-.member-chip.speaking { border-color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
+.member-row:hover { border-color: var(--accent); background: var(--bg-input); }
+.member-row.selected { border-color: var(--accent); background: var(--accent-glow); }
+.member-row.speaking { border-color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
 .member-avatar {
   width: 32px; height: 32px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
@@ -872,7 +872,7 @@ body {
 
       <!-- Members -->
       <div class="section-label" id="membersLabel">Участники (4 онлайн)</div>
-      <div class="members-grid" id="membersGrid">
+      <div class="members-list" id="membersGrid">
         <!-- filled by JS -->
       </div>
     </div>
@@ -977,7 +977,7 @@ function openChannel(name, online) {
   grid.innerHTML = '';
   list.forEach((m, i) => {
     const chip = document.createElement('div');
-    chip.className = 'member-chip';
+    chip.className = 'member-row';
     chip.dataset.name = m.name;
     chip.onclick = function() { toggleMemberSelect(this); };
     chip.innerHTML = '<div class="member-avatar" style="background:' + m.color + ';color:' + m.text + '">' + m.initial + '<span class="dot ' + (m.online ? 'online' : 'offline') + '"></span></div><span class="member-name">' + m.name + '</span>';
