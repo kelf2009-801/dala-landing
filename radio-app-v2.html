@@ -118,20 +118,29 @@ body {
 .search-bar input:focus { border-color: var(--accent); }
 .search-bar input::placeholder { color: var(--text-3); }
 
-/* Tabs */
+/* Tabs — horizontal scroll */
 .tabs {
   display: flex;
   background: var(--bg-card);
   border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
 }
+.tabs::-webkit-scrollbar { display: none; }
 .tab {
-  flex: 1; text-align: center; padding: 14px 0;
+  flex: 0 0 auto;
+  min-width: 90px;
+  text-align: center; padding: 14px 16px;
   font-size: 0.8rem; font-weight: 600;
   color: var(--text-3);
   border-bottom: 3px solid transparent;
   cursor: pointer;
   transition: all 0.2s;
   display: flex; flex-direction: column; align-items: center; gap: 4px;
+  scroll-snap-align: center;
 }
 .tab svg { width: 20px; height: 20px; }
 .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
