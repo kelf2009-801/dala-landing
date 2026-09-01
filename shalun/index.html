@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHALUN — онлайн-рация для водителей · Инструкция</title>
+<meta name="description" content="SHALUN — push-to-talk рация по интернету. Как поставить, создать канал, отправить запрос и говорить в эфире.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<style>
+:root{
+  --bg:#07090a; --bg2:#0c1011; --ink:#f4f7f6; --mut:#8a948f;
+  --green:#00FA8C; --green-d:#05c977; --line:rgba(255,255,255,.07);
+  --phone-w:300px; --phone-h:636px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:var(--green);color:#03150c}
+canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.glow{position:fixed;width:520px;height:520px;border-radius:50%;pointer-events:none;z-index:1;
+  background:radial-gradient(circle,rgba(0,250,140,.06),transparent 60%);
+  transform:translate(-50%,-50%);transition:opacity .4s}
+main{position:relative;z-index:2}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.mono{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:18px 0;
+  background:linear-gradient(rgba(7,9,10,.92),rgba(7,9,10,.65));backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);transform:translateY(-100%)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.18em;font-size:15px}
+.logo svg{width:26px;height:26px}
+.logo b{color:var(--green)}
+.nav-links{display:flex;gap:26px;font-size:13px;color:var(--mut)}
+.nav-links a{color:inherit;text-decoration:none;transition:color .25s}
+.nav-links a:hover{color:var(--green)}
+.badge-dev{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;padding:6px 12px;
+  border:1px solid rgba(0,250,140,.35);border-radius:99px;color:var(--green);position:relative;overflow:hidden}
+.badge-dev::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(0,250,140,.25) 50%,transparent 70%);
+  background-size:200% 100%;animation:shine 3.2s linear infinite}
+@keyframes shine{to{background-position:-200% 0}}
+@media(max-width:760px){.nav-links{display:none}}
+
+/* ─── HERO ─── */
+header{min-height:100svh;display:flex;align-items:center;padding:130px 0 70px;position:relative}
+header::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(900px 600px at 78% 38%,rgba(0,250,140,.08),transparent 60%),
+             radial-gradient(700px 500px at 8% 90%,rgba(0,250,140,.05),transparent 60%)}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;position:relative}
+h1{font-size:clamp(44px,7.2vw,88px);font-weight:700;letter-spacing:-.045em;line-height:.98}
+h1 .ln{display:block;overflow:hidden}
+h1 .ln span{display:inline-block}
+h1 em{font-style:normal;color:var(--green)}
+.hero p{margin-top:22px;font-size:17px;line-height:1.65;color:var(--mut);max-width:46ch}
+.hero p b{color:var(--ink);font-weight:500}
+.hero-cta{display:flex;gap:14px;margin-top:34px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:9px;height:46px;padding:0 22px;border-radius:99px;
+  font-size:13.5px;font-weight:600;letter-spacing:.02em;text-decoration:none;cursor:pointer;border:none}
+.btn-g{background:var(--green);color:#03150c;box-shadow:0 8px 34px rgba(0,250,140,.28)}
+.btn-o{border:1px solid rgba(255,255,255,.18);color:var(--ink);background:transparent;transition:border-color .25s,color .25s}
+.btn-o:hover{border-color:var(--green);color:var(--green)}
+.btn svg{width:16px;height:16px}
+.hero-meta{display:flex;gap:26px;margin-top:44px;padding-top:22px;border-top:1px solid var(--line);font-size:12px;color:var(--mut)}
+.hero-meta i{font-style:normal;display:block;color:var(--green);font-family:'JetBrains Mono',monospace;font-size:16px;margin-bottom:2px}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.hero-phone-col{display:flex;justify-content:center;order:-1}}
+
+/* ─── PHONE ─── */
+.phone{width:var(--phone-w);height:var(--phone-h);border-radius:46px;position:relative;flex-shrink:0;
+  background:linear-gradient(145deg,#2a2a2a,#1a1a1a 45%,#262626 80%,#151515);
+  padding:11px;box-shadow:0 2px 0 #3d3d3d inset,0 -2px 0 #000 inset,
+    0 40px 90px -20px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06),0 0 80px rgba(0,250,140,.07)}
+.phone::before{content:'';position:absolute;left:-3px;top:150px;width:3px;height:34px;border-radius:3px;background:#1d1d1d;box-shadow:0 56px 0 #1d1d1d,0 100px 0 #1d1d1d}
+.phone::after{content:'';position:absolute;right:-3px;top:190px;width:3px;height:62px;border-radius:3px;background:#1d1d1d}
+.phone-screen{width:100%;height:100%;border-radius:37px;overflow:hidden;position:relative;background:#0a0a0a}
+.island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:86px;height:24px;border-radius:99px;background:#000;z-index:5}
+.island::after{content:'';position:absolute;right:9px;top:7px;width:9px;height:9px;border-radius:50%;background:#10151a;box-shadow:0 0 3px rgba(60,90,130,.5)}
+.sbar{position:absolute;top:0;left:0;right:0;height:46px;z-index:4;display:flex;justify-content:space-between;align-items:flex-end;padding:0 22px 6px;font-size:11.5px;font-weight:600;color:#fff}
+.sbar .r{display:flex;gap:4px;align-items:center}
+.sbar svg{width:15px;height:15px;fill:#fff}
+.screen-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;transition:opacity .5s ease,transform .5s ease;transform:scale(1.04)}
+.screen-img.on{opacity:1;transform:scale(1)}
+.phone-float{animation:float 7s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0.4deg)}50%{transform:translateY(-14px) rotate(-.6deg)}}
+
+/* ─── STEPS STRIP ─── */
+.strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2)}
+.strip .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.strip-i{padding:34px 26px;border-left:1px solid var(--line);display:flex;gap:14px;align-items:baseline}
+.strip-i:first-child{border-left:none}
+.strip-i b{font-family:'JetBrains Mono',monospace;color:var(--green);font-size:13px;font-weight:600}
+.strip-i span{font-size:14px;color:var(--mut);line-height:1.4}
+.strip-i span i{display:block;font-style:normal;color:var(--ink);font-weight:500;font-size:15px;margin-bottom:3px}
+@media(max-width:900px){.strip .wrap{grid-template-columns:1fr 1fr}.strip-i:nth-child(3){border-left:none}}
+@media(max-width:520px){.strip .wrap{grid-template-columns:1fr}.strip-i{border-left:none;border-top:1px solid var(--line)}.strip-i:first-child{border-top:none}}
+
+/* ─── STORY (sticky phone) ─── */
+.story{position:relative}
+.story .wrap{display:grid;grid-template-columns:1fr 380px 1fr;gap:0;align-items:start}
+.story-phone{grid-column:2;position:sticky;top:calc(50vh - var(--phone-h)/2);height:var(--phone-h);z-index:3;
+  display:flex;justify-content:center;align-self:start}
+.story-phone .cap{position:absolute;bottom:-46px;left:0;right:0;text-align:center;font-family:'JetBrains Mono',monospace;
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);transition:opacity .3s}
+.story-phone .cap b{color:var(--green);font-weight:600}
+.step{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:40px 34px;position:relative;z-index:4}
+.step.left{grid-column:1;text-align:right}
+.step.right{grid-column:3;text-align:left}
+.step-num{font-family:'JetBrains Mono',monospace;font-size:52px;font-weight:600;color:transparent;
+  -webkit-text-stroke:1px rgba(0,250,140,.5);letter-spacing:-.02em;line-height:1;margin-bottom:14px}
+.step h3{font-size:clamp(24px,3vw,34px);font-weight:600;letter-spacing:-.02em;line-height:1.12;margin-bottom:14px}
+.step h3 em{font-style:normal;color:var(--green)}
+.step p{font-size:15px;line-height:1.7;color:var(--mut);max-width:38ch}
+.step.left p{margin-left:auto}
+.step p b{color:var(--ink);font-weight:500}
+.step .hint{display:inline-flex;align-items:center;gap:7px;margin-top:16px;padding:8px 14px;border:1px solid var(--line);
+  border-radius:10px;font-size:12px;color:var(--mut);background:rgba(255,255,255,.02)}
+.step .hint svg{width:13px;height:13px;stroke:var(--green)}
+@media(max-width:980px){
+  .story .wrap{grid-template-columns:1fr}
+  .story-phone{grid-column:1;top:90px;height:auto;justify-content:center}
+  .step{grid-column:1 !important;text-align:left !important;min-height:88vh}
+  .step.left p,.step p{margin-left:0}
+  .step .screen-mini{display:block;max-width:240px;border-radius:26px;border:1px solid var(--line);margin:18px 0 0}
+}
+.step .screen-mini{display:none}
+
+/* ─── PTT FLOW ─── */
+.flow{padding:110px 0;border-top:1px solid var(--line);position:relative;background:var(--bg2)}
+.flow h2,.sec-head h2{font-size:clamp(30px,4.6vw,52px);font-weight:700;letter-spacing:-.035em;line-height:1.05}
+.flow h2 em,.sec-head h2 em{font-style:normal;color:var(--green)}
+.sec-head{padding:110px 0 20px}
+.sec-head p{color:var(--mut);font-size:16px;margin-top:14px;max-width:56ch;line-height:1.6}
+.states{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:56px}
+.st{border:1px solid var(--line);border-radius:18px;padding:26px 22px;background:rgba(255,255,255,.015);position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
+.st:hover{border-color:rgba(0,250,140,.4);transform:translateY(-4px)}
+.st .dot{width:13px;height:13px;border-radius:50%;margin-bottom:18px}
+.st h4{font-size:15.5px;font-weight:600;margin-bottom:8px}
+.st p{font-size:13px;color:var(--mut);line-height:1.6}
+.st code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green)}
+.st-arrow{position:absolute;right:-13px;top:50%;z-index:2;color:var(--mut);font-size:18px}
+.st:nth-child(1) .dot{background:var(--green);box-shadow:0 0 18px var(--green)}
+.st:nth-child(2) .dot{background:#ff3b4d;box-shadow:0 0 18px #ff3b4d}
+.st:nth-child(3) .dot{background:var(--green);box-shadow:0 0 18px var(--green);animation:pulse 1.4s infinite}
+.st:nth-child(4) .dot{background:#5a6165;box-shadow:none}
+@keyframes pulse{50%{opacity:.4}}
+@media(max-width:900px){.states{grid-template-columns:1fr 1fr}.st-arrow{display:none}}
+@media(max-width:520px){.states{grid-template-columns:1fr}}
+
+/* ─── FAQ ─── */
+.faq{padding:0 0 110px}
+.faq-list{margin-top:50px;border-top:1px solid var(--line)}
+.q{border-bottom:1px solid var(--line);padding:24px 6px;cursor:pointer}
+.q b{display:flex;justify-content:space-between;align-items:center;font-size:16.5px;font-weight:500;gap:20px}
+.q b i{font-style:normal;color:var(--green);font-size:22px;transition:transform .3s;flex-shrink:0;font-weight:300}
+.q .a{max-height:0;overflow:hidden;transition:max-height .45s ease}
+.q .a p{padding:14px 0 4px;color:var(--mut);font-size:14.5px;line-height:1.7;max-width:70ch}
+.q .a b{color:var(--ink);font-weight:500}
+.q.open b i{transform:rotate(45deg)}
+.q.open .a{max-height:220px}
+
+/* ─── FOOTER ─── */
+footer{border-top:1px solid var(--line);padding:64px 0 46px;background:var(--bg2)}
+footer .wrap{display:flex;justify-content:space-between;align-items:end;gap:30px;flex-wrap:wrap}
+footer .f-big{font-size:clamp(40px,6vw,72px);font-weight:800;letter-spacing:.12em;line-height:1}
+footer .f-big span{color:var(--green)}
+footer .f-note{font-size:12.5px;color:var(--mut);line-height:1.7;text-align:right;max-width:34ch}
+footer .f-note b{color:var(--green);font-weight:600}
+@media(max-width:640px){footer .f-note{text-align:left}}
+
+.reveal{opacity:0;transform:translateY(34px)}
+@media(prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div class="glow" id="glow"></div>
+
+<nav id="nav"><div class="wrap">
+  <div class="logo">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v10.5" stroke="#00FA8C" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="16.5" r="2.6" stroke="#00FA8C" stroke-width="2.2"/><path d="M6.5 7a7 7 0 0 1 0 9M17.5 7a7 7 0 0 1 0 9M3.5 4a11 11 0 0 1 0 15M20.5 4a11 11 0 0 1 0 15" stroke="#00FA8C" stroke-width="1.6" stroke-linecap="round" opacity=".55"/></svg>
+    SHAL<b>UN</b>
+  </div>
+  <div class="nav-links">
+    <a href="#story">Установка</a><a href="#story">Каналы</a><a href="#flow">Эфир</a><a href="#faq">FAQ</a>
+  </div>
+  <span class="badge-dev">В РАЗРАБОТКЕ · v1.0.0</span>
+</div></nav>
+
+<header><div class="wrap hero">
+  <div>
+    <span class="mono">Онлайн-рация · push-to-talk</span>
+    <h1 style="margin-top:18px">
+      <span class="ln"><span>Рация,</span></span>
+      <span class="ln"><span>которая</span></span>
+      <span class="ln"><span>слышит <em>весь</em></span></span>
+      <span class="ln"><span><em>маршрут</em>.</span></span>
+    </h1>
+    <p>Нажми и держи — говори. Отпусти — слушаешь. Без номеров, паролей и google-аккаунтов: <b>только позывной</b>. Диспетчер и водители на одной волне, хоть Сызрань, хоть Актобе.</p>
+    <div class="hero-cta">
+      <a class="btn btn-o" href="#story">Как это работает
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m0 0l-6-6m6 6l6-6"/></svg></a>
+    </div>
+    <div class="hero-meta">
+      <div><i>~24 кбит/с</i>трафик говоритящего</div>
+      <div><i>&lt;400 мс</i>задержка голоса</div>
+      <div><i>RSA-2048</i>вход по позывному</div>
+    </div>
+  </div>
+  <div class="hero-phone-col"><div class="phone phone-float">
+    <div class="phone-screen">
+      <div class="island"></div>
+      <div class="sbar"><span>21:46</span><span class="r">
+        <svg viewBox="0 0 24 24"><path d="M2 17h3v4H2zM7 13h3v8H7zM12 9h3v12h-3zM17 4h3v17h-3z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 20l-3.5-3.9a5 5 0 1 1 7 0L12 20zM4.6 9.3A10.6 10.6 0 0 1 12 6.5a10.6 10.6 0 0 1 7.4 2.8" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg viewBox="0 0 26 24"><rect x="2" y="8" width="18" height="9" rx="2" fill="none" stroke="#fff" stroke-width="1.6"/><rect x="3.7" y="9.7" width="12" height="5.6" rx="1"/><path d="M22 11v3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+      </span></div>
+      <img class="screen-img on" src="shalun/img/02-onboarding-filled.jpg" alt="Экран входа в SHALUN">
+    </div>
+  </div></div>
+</div></header>
+
+<section class="strip"><div class="wrap">
+  <div class="strip-i"><b>01</b><span><i>Позывной</i>Фото по тапу, имя в эфир, маршрут</span></div>
+  <div class="strip-i"><b>02</b><span><i>Канал</i>Найти или создать — свой маршрут</span></div>
+  <div class="strip-i"><b>03</b><span><i>Запрос</i>В приватный — через апрув админа</span></div>
+  <div class="strip-i"><b>04</b><span><i>Эфир</i>Держишь — говоришь, отпустил — слушаешь</span></div>
+</div></section>
+
+<div class="sec-head" id="story"><div class="wrap">
+  <span class="mono">Инструкция · 5 шагов</span>
+  <h2 style="margin-top:14px">От установки<br>до <em>первого «приём»</em>.</h2>
+</div></div>
+
+<section class="story"><div class="wrap">
+  <div class="story-phone"><div class="phone" id="storyPhone">
+    <div class="phone-screen">
+      <div class="island"></div>
+      <div class="sbar"><span id="storyTime">21:46</span><span class="r">
+        <svg viewBox="0 0 24 24"><path d="M2 17h3v4H2zM7 13h3v8H7zM12 9h3v12h-3zM17 4h3v17h-3z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 20l-3.5-3.9a5 5 0 1 1 7 0L12 20zM4.6 9.3A10.6 10.6 0 0 1 12 6.5a10.6 10.6 0 0 1 7.4 2.8" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg viewBox="0 0 26 24"><rect x="2" y="8" width="18" height="9" rx="2" fill="none" stroke="#fff" stroke-width="1.6"/><rect x="3.7" y="9.7" width="12" height="5.6" rx="1"/><path d="M22 11v3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+      </span></div>
+      <img class="screen-img on" data-s="0" src="shalun/img/01-onboarding-empty.jpg" alt="Регистрация">
+      <img class="screen-img" data-s="1" src="shalun/img/03-channels-list.jpg" alt="Мои каналы">
+      <img class="screen-img" data-s="2" src="shalun/img/04-search-join-dialog.jpg" alt="Запрос на вход">
+      <img class="screen-img" data-s="3" src="shalun/img/06-radio-screen.jpg" alt="Экран рации">
+      <img class="screen-img" data-s="4" src="shalun/img/07-drawer-menu.jpg" alt="Меню">
+    </div>
+    <div class="cap" id="storyCap"><b>ШАГ 1</b> — РЕГИСТРАЦИЯ</div>
+  </div></div>
+
+  <div class="step left" data-s="0">
+    <div class="step-num">01</div>
+    <h3>Заходишь <em>по позывному</em></h3>
+    <p>Тапни круг — своё фото из галереи. <b>Позывной</b> — как тебя слышать в эфире. <b>Маршрут</b> — по желанию, например <b>№28</b>. Жми «Начать».</p>
+    <span class="hint"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Ни паролей, ни СМС — ключ шифрования живёт в телефоне</span>
+    <img class="screen-mini" src="shalun/img/01-onboarding-empty.jpg" alt="">
+  </div>
+
+  <div class="step right" data-s="1">
+    <div class="step-num">02</div>
+    <h3>Находишь <em>свой канал</em></h3>
+    <p>Поиск сверху — по названию. 🔒 замóк — приватный, без замка — открытый. Свой маршрут ищется за секунду: <b>«Сызрань-28»</b>. Внизу — «+ Создать канал», если везёшь новый.</p>
+    <span class="hint"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>Подсказка: создатель канала становится его админом</span>
+    <img class="screen-mini" src="shalun/img/03-channels-list.jpg" alt="">
+  </div>
+
+  <div class="step left" data-s="2">
+    <div class="step-num">03</div>
+    <h3>Приватный — <em>по запросу</em></h3>
+    <p>Тап по замкнутому каналу → «Отправить запрос». Админ увидит тебя во «Запросах на вход» и подтвердит. Так в эфир не попадает случайный шум с дороги.</p>
+    <span class="hint"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Альтернатива — код-приглашение от админа</span>
+    <img class="screen-mini" src="shalun/img/04-search-join-dialog.jpg" alt="">
+  </div>
+
+  <div class="step right" data-s="3">
+    <div class="step-num">04</div>
+    <h3>Держишь кнопку — <em>говоришь</em></h3>
+    <p>«Эфир свободен» → жми и держи <b>ГОВОРИТЬ</b> → стал <b>ГОВОРЮ</b>. Отпустил — эфир свободен для следующего. Кто-то опередил — увидишь «Говорит: Серёга», перебьёшь, когда отпустит.</p>
+    <span class="hint"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3"/></svg>Вкладка «Онлайн» — видно, кто в канале и кто вещает</span>
+    <img class="screen-mini" src="shalun/img/06-radio-screen.jpg" alt="">
+  </div>
+
+  <div class="step left" data-s="4">
+    <div class="step-num">05</div>
+    <h3>Меню — <em>всё под рукой</em></h3>
+    <p>Свайп от левого края: все каналы, приватные, мои, избранное, история разговоров, контакты, настройки. <b>История</b> пригодится разобрать, кто и что передавал.</p>
+    <span class="hint"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 0 .01M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Настройки: звук PTT, вибрация, шумоподавление</span>
+    <img class="screen-mini" src="shalun/img/07-drawer-menu.jpg" alt="">
+  </div>
+</div></section>
+
+<section class="flow" id="flow"><div class="wrap">
+  <span class="mono">Логика эфира · floor control</span>
+  <h2 style="margin-top:14px">Один говорит —<br>остальные <em>слышат</em>.</h2>
+  <div class="states">
+    <div class="st reveal"><div class="dot"></div><h4>Эфир свободен</h4>
+      <p>Кнопка зелёная. <code>ГОВОРИТЬ</code> — жду нажатия.</p><span class="st-arrow">→</span></div>
+    <div class="st reveal"><div class="dot"></div><h4>Говоришь ты</h4>
+      <p>Держишь — кнопка краснеет, <code>ГОВОРЮ</code>. Канал видит: «Говорит: Андрей».</p><span class="st-arrow">→</span></div>
+    <div class="st reveal"><div class="dot"></div><h4>Слушаешь других</h4>
+      <p>Занятый эфир пульсирует: кто-то вещает. Жми — стой в очереди, отпустит — твой ход.</p><span class="st-arrow">→</span></div>
+    <div class="st reveal"><div class="dot"></div><h4>Мут / тишина</h4>
+      <p>Админ может притихить: «Ты замьючен админом». Молчишь 30 сек — эфир отпускается сам.</p></div>
+  </div>
+</div></section>
+
+<section class="faq" id="faq"><div class="wrap">
+  <span class="mono">Вопросы с маршрута</span>
+  <h2 style="margin-top:14px">Коротко <em>по делу</em>.</h2>
+  <div class="faq-list">
+    <div class="q"><b>Почему без пароля — это не страшно?<i>+</i></b>
+      <div class="a"><p>Твой вход — <b>RSA-2048 ключ</b>, который генерится прямо на телефоне при регистрации. Пароль нельзя подсмотреть, подобрать или слить — его просто нет. Позывной — это как брэнд на капоте: тебя слышат по имени, а доступ к эфиру решает канал.</p></div></div>
+    <div class="q"><b>Сколько ест трафика и как с задержкой?<i>+</i></b>
+      <div class="a"><p>~<b>24 кбит/сек</b> на говорящего: 40 минут в эфире — примерно 7 МБ. Задержка голоса 200–400 мс — как обычная рация, только без «шшш» на весь эфир.</p></div></div>
+    <div class="q"><b>Работает, пока телефон в кармане или за рулём?<i>+</i></b>
+      <div class="a"><p>Да: рация живёт в фоне как навигатор. Вибрация и звук нажатия PTT, «кто говорит» видно даже на заблокированном экране в уведомлении. Bluetooth-гарнитура — говоришь вообще не беря телефон.</p></div></div>
+    <div class="q"><b>Кто такие «запросы на вход» и зачем админ?<i>+</i></b>
+      <div class="a"><p>Приватный канал = только свои. Админ одобряет, кикает, банит и мьютит — у эфира есть хозяин. Первым в канал зашёл <b>создатель</b> — он и админ. Вдвоём можно не светиться: кинь другу <b>код-приглашение</b>.</p></div></div>
+    <div class="q"><b>Где скачать?<i>+</i></b>
+      <div class="a"><p>Приложение <b>в разработке</b>. Готовится к маршруту: сначала общий эфир и сервер, тогда и релиз. Хочешь в первых тестировщиках — пиши админу, поставим вручную.</p></div></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div>
+    <div class="f-big">SHAL<span>UN</span></div>
+    <p style="margin-top:12px;color:var(--mut);font-size:13px">Онлайн-рация для водителей · v1.0.0</p>
+  </div>
+  <div class="f-note">Статус: <b>в разработке</b>.<br>Эфир строится. Скоро будет слышно.<br>Связь с админом — в Telegram.</div>
+</div></footer>
+
+<script>
+/* звёзды фоном — тихие, с зелёнским отливом */
+(()=>{const c=document.getElementById('stars'),x=c.getContext('2d');let W,H,P=[];
+const rs=()=>{W=c.width=innerWidth;H=c.height=innerHeight;P=Array.from({length:Math.min(110,innerWidth/9)},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.2,s:Math.random()*.3+.05,g:Math.random()<.22}))};rs();addEventListener('resize',rs);
+(function d(){x.clearRect(0,0,W,H);for(const p of P){p.y-=p.s;if(p.y<-2){p.y=H+2;p.x=Math.random()*W}x.beginPath();x.arc(p.x,p.y,p.r,0,7);x.fillStyle=p.g?'rgba(0,250,140,.5)':'rgba(255,255,255,.45)';x.fill()}requestAnimationFrame(d)})()})();
+
+/* курсор-подсветка */
+(()=>{const g=document.getElementById('glow');let tx=0,ty=0,cx=0,cy=0;
+addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY});
+(function l(){cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;g.style.left=cx+'px';g.style.top=cy+'px';requestAnimationFrame(l)})()})();
+
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(window.gsap&&window.ScrollTrigger&&!reduce){
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.to('#nav',{y:0,duration:.7,ease:'power3.out',onComplete:()=>gsap.set('#nav',{transform:'none'})});
+  document.querySelectorAll('h1 .ln span').forEach((s,i)=>{
+    gsap.from(s,{yPercent:105,opacity:0,duration:.9,delay:.15+i*.09,ease:'power4.out'})});
+  gsap.from('.hero p,.hero-cta,.hero-meta',{y:26,opacity:0,duration:.8,delay:.55,stagger:.12,ease:'power3.out'});
+  gsap.utils.toArray('.reveal').forEach(el=>{
+    gsap.fromTo(el,{opacity:0,y:34},{opacity:1,y:0,duration:.7,ease:'power3.out',
+      scrollTrigger:{trigger:el,start:'top 85%'}})});
+  gsap.utils.toArray('.strip-i').forEach((el,i)=>{
+    gsap.from(el,{opacity:0,y:26,duration:.6,delay:i*.1,ease:'power3.out',
+      scrollTrigger:{trigger:'.strip',start:'top 85%'}})});
+  /* сторителлинг: липкий телефон + переключение экранов по скроллу */
+  const imgs=[...document.querySelectorAll('#storyPhone .screen-img')];
+  const cap=document.getElementById('storyCap');
+  const CAPS=[['ШАГ 1','РЕГИСТРАЦИЯ'],['ШАГ 2','КАНАЛЫ'],['ШАГ 3','ЗАПРОС НА ВХОД'],['ШАГ 4','ЭФИР'],['ШАГ 5','МЕНЮ']];
+  const setS=n=>{imgs.forEach(im=>im.classList.toggle('on',+im.dataset.s===n));
+    cap.innerHTML=`<b>${CAPS[n][0]}</b> — ${CAPS[n][1]}`};
+  document.querySelectorAll('.step').forEach(st=>{
+    ScrollTrigger.create({trigger:st,start:'top center',end:'bottom center',
+      onToggle:sc=>{if(sc.isActive)setS(+st.dataset.s)}})});
+  /* дрифт телефона в сторителлинге */
+  gsap.to('#storyPhone',{rotate:2,ease:'none',scrollTrigger:{trigger:'.story',start:'top bottom',end:'bottom top',scrub:true}});
+}
+/* FAQ */
+document.querySelectorAll('.q').forEach(q=>q.addEventListener('click',()=>{
+  const open=q.classList.contains('open');
+  document.querySelectorAll('.q').forEach(o=>o.classList.remove('open'));
+  if(!open)q.classList.add('open')}));
+</script>
+</body>
+</html>
