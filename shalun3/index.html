@@ -480,6 +480,15 @@ if(tb){var lines=[
   io2.observe(tb);
  }
 }
+/* ── FAQ toggle ── */
+document.querySelectorAll('.q').forEach(function(q){
+  q.setAttribute('tabindex','0');
+  q.setAttribute('role','button');
+  q.setAttribute('aria-expanded','false');
+  function tog(){var open=q.classList.toggle('open');q.setAttribute('aria-expanded',open?'true':'false')}
+  q.addEventListener('click',tog);
+  q.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();tog()}});
+});
 /* ── reveal ── */
 if(window.gsap&&window.ScrollTrigger&&!reduce){
   gsap.registerPlugin(ScrollTrigger);
