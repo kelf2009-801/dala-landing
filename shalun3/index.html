@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHALUN — рация водителей · Жми и держи</title>
+<meta name="description" content="Онлайн-рация для водителей: эфир без паролей и сим-карт. Позывной, канал, кнопка. 24 кбит/с, задержка меньше секунды.">
+<meta property="og:title" content="SHALUN — рация водителей">
+<meta property="og:description" content="Жми и держи — говоришь. Отпустил — слушаешь. Эфир для маршрута без паролей и сим-карт.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://kelf2009-801.github.io/dala-landing/shalun3/img/og.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<style>
+:root{
+  --asphalt:#110e0a; --panel:#1b160f; --panel2:#221b12; --ink:#f4efe3; --mut:#a99f8d;
+  --amber:#ffb430; --green:#2be08a; --red:#ff4141; --line:#000;
+  --bw:3px; /* brutal border */
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--asphalt);color:var(--ink);font-family:'Golos Text',sans-serif;font-weight:400;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.5}
+::selection{background:var(--amber);color:#171310}
+img{max-width:100%;display:block}
+main{position:relative;z-index:2}
+.wrap{max-width:1140px;margin:0 auto;padding:0 clamp(18px,4vw,40px)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+h1,h2,h3,.disp{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.01em;line-height:1.02}
+.emo{font-style:normal}
+
+/* ── brutal primitives ── */
+.brd{border:var(--bw) solid var(--line);box-shadow:8px 8px 0 var(--line);background:var(--panel)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:46px;padding:0 22px;
+  border:var(--bw) solid var(--line);font-family:'Oswald';text-transform:uppercase;font-size:15px;font-weight:600;
+  letter-spacing:.04em;color:#171310;background:var(--amber);box-shadow:5px 5px 0 var(--line);
+  cursor:pointer;text-decoration:none;transition:transform .08s,box-shadow .08s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--line)}
+.btn:active,.btn.pressed{transform:translate(5px,5px);box-shadow:0 0 0 var(--line)}
+.btn-g{background:var(--green)}
+.btn-o{background:transparent;color:var(--ink)}
+
+/* ── nav ── */
+nav{position:sticky;top:0;z-index:60;background:var(--asphalt);border-bottom:var(--bw) solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Oswald';font-weight:700;font-size:20px;letter-spacing:.06em}
+.logo svg{width:26px;height:26px;stroke:var(--green)}
+.nav-links{display:flex;gap:22px;align-items:center}
+.nav-links a{color:var(--mut);text-decoration:none;font-family:'JetBrains Mono';font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.nav-links a:hover{color:var(--amber)}
+.onair{display:flex;align-items:center;gap:8px;border:2px solid var(--green);color:var(--green);padding:5px 10px;font-size:11px}
+.onair i{width:8px;height:8px;border-radius:50%;background:var(--green);animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.25}}
+@media(max-width:860px){.nav-links a{display:none}.nav-links .onair{display:flex}}
+
+/* ── hero ── */
+header{padding:clamp(40px,7vw,80px) 0 0;position:relative;overflow:hidden}
+.head-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,60px);align-items:end}
+h1{font-size:clamp(48px,9.6vw,104px);font-weight:700;white-space:nowrap}
+@media(max-width:600px){h1{white-space:normal}}
+h1 .ln{display:block;overflow:hidden;padding-bottom:.09em;margin-bottom:-.09em}
+h1 .ln>span{display:inline-block}
+h1 .amber{color:var(--amber)}
+h1 .green{color:var(--green)}
+.hero-sub{color:var(--mut);font-size:clamp(15px,2vw,18px);margin-top:18px;max-width:40ch}
+.hero-cta{display:flex;gap:16px;margin-top:28px;flex-wrap:wrap}
+/* приёмник справа */
+.rx{border:var(--bw) solid var(--line);background:linear-gradient(160deg,#2a2115,#1a150e);
+  box-shadow:10px 10px 0 var(--line);padding:clamp(14px,2vw,22px);position:relative;min-width:0}
+.rx-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.rx-brand{font-family:'Oswald';font-weight:700;letter-spacing:.14em;font-size:14px}
+.rx-led{display:flex;gap:6px;align-items:center;font-size:11.5px;color:var(--mut)}
+.rx-led i{width:9px;height:9px;border-radius:2px;background:var(--green)}
+/* частотная шкала */
+.dial{position:relative;height:84px;border:var(--bw) solid var(--line);background:linear-gradient(#0d0b08,#151109);
+  overflow:hidden;user-select:none;padding-bottom:8px}
+.dial-ticks{position:absolute;left:10px;right:10px;top:8px;height:20px;
+  background:repeating-linear-gradient(90deg,#5a4e3b 0 2px,transparent 2px 26px);opacity:.9}
+.dial-ticks::after{content:'';position:absolute;left:0;right:0;top:0;height:32px;
+  background:repeating-linear-gradient(90deg,transparent 0 128px,#8a7a5c 128px 131px,transparent 131px)}
+.dial-stations{position:absolute;left:10px;right:10px;top:46px;height:22px;
+  font-family:'JetBrains Mono';font-size:clamp(10px,1.4vw,12px);font-weight:700}
+.stn{position:absolute;transform:translateX(-50%);white-space:nowrap;color:#7c7059;padding-top:3px;border-top:2px solid #3d3524}
+.stn.hot{color:var(--green);border-top-color:var(--green)}
+@media(max-width:520px){.stn.side{display:none}}
+.needle{position:absolute;top:0;bottom:0;width:4px;background:linear-gradient(var(--amber),#c98a1e);left:12%;border-radius:2px}
+.needle::before{content:'';position:absolute;top:-2px;left:50%;transform:translateX(-50%);
+  width:14px;height:14px;background:var(--amber);border:2px solid var(--line);border-radius:50%;
+  box-shadow:inset 0 -2px 3px rgba(0,0,0,.4)}
+.dial-nums{display:flex;justify-content:space-between;padding:4px 10px 6px;font-family:'JetBrains Mono';font-size:11.5px;color:#8a7f6d}
+/* PTT */
+.ptt-zone{display:flex;gap:18px;align-items:center;margin-top:16px}
+.ptt{width:clamp(112px,15vw,132px);height:clamp(112px,15vw,132px);border-radius:50%;border:var(--bw) solid var(--line);
+  background:radial-gradient(circle at 35% 30%,#3a8f68,var(--green) 60%);color:#08130d;font-family:'Oswald';
+  font-weight:700;font-size:clamp(15px,2vw,18px);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;
+  box-shadow:0 8px 0 #0a4f31,0 12px 24px rgba(0,0,0,.55),inset 0 2px 6px rgba(255,255,255,.4);
+  transition:transform .08s,box-shadow .08s,background .15s;touch-action:none;flex-shrink:0}
+.ptt.on{background:radial-gradient(circle at 35% 30%,#b03030,var(--red) 60%);color:#1d0606;
+  box-shadow:0 2px 0 #7c1f1f,0 6px 16px rgba(0,0,0,.5),inset 0 2px 6px rgba(255,255,255,.35);
+  transform:translateY(6px)}
+.rx-right{flex:1;min-width:0}
+.rx-status{font-family:'Oswald';font-size:clamp(17px,2.4vw,22px);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.rx-status.talk{color:var(--red)}
+.rx-status .free{color:var(--green)}
+.vu{display:flex;gap:3px;height:34px;margin-top:10px;align-items:flex-end}
+.vu i{width:6px;background:#33291b;border-radius:1px;transition:height .06s linear}
+.vu.live i:nth-child(4n){background:var(--green)}.vu.live i:nth-child(7n){background:var(--amber)}
+.vu.live i:nth-child(11n){background:var(--red)}
+.rx-hint{font-size:12px;color:var(--mut);margin-top:8px}
+/* тикер */
+.ticker{margin-top:clamp(34px,5vw,56px);border-top:var(--bw) solid var(--line);border-bottom:var(--bw) solid var(--line);
+  background:var(--panel);overflow:hidden;white-space:nowrap}
+.ticker-track{display:inline-block;padding:12px 0;animation:tick 22s linear infinite}
+.ticker span{font-family:'Oswald';font-size:15px;text-transform:uppercase;letter-spacing:.05em;margin:0 26px;color:var(--mut)}
+.ticker b{color:var(--amber)}
+@keyframes tick{to{transform:translateX(-50%)}}
+@media(max-width:900px){.head-grid{grid-template-columns:1fr}.rx{margin-top:30px}}
+
+/* ── секции ── */
+section{padding:clamp(56px,9vw,96px) 0}
+.kick{font-family:'JetBrains Mono';font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+h2{font-size:clamp(30px,5.2vw,56px);font-weight:700}
+h2 .green{color:var(--green)} h2 .amber{color:var(--amber)}
+.sec-head{margin-bottom:clamp(30px,5vw,54px);max-width:24ch}
+.sec-head.wide{max-width:none}
+/* маска-слова */
+.mw{display:inline-block;overflow:hidden;vertical-align:bottom;padding:0 .05em .16em;margin-bottom:-.16em}
+.mw>span{display:inline-block;transform:translateY(118%);transition:transform .9s cubic-bezier(.16,1,.3,1) var(--wd,0s)}
+
+/* ── сигнал: путь ── */
+.path{border:var(--bw) solid var(--line);background:var(--panel);box-shadow:8px 8px 0 var(--line);
+  padding:clamp(22px,4vw,40px) clamp(16px,3vw,36px)}
+.path-svg{width:100%;height:auto;display:block}
+.path-svg .flowline{stroke-dasharray:10 10;animation:dashmove 1.1s linear infinite}
+@keyframes dashmove{to{stroke-dashoffset:-20}}
+.path-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px}
+.ps{border:2px solid var(--line);background:var(--panel2);padding:14px}
+.ps b{display:block;font-family:'Oswald';font-size:15px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;color:var(--amber)}
+.ps span{font-size:13px;color:var(--mut)}
+@media(max-width:760px){.path-steps{grid-template-columns:1fr 1fr}}
+@media(max-width:440px){.path-steps{grid-template-columns:1fr}}
+
+/* ── каналы ── */
+.chan-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:clamp(18px,3vw,30px)}
+.chan{border:var(--bw) solid var(--line);background:var(--panel);box-shadow:8px 8px 0 var(--line);
+  display:grid;grid-template-columns:200px 1fr;min-height:280px;overflow:hidden}
+.chan img{width:100%;height:100%;object-fit:cover;object-position:top;border-right:var(--bw) solid var(--line)}
+.chan-body{padding:clamp(16px,2.4vw,26px);display:flex;flex-direction:column;gap:10px;min-width:0}
+.chan h3{font-size:clamp(20px,2.6vw,28px)}
+.chan .meta{font-family:'JetBrains Mono';font-size:11.5px;color:var(--mut)}
+.chan p{font-size:14px;color:var(--mut)}
+.chan .btn{margin-top:auto;align-self:flex-start}
+.chan-side{display:flex;flex-direction:column;gap:clamp(18px,3vw,30px)}
+.chan-sm{border:var(--bw) solid var(--line);background:var(--panel);box-shadow:8px 8px 0 var(--line);padding:18px;
+  display:flex;gap:14px;align-items:center}
+.chan-sm .ico{width:52px;height:52px;flex-shrink:0;border:2px solid var(--line);background:var(--panel2);
+  display:grid;place-items:center}
+.chan-sm .ico svg{width:26px;height:26px;stroke:var(--green);fill:none;stroke-width:2}
+.chan-sm b{font-family:'Oswald';font-size:17px;text-transform:uppercase;display:block}
+.chan-sm span{font-size:12.5px;color:var(--mut)}
+@media(max-width:900px){.chan-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.chan{grid-template-columns:1fr}.chan img{height:220px;border-right:none;border-bottom:var(--bw) solid var(--line)}}
+
+/* ── кому ── */
+.aud{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,2.4vw,22px)}
+.au{border:var(--bw) solid var(--line);background:var(--panel);padding:22px;box-shadow:8px 8px 0 var(--line);
+  transform:rotate(var(--r,0deg));transition:transform .18s}
+.au:hover{transform:rotate(0deg) translate(-2px,-2px)}
+.au svg{width:34px;height:34px;stroke:var(--amber);fill:none;stroke-width:2;margin-bottom:14px}
+.au h3{font-size:19px;margin-bottom:8px}
+.au p{font-size:13.5px;color:var(--mut)}
+@media(max-width:900px){.aud{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.aud{grid-template-columns:1fr}}
+
+/* ── админ: терминал ── */
+.term{border:var(--bw) solid var(--line);background:#0c0a07;box-shadow:10px 10px 0 var(--line);max-width:760px}
+.term-bar{display:flex;align-items:center;gap:8px;border-bottom:var(--bw) solid var(--line);padding:10px 14px}
+.term-bar i{width:11px;height:11px;border-radius:50%;border:2px solid var(--line)}
+.term-bar b{font-family:'JetBrains Mono';font-size:11.5px;margin-left:auto;color:var(--mut)}
+.term-body{padding:18px 20px;font-family:'JetBrains Mono';font-size:clamp(11.5px,1.5vw,13.5px);line-height:1.85;min-height:220px}
+.term-body .p{color:var(--green)} .term-body .c{color:var(--amber)} .term-body .d{color:var(--red)} .term-body .n{color:var(--mut)}
+.admin-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(24px,4vw,44px);align-items:center}
+.admin-grid ul{list-style:none;margin-top:18px}
+.admin-grid li{padding:12px 0 12px 34px;border-bottom:2px solid #241d14;position:relative;font-size:15px}
+.admin-grid li::before{content:'';position:absolute;left:0;top:15px;width:18px;height:18px;border:2px solid var(--green);
+  background:linear-gradient(135deg,transparent 45%,var(--green) 45%,var(--green) 55%,transparent 55%)}
+@media(max-width:900px){.admin-grid{grid-template-columns:1fr}}
+
+/* ── FAQ ── */
+.faq{max-width:860px}
+.q{border:var(--bw) solid var(--line);background:var(--panel);box-shadow:5px 5px 0 var(--line);margin-bottom:14px;cursor:pointer}
+.q>b{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 20px;font-family:'Oswald';
+  font-size:17px;text-transform:uppercase;letter-spacing:.02em}
+.q>b i{font-style:normal;font-family:'JetBrains Mono';color:var(--amber);font-size:18px;transition:transform .25s}
+.q .a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s ease;overflow:hidden}
+.q .a p{padding:0 20px;font-size:14.5px;color:var(--mut);line-height:1.7;min-height:0;max-width:70ch}
+.q.open{background:var(--amber);color:#171310}
+.q.open>b i{transform:rotate(45deg)}
+.q.open .a{grid-template-rows:1fr}
+.q.open .a p{padding-bottom:20px;color:#4a3c1c}
+
+/* ── footer CTA ── */
+footer{border-top:var(--bw) solid var(--line);background:var(--panel)}
+.f-grid{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center;padding:clamp(40px,6vw,64px) 0}
+.f-big{font-family:'Oswald';font-weight:700;font-size:clamp(44px,8vw,86px);text-transform:uppercase;line-height:.95}
+.f-big .amber{color:var(--amber)}
+.f-note{font-size:13px;color:var(--mut);margin-top:14px;max-width:44ch}
+.f-note a{color:var(--green);text-decoration:none;border-bottom:1px solid rgba(43,224,138,.4)}
+.f-meta{text-align:right;font-family:'JetBrains Mono';font-size:12px;color:var(--mut);line-height:2}
+@media(max-width:760px){.f-grid{grid-template-columns:1fr}.f-meta{text-align:left}}
+.reveal{opacity:1;transform:none}
+html.js .reveal{opacity:0;transform:translateY(28px)}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none !important;transition:none !important}
+  .reveal{opacity:1;transform:none}.mw>span{transform:none}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v10.5"/><circle cx="12" cy="16.5" r="2.6"/><path d="M6.5 7a7 7 0 0 1 0 9M17.5 7a7 7 0 0 1 0 9M3.5 4a11 11 0 0 1 0 15M20.5 4a11 11 0 0 1 0 15" opacity=".55"/></svg>SHALUN</div>
+  <div class="nav-links">
+    <a href="#signal">Сигнал</a><a href="#channels">Каналы</a><a href="#for">Кому</a><a href="#faq">FAQ</a>
+    <span class="onair mono"><i></i>ON AIR</span>
+  </div>
+</div></nav>
+
+<header><div class="wrap">
+  <div class="head-grid">
+    <div>
+      <p class="mono kick" id="kick1" style="color:var(--green)">● приёмник ловит · v1.0.0</p>
+      <h1>
+        <span class="ln"><span>Жми</span></span>
+        <span class="ln"><span>и&nbsp;держи <span class="amber">—</span></span></span>
+        <span class="ln"><span>слышь <span class="green">весь</span></span></span>
+        <span class="ln"><span class="green">маршрут</span></span>
+      </h1>
+      <p class="hero-sub">Онлайн-рация для водителей. Без паролей, симок и «а давай созвонимся в мессенджере». Позывной, канал, кнопка. Набрал — отпустил, как по рации.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#channels">Застолбить канал</a>
+        <a class="btn btn-o" href="#signal">Как летит сигнал</a>
+      </div>
+    </div>
+    <div class="rx" aria-label="Интерактивный приёмник">
+      <div class="rx-top">
+        <span class="rx-brand">SHALUN · FM-эфир</span>
+        <span class="rx-led"><i></i><span class="mono" id="rxlock">LOCK · СЫЗРАНЬ-28</span></span>
+      </div>
+      <div class="dial">
+        <div class="dial-ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="dial-stations">
+          <span class="stn side" style="left:12%">№28</span>
+          <span class="stn hot" style="left:31%">СЫЗРАНЬ-28</span>
+          <span class="stn side" style="left:57%">ЗАЕБАНЦЫ</span>
+          <span class="stn side" style="left:84%">АКТОБЕ</span>
+        </div>
+        <div class="needle" id="needle"></div>
+      </div>
+      <div class="dial-nums"><span>88</span><span>92</span><span>96</span><span>100</span><span>104</span><span>108</span></div>
+      <div class="ptt-zone">
+        <button class="ptt" id="ptt" type="button">Говорить</button>
+        <div class="rx-right">
+          <div class="rx-status" id="pttstatus"><span class="free">Эфир свободен</span></div>
+          <div class="vu" id="vu" aria-hidden="true"></div>
+          <p class="rx-hint" id="ptthint">Жмякни и держи — это демо, без микрофона. Так работает кнопка в рации.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticktrack">
+  <span>задержка <b>&lt;400 мс</b></span><span>трафик <b>24 кбит/с</b></span><span>шифр <b>RSA-2048</b></span><span>в канале <b>до 30</b></span><span><b>без паролей</b> и сим-карт</span><span>работает <b>в фоне</b> за рулём</span>
+</div></div>
+</header>
+
+<main>
+<section id="signal"><div class="wrap">
+  <div class="sec-head"><p class="kick">01 · путь голоса</p><h2 data-fx="mask">Голос летит <span class="amber">быстрее мысли</span></h2></div>
+  <div class="path reveal">
+    <svg class="path-svg" viewBox="0 0 900 120" fill="none" role="img" aria-label="Схема: микрофон, кодек Opus, радиоволны, динамик">
+      <g stroke-linecap="round">
+        <g stroke="#ffb430" stroke-width="3" transform="translate(60,60)">
+          <rect x="-9" y="-28" width="18" height="34" rx="9"/><path d="M-16 -2 a16 16 0 0 0 32 0 M0 14 v14 M-10 28 h20"/>
+        </g>
+        <path class="flowline" d="M95 60 H215" stroke="#2be08a" stroke-width="3"/>
+        <g stroke="#f4efe3" stroke-width="3" transform="translate(255,60)">
+          <rect x="-34" y="-26" width="68" height="52" rx="4"/><path d="M-14 -10 h14 M-14 2 h24 M-14 14 h8 M10 -14 v28"/>
+        </g>
+        <path class="flowline" d="M300 60 H420" stroke="#2be08a" stroke-width="3"/>
+        <g stroke="#2be08a" stroke-width="3">
+          <circle cx="470" cy="60" r="6" fill="#2be08a"/>
+          <path d="M492 44 a24 24 0 0 1 0 32 M508 32 a40 40 0 0 1 0 56 M524 20 a56 56 0 0 1 0 80" opacity=".8"/>
+          <path d="M448 44 a24 24 0 0 0 0 32 M432 32 a40 40 0 0 0 0 56" opacity=".35"/>
+        </g>
+        <path class="flowline" d="M570 60 H690" stroke="#2be08a" stroke-width="3"/>
+        <g stroke="#ffb430" stroke-width="3" transform="translate(730,60)">
+          <path d="M-26 -14 h14 l20 -18 v64 l-20 -18 h-14 z"/><path d="M22 -6 a14 14 0 0 1 0 12 M30 -16 a26 26 0 0 1 0 32"/>
+        </g>
+      </g>
+      <g font-family="JetBrains Mono" font-size="13" fill="#a99f8d">
+        <text x="38" y="108">микрофон</text><text x="212" y="108">Opus 20мс</text><text x="440" y="108">эфир UDP</text><text x="690" y="108">динамик</text>
+      </g>
+    </svg>
+    <div class="path-steps">
+      <div class="ps"><b>Хват 20 мс</b><span>Буфер AudioRecord минимальный, заиканий нет</span></div>
+      <div class="ps"><b>Opus FEC</b><span>Потерял пакет — голос достроился сам</span></div>
+      <div class="ps"><b>Тишина не летит</b><span>DTX: молчишь — трафик ноль, экономия</span></div>
+      <div class="ps"><b>Один в эфире</b><span>Floor control: говорит тот, кто первый нажал</span></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="channels" style="border-top:var(--bw) solid var(--line);background:var(--panel)"><div class="wrap">
+  <div class="sec-head wide"><p class="kick">02 · частоты</p><h2 data-fx="mask">Каналы <span class="green">твоего маршрута</span></h2></div>
+  <div class="chan-grid">
+    <div class="chan reveal">
+      <img src="img/ch-syzran.jpg" alt="Список каналов в приложении SHALUN">
+      <div class="chan-body">
+        <h3>Сызрань-28</h3>
+        <p class="meta">5 участников · приватный · код-приглашение</p>
+        <p>Базовый канал маршрута №28. Диспетчер ставит задачу, водители отвечают с колёс. Запросы на вход — у админа.</p>
+        <a class="btn btn-g" href="#cta">В эфир</a>
+      </div>
+    </div>
+    <div class="chan-side">
+      <div class="chan-sm reveal"><span class="ico"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+        <div><b>Заебанцы</b><span>Свой круг. Замóк = только по запросу или коду.</span></div></div>
+      <div class="chan-sm reveal"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 16 0M8 12a4 4 0 0 1 8 0M12 12v.01"/></svg></span>
+        <div><b>Создать канал</b><span>Везёшь новый маршрут — жми «+», становишься админом.</span></div></div>
+      <div class="chan-sm reveal"><span class="ico"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></span>
+        <div><b>Код-приглашение</b><span>Скинул другу код — он внутри. Без анкет и телефонов.</span></div></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="for"><div class="wrap">
+  <div class="sec-head wide"><p class="kick">03 · кто в эфире</p><h2 data-fx="mask">Собрано <span class="amber">под руль</span></h2></div>
+  <div class="aud">
+    <div class="au reveal" style="--r:-1.2deg"><svg viewBox="0 0 24 24"><path d="M2 6h12v11H2zM14 10h4l3 3v4h-7z"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><h3>Водителям</h3><p>Фон-режим, вибрация, Bluetooth-тангента. Телефону не нужен, руки на руле.</p></div>
+    <div class="au reveal" style="--r:1deg"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg><h3>Диспетчерам</h3><p>Одним нажатием на весь канал. «Говорит: диспетчер» видно у всех сразу.</p></div>
+    <div class="au reveal" style="--r:-.8deg"><svg viewBox="0 0 24 24"><path d="M4 15a8 8 0 0 1 16 0zM12 7v-3M7 8 6 7M17 8l1-1M3 19h18v2H3z"/></svg><h3>Стройке</h3><p>Шумоподавление и автоответ: крановщик слышит прораба сквозь экскаватор.</p></div>
+    <div class="au reveal" style="--r:1.3deg"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg><h3>Охране</h3><p>Каналы по постам, SOS одной кнопкой, история всех передаваний.</p></div>
+  </div>
+</div></section>
+
+<section id="admin" style="border-top:var(--bw) solid var(--line);background:var(--panel)"><div class="wrap">
+  <div class="sec-head wide"><p class="kick">04 · у эфира есть хозяин</p><h2 data-fx="mask">Админу <span class="green">всё видно</span></h2></div>
+  <div class="admin-grid">
+    <div class="term reveal">
+      <div class="term-bar"><i style="background:var(--red)"></i><i style="background:var(--amber)"></i><i style="background:var(--green)"></i><b>admin-console.sh</b></div>
+      <div class="term-body" id="termbody"></div>
+    </div>
+    <div>
+      <p style="color:var(--mut);max-width:44ch">Первым в канал зашёл — ты и админ. Дальше эфир живёт по твоим правилам:</p>
+      <ul>
+        <li>Запросы на вход: принять / отшить в один тап</li>
+        <li>Мут болтуна, кик шаловливых, бан навсегда</li>
+        <li>Код-приглашение для своих, ротация в пару секунд</li>
+        <li>История эфира: кто, что и когда передавал</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<section id="faq"><div class="wrap faq">
+  <div class="sec-head"><p class="kick">05 · по-простому</p><h2 data-fx="mask">Частые <span class="amber">вопросы с трассы</span></h2></div>
+  <div class="q"><b>Это законно? Рации же нужны?<i>+</i></b>
+    <div class="a"><p>Это не радио, а обычный мобильный интернет: голос идёт как сообщение в мессенджере, только на весь канал и мгновенно. Никаких частот, разрешений и ГРЧЦ. Нужна связь — нужен трафик, как у навигатора.</p></div></div>
+  <div class="q"><b>Сколько жрёт батарею и трафик?<i>+</i></b>
+    <div class="a"><p>Говорящий льёт ~24 кбит/с: сорок минут базара — около 7 МБ. Тишину DTX вообще не передаёт, поэтому в кармане батарея почти не тает.</p></div></div>
+  <div class="q"><b>А если интернета нет?<i>+</i></b>
+    <div class="a"><p>Кнопка станет серой, статус покажет «нет связи» — как настоящая рация без башни. Как поймаешь сеть, догоняешь эфир в один тап. На трассе М-5 сеть есть почти везде, а в глухих местах и обычная рация бы молчала.</p></div></div>
+  <div class="q"><b>Почему без пароля — не украдут аккаунт?<i>+</i></b>
+    <div class="a"><p>Ключ RSA-2048 рождается на твоём телефоне и с него не уходит. Позывной — это как наклейка на капоте: как тебя слышат в эфире, а доступ в канал решает админ.</p></div></div>
+  <div class="q"><b>Где взять?<i>+</i></b>
+    <div class="a"><p>Приложение сейчас в разработке: доводим эфир до ума, потом общий релиз. Хочешь на первый обкат — <a href="https://t.me/Vandrey63" style="color:var(--amber)">пиши админу</a>, поставим вручную.</p></div></div>
+</div></section>
+</main>
+
+<footer id="cta"><div class="wrap f-grid">
+  <div>
+    <div class="f-big">Эфир<br><span class="amber">ждёт</span></div>
+    <p class="f-note">Статус: в разработке. Канал Сызрань-28 уже собирает маршрут. <a href="https://t.me/Vandrey63">Связь с админом</a> — поставим на обкат.</p>
+  </div>
+  <div class="f-meta">SHALUN v1.0.0<br>PRESS AND HOLD<br>© 2026 · на связи с трассы</div>
+</div></footer>
+
+<script>
+(function(){
+window.addEventListener('error',function(){document.documentElement.classList.remove('js')},{once:true});
+var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.documentElement.classList.add('js');
+/* ── PTT demo ── */
+var ptt=document.getElementById('ptt'),st=document.getElementById('pttstatus'),hint=document.getElementById('ptthint'),
+    vu=document.getElementById('vu'),needle=document.getElementById('needle'),lock=document.getElementById('rxlock');
+var bars=[],playing=false,timer=0;
+for(var i=0;i<22;i++){var b=document.createElement('i');b.style.height='4px';vu.appendChild(b);bars.push(b)}
+function talk(on){
+  ptt.classList.toggle('on',on);playing=on;
+  st.classList.toggle('talk',on);
+  vu.classList.toggle('live',on);
+  st.innerHTML=on?'ГОВОРИШЬ · эфир занят':'<span class="free">Эфир свободен</span>';
+  hint.textContent=on?'Отпусти — эфир сразу свободен для следующих.':'Жмякни и держи — это демо, без микрофона. Так работает кнопка в рации.';
+  if(on){needle.style.transition='none';clearInterval(timer);timer=setInterval(function(){
+    needle.style.left=(31+(Math.random()*4-2))+'%';},90);
+  }else{clearInterval(timer);needle.style.transition='left .8s cubic-bezier(.2,1.4,.4,1)';needle.style.left='31%';
+    bars.forEach(function(b){b.style.height='4px'})}
+}
+if(reduce){st.innerHTML='<span class="free">Эфир свободен</span>';}
+else{
+  var loop=function(){bars.forEach(function(b){b.style.height=(playing?6+Math.random()*26:3+Math.random()*5)+'px'});requestAnimationFrame(function(){setTimeout(loop,80)})};loop();
+  var hold=function(e){e.preventDefault();talk(true)},rel=function(e){if(e&&e.type==='visibilitychange'&&document.hidden)talk(false);else talk(false)};
+  ptt.addEventListener('pointerdown',hold);addEventListener('pointerup',rel);addEventListener('pointercancel',rel);
+  document.addEventListener('visibilitychange',function(){rel()});
+  /* авто-релиз как в рации */
+  var autoT;ptt.addEventListener('pointerdown',function(){clearTimeout(autoT);autoT=setTimeout(function(){if(playing)talk(false)},30000)});
+  ptt.addEventListener('pointerup',function(){clearTimeout(autoT)});
+}
+/* ── needle intro ── */
+if(needle&&!reduce){needle.style.left='12%';setTimeout(function(){needle.style.transition='left 1.2s cubic-bezier(.2,1.2,.3,1)';needle.style.left='31%'},450)}
+else if(needle){needle.style.left='31%'}
+/* ── ticker duplicate ── */
+var tr=document.getElementById('ticktrack');if(tr)tr.innerHTML+=tr.innerHTML;
+/* ── word-mask headings + hero ── */
+function splitWords(el){ /* [{c,g}] по словам */
+  var words=[],cur=[];(function walk(n,g){
+    if(n.nodeType===3){for(var k=0;k<n.nodeValue.length;k++){var c=n.nodeValue[k];if(c===' '){if(cur.length){words.push(cur);cur=[]}}else cur.push({c:c,g:g})}}
+    else for(var i=0;i<n.childNodes.length;i++){var ch=n.childNodes[i];walk(ch,g||ch.nodeName==='EM')}
+  })(el,false);if(cur.length)words.push(cur);return words}
+document.querySelectorAll('h2[data-fx]').forEach(function(h){
+  var words=splitWords(h);h.innerHTML='';
+  words.forEach(function(w,wi){
+    if(wi)h.appendChild(document.createTextNode(' '));
+    var m=document.createElement('span');m.className='mw';var inn=document.createElement('span');
+    w.forEach(function(cg){var s=document.createElement('span');s.textContent=cg.c;if(cg.g)s.style.color='var(--green)';inn.appendChild(s)});
+    inn.style.setProperty('--wd',(wi*.06)+'s');m.appendChild(inn);h.appendChild(m)});
+  if(reduce)h.querySelectorAll('.mw>span').forEach(function(s){s.style.transform='none'});
+});
+if(!reduce){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){
+    e.target.querySelectorAll('.mw>span').forEach(function(s){s.style.transform='translateY(0)'});io.unobserve(e.target)}})},{threshold:.3});
+  document.querySelectorAll('h2[data-fx]').forEach(function(h){io.observe(h)});
+}
+/* ── scramble decode (kawai shuffle) ── */
+function scramble(el){if(reduce||!el)return;var txt=el.textContent,i=0,
+ syms='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·-';
+ var t=setInterval(function(){i++;
+  el.textContent=txt.split('').map(function(c,j){if(c===' ')return' ';return j<i/2?c:syms[Math.floor(Math.random()*syms.length)]}).join('');
+  if(i/2>=txt.length)clearInterval(t)},34)}
+scramble(document.getElementById('kick1'));
+/* ── terminal typing (admin) ── */
+var tb=document.getElementById('termbody');
+if(tb){var lines=[
+ ['p','sh$ '],['c','admin --enter Сызрань-28'],['br'],
+ ['n','› эфир открыт · 5 в канале'],['br'],
+ ['p','sh$ '],['c','request list'],['br'],
+ ['n','› Серёга (Актобе) — на вход'],['br'],
+ ['p','sh$ '],['c','approve 1 · Серёга'],['br'],
+ ['n','› допущен · шлёт «привет с М-32»'],['br'],
+ ['p','sh$ '],['c','mute 3'],['br'],
+ ['d','› «Шалун-7» замьючен'],['br'],
+ ['p','sh$ '],['c','floor release'],['br'],
+ ['n','› эфир свободен']];
+ if(reduce){tb.innerHTML=lines.map(function(l){return l[0]==='br'?'<br>':(l[0]==='p'?'<span class="p">'+l[1]+'</span>':'<span class="'+l[0]+'">'+l[1]+'</span>')}).join('')}
+ else{
+  var io2=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){
+   var idx=0;
+   var step=function(){
+     if(idx>=lines.length)return;
+     var l=lines[idx++];
+     if(l[0]==='br'){tb.appendChild(document.createElement('br'));setTimeout(step,60);return}
+     if(l[0]==='p'){var s=document.createElement('span');s.className='p';s.textContent=l[1];tb.appendChild(s);setTimeout(step,60);return}
+     var s2=document.createElement('span');s2.className=l[0];tb.appendChild(s2);
+     var full=l[1],ci=0;
+     var iv=setInterval(function(){s2.textContent=full.slice(0,++ci);
+       if(ci>=full.length){clearInterval(iv);setTimeout(step,200)}},26)};
+   step();io2.unobserve(e.target)}})},{threshold:.4});
+  io2.observe(tb);
+ }
+}
+/* ── reveal ── */
+if(window.gsap&&window.ScrollTrigger&&!reduce){
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.utils.toArray('.reveal').forEach(function(el){
+    gsap.fromTo(el,{opacity:0,y:28},{opacity:1,y:0,duration:.7,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}})});
+  /* hero line-mask */
+  document.querySelectorAll('h1 .ln>span').forEach(function(s,i){
+    gsap.from(s,{yPercent:110,duration:.85,delay:.1+i*.1,ease:'power4.out'});
+    s.parentElement.style.overflow='hidden';});
+  /* параллакс стрелки */
+  gsap.to('#needle',{left:'88%',ease:'none',scrollTrigger:{trigger:'#signal',start:'top bottom',end:'bottom top',scrub:true}});
+}else document.querySelectorAll('.reveal').forEach(function(el){el.style.opacity=1;el.style.transform='none'});
+})();
+</script>
+</body>
+</html>
